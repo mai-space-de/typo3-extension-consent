@@ -1,0 +1,111 @@
+<?php
+
+declare(strict_types = 1);
+
+namespace Maispace\MaispaceConsent\DataProcessing;
+
+use Maispace\MaispaceConsent\Event\BeforeContentElementGatedEvent;
+use Psr\EventDispatcher\EventDispatcherInterface;
+use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
+use TYPO3\CMS\Frontend\ContentObject\DataProcessorInterface;
+
+/**
+ * Adds consent-gating information to every content element's template variables.
+ *
+ * When a content element has one or more consent categories assigned via the
+ * `tx_maispace_consent_categories` field the processor sets
+ * `maispace_consent.isGated = true` and `maispace_consent.categoryUids` so that
+ * a layout override can wrap the element in a hidden container.
+ *
+ * Register in TypoScript:
+ *
+ *     lib.contentElement {
+ *         dataProcessing {
+ *             200 = Maispace\MaispaceConsent\DataProcessing\ConsentGatingProcessor
+ *         }
+ *     }
+ */
+class ConsentGatingProcessor implements DataProcessorInterface
+{
+    private const FIELD_CATEGORIES = 'tx_maispace_consent_categories';
+
+    public function __construct(
+        private readonly EventDispatcherInterface $eventDispatcher,
+    ) {
+    }
+
+    /**
+     * @param array<string, mixed>                 $contentObjectConfiguration
+     * @param array<string, mixed>                 $processorConfiguration
+     * @param array<string, mixed>                 $processedData
+     * @return array<string, mixed>
+     */
+    public function process(
+        ContentObjectRenderer $cObj,
+        array $contentObjectConfiguration,
+        array $processorConfiguration,
+        array $processedData,
+    ): array {
+        $row = is_array($processedData['data'] ?? null) ? $processedData['data'] : [];
+        $rawCategories = $row[self::FIELD_CATEGORIES] ?? '';
+
+        $categoryUids = $this->parseCategoryUids(
+            is_string($rawCategories) ? $rawCategories : (string)$rawCategories
+        );
+
+        if ($categoryUids === []) {
+            $processedData['maispace_consent'] = [
+                'isGated'      => false,
+                'categoryUids' => [],
+                'categoryList' => '',
+            ];
+
+            return $processedData;
+        }
+
+        $contentElementUid = is_int($row['uid'] ?? null) ? $row['uid'] : (int)($row['uid'] ?? 0);
+
+        $event = new BeforeContentElementGatedEvent($contentElementUid, $categoryUids);
+        /** @var BeforeContentElementGatedEvent $event */
+        $event = $this->eventDispatcher->dispatch($event);
+
+        if ($event->shouldSkip()) {
+            $processedData['maispace_consent'] = [
+                'isGated'      => false,
+                'categoryUids' => [],
+                'categoryList' => '',
+            ];
+
+            return $processedData;
+        }
+
+        $resolvedUids = $event->getCategoryUids();
+
+        $processedData['maispace_consent'] = [
+            'isGated'      => true,
+            'categoryUids' => $resolvedUids,
+            'categoryList' => implode(',', $resolvedUids),
+        ];
+
+        return $processedData;
+    }
+
+    /**
+     * Parses a comma-separated string of category UIDs into a list of positive integers.
+     *
+     * @return int[]
+     */
+    private function parseCategoryUids(string $raw): array
+    {
+        if ($raw === '') {
+            return [];
+        }
+
+        return array_values(
+            array_filter(
+                array_map('intval', explode(',', $raw)),
+                static fn (int $uid) => $uid > 0
+            )
+        );
+    }
+}

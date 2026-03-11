@@ -19,10 +19,14 @@ A TYPO3 extension that adds a cookie banner and consent modal to the frontend, l
 | Cookie banner with accept / reject / customize actions | Auto-injected via middleware |
 | Consent modal for per-category preference management | Triggered from banner |
 | Consent preferences stored in a first-party cookie | `maispace_consent` cookie |
-| Content elements hidden until consent is granted | Middleware + JavaScript |
+| Content elements hidden until consent is granted | DataProcessor + JavaScript runtime |
+| JavaScript runtime for full client-side consent UX | `Resources/Public/JavaScript/consent.js` |
+| CSS styling for banner, modal and placeholder | `Resources/Public/Css/consent.css` |
 | Backend module for managing categories | `Web > Consent` module |
-| Consent statistics per category (charts + tables) | Backend module dashboard |
+| Consent statistics per category (tables + progress bar) | Backend module dashboard |
+| CSV export of consent statistics | One-click download from statistics view |
 | Fully customizable banner and modal text via TypoScript | `plugin.tx_maispace_consent` |
+| All frontend texts translatable via XLIFF | `locallang_fe.xlf` |
 | GDPR-compliant — no data leaves the server | Built-in |
 
 ---
@@ -39,7 +43,9 @@ Include the TypoScript setup in your site package:
 @import 'EXT:maispace_consent/Configuration/TypoScript/setup.typoscript'
 ```
 
-The cookie banner and middleware are registered automatically — no manual PageRenderer wiring required.
+The cookie banner, CSS, JavaScript and middleware are registered automatically — no manual PageRenderer wiring required.
+
+Run the Database Analyser in **Admin Tools → Database Analyser** to create the two extension tables after installation.
 
 ---
 
@@ -55,6 +61,19 @@ Elements with no category assigned are always rendered regardless of user consen
 2. Switch to the **Consent** tab
 3. Select one or more categories from the multi-select list
 4. Save — the element is now consent-gated
+
+**Rendered markup:**
+
+```html
+<!-- content element with category UID 2 assigned -->
+<div data-maispace-consent-required="2"
+     data-maispace-consent-uid="<element-uid>"
+     hidden="hidden">
+    <!-- original content element markup -->
+</div>
+```
+
+The JavaScript runtime reads the cookie on page load and reveals elements whose required categories have been accepted. When consent changes, elements are shown or hidden immediately without a page reload.
 
 ---
 
@@ -84,15 +103,17 @@ plugin.tx_maispace_consent.view {
 }
 ```
 
+**Banner positions:** `bottom` (default) · `top` · `bottom-left` · `bottom-right`
+
 ---
 
 ## Consent Modal
 
-The modal is opened from the cookie banner's **Customize** button (or any element on the page with `data-maispace-consent="open"`). It lists all active categories with their description and an individual toggle per category.
+The modal is opened from the cookie banner's **Customize** button (or any element on the page with `data-maispace-consent-action="open-modal"`). It lists all active categories with their description and an individual toggle per category.
 
 ```html
 <!-- Open the consent modal from any element -->
-<button data-maispace-consent="open">Manage preferences</button>
+<button data-maispace-consent-action="open-modal">Manage preferences</button>
 ```
 
 Override the modal partial in your site package:
@@ -106,7 +127,9 @@ The modal partial receives the following variables:
 | Variable | Type | Description |
 |---|---|---|
 | `{categories}` | array | All active consent categories |
-| `{preferences}` | array | Current user preferences keyed by category UID |
+| `{settings.modal.showCategoryDescriptions}` | bool | Whether to show category descriptions |
+
+**Accessibility:** The modal traps focus while open and restores focus on close. Pressing `Escape` closes the modal. Essential categories are marked with a badge and their checkboxes are disabled.
 
 ---
 
@@ -133,18 +156,9 @@ The cookie is set entirely client-side via JavaScript after the user interacts w
 
 ## Frontend Gating
 
-Content elements assigned to a consent category are wrapped in a `<div>` with `data-maispace-consent-required="{categoryUid}"`. The JavaScript runtime reads the cookie on page load and shows or hides elements accordingly.
+Content elements assigned to a consent category are hidden on initial render and revealed by the JavaScript runtime when the required consent is present.
 
-When consent is subsequently granted or revoked, elements are shown or hidden immediately without a page reload.
-
-```html
-<!-- Rendered markup for a gated content element (category UID 2) -->
-<div data-maispace-consent-required="2" hidden>
-    <!-- original content element markup -->
-</div>
-```
-
-A placeholder can be shown instead of the hidden element:
+A placeholder can be shown instead of the blank space:
 
 ```typoscript
 plugin.tx_maispace_consent.gating {
@@ -163,16 +177,13 @@ The **Consent** backend module (`Web > Consent`) gives administrators full contr
 
 - Create, edit, and delete consent categories
 - Set name, description, and whether the category is essential (essential categories cannot be rejected)
-- Reorder categories (determines display order in the modal)
 
 **Statistics**
 
 - Total consent events recorded per category
-- Accept / reject ratio per category as a bar chart
-- Daily consent activity over the last 30 days as a line chart
-- Export statistics as CSV
-
-The module respects backend user permissions — non-admin editors can view statistics but cannot create or delete categories.
+- Accept / reject ratio per category as a progress bar
+- Daily consent activity over the last 30 days
+- **CSV export** — download a spreadsheet of all category statistics
 
 ---
 
@@ -230,8 +241,17 @@ services:
     tags:
       - name: event.listener
         identifier: 'my-sitepackage/modify-banner'
-        event: Maispace\Consent\Event\BeforeBannerRenderedEvent
+        event: Maispace\MaispaceConsent\Event\BeforeBannerRenderedEvent
 ```
+
+---
+
+## Internationalization
+
+All visible frontend texts (banner, modal, placeholder) are defined in
+`Resources/Private/Language/locallang_fe.xlf` and referenced via
+`<f:translate>` in Fluid templates. Provide TYPO3 language override files
+in your site configuration to translate them.
 
 ---
 
@@ -256,8 +276,8 @@ vendor/bin/phpunit --configuration phpunit.xml.dist --testdox
 |---|---|
 | `Tests/Unit/Service/ConsentCookieServiceTest.php` | Cookie parsing, preference read/write, essential category handling |
 | `Tests/Unit/Service/CategoryServiceTest.php` | Category CRUD, ordering, essential flag |
-| `Tests/Unit/Middleware/ConsentBannerMiddlewareTest.php` | Banner injection, position, suppression conditions |
-| `Tests/Unit/DataProcessing/ConsentGatingProcessorTest.php` | Element hiding, placeholder rendering, category resolution |
+| `Tests/Unit/Middleware/ConsentBannerMiddlewareTest.php` | Banner injection, CSS/JS injection, suppression conditions |
+| `Tests/Unit/DataProcessing/ConsentGatingProcessorTest.php` | Element gating, skip event, category UID override |
 
 All tests are pure unit tests — no database, no TYPO3 installation required.
 

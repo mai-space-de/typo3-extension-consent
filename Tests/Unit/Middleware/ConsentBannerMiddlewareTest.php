@@ -148,6 +148,7 @@ final class ConsentBannerMiddlewareTest extends TestCase
         $this->bannerRenderer->method('renderBannerHtml')->willReturn('');
         $this->bannerRenderer->method('renderModalHtml')->willReturn('');
         $this->bannerRenderer->method('getJsPath')->willReturn('/typo3conf/ext/maispace_consent/Resources/Public/JavaScript/consent.js');
+        $this->bannerRenderer->method('getCssPath')->willReturn('/typo3conf/ext/maispace_consent/Resources/Public/Css/consent.css');
 
         $result = $this->subject->process($request, $handler);
 

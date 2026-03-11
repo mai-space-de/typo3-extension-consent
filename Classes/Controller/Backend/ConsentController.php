@@ -11,6 +11,8 @@ use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Backend\Routing\UriBuilder;
 use TYPO3\CMS\Backend\Template\ModuleTemplateFactory;
 use TYPO3\CMS\Core\Http\RedirectResponse;
+use TYPO3\CMS\Core\Http\Response;
+use TYPO3\CMS\Core\Http\Stream;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Fluid\View\StandaloneView;
 
@@ -135,6 +137,46 @@ class ConsentController
             (string)$this->uriBuilder->buildUriFromRoute('maispace_consent'),
             303
         );
+    }
+
+    public function exportStatisticsCsvAction(ServerRequestInterface $request): ResponseInterface
+    {
+        $countsPerCategory = $this->statisticRepository->getCountsPerCategory();
+        $categories = $this->categoryService->getAllCategories();
+
+        $lines = [];
+        $lines[] = implode(',', ['Category UID', 'Category Name', 'Essential', 'Accepted', 'Rejected', 'Total', 'Accept Rate (%)']);
+
+        foreach ($categories as $category) {
+            $uid = $category->getUid();
+            $counts = $countsPerCategory[$uid] ?? ['accepted' => 0, 'rejected' => 0];
+            $total = $counts['accepted'] + $counts['rejected'];
+            $acceptRate = $total > 0 ? round(($counts['accepted'] / $total) * 100, 1) : 0;
+
+            $lines[] = implode(',', [
+                $uid,
+                '"' . str_replace('"', '""', $category->getName()) . '"',
+                $category->isEssential() ? 'yes' : 'no',
+                $counts['accepted'],
+                $counts['rejected'],
+                $total,
+                $acceptRate,
+            ]);
+        }
+
+        $csvContent = implode("\r\n", $lines) . "\r\n";
+
+        $stream = new Stream('php://temp', 'rw');
+        $stream->write($csvContent);
+        $stream->rewind();
+
+        $filename = 'consent-statistics-' . (new \DateTimeImmutable())->format('Y-m-d') . '.csv';
+
+        return (new Response())
+            ->withHeader('Content-Type', 'text/csv; charset=utf-8')
+            ->withHeader('Content-Disposition', 'attachment; filename="' . $filename . '"')
+            ->withHeader('Cache-Control', 'no-cache, no-store, must-revalidate')
+            ->withBody($stream);
     }
 
     private function createView(string $template): StandaloneView

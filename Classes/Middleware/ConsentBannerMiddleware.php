@@ -69,8 +69,12 @@ class ConsentBannerMiddleware implements MiddlewareInterface
         $bannerHtml = $this->bannerRenderer->renderBannerHtml($variables);
         $modalHtml = $this->bannerRenderer->renderModalHtml($variables);
         $jsPath = $this->bannerRenderer->getJsPath();
+        $cssPath = $this->bannerRenderer->getCssPath();
 
         $categoriesJson = json_encode($categoriesData, JSON_THROW_ON_ERROR);
+
+        $cssLink = '<link rel="stylesheet" href="' . htmlspecialchars($cssPath, ENT_QUOTES | ENT_HTML5) . '">';
+        $headInjection = "\n" . $cssLink . "\n";
 
         $injection = "\n"
             . '<script type="application/json" id="maispace-consent-categories">'
@@ -78,18 +82,19 @@ class ConsentBannerMiddleware implements MiddlewareInterface
             . '</script>' . "\n"
             . $bannerHtml . "\n"
             . $modalHtml . "\n"
-            . '<script type="module" src="' . htmlspecialchars($jsPath, ENT_QUOTES | ENT_HTML5) . '"'
+            . '<script id="maispace-consent-script" src="' . htmlspecialchars($jsPath, ENT_QUOTES | ENT_HTML5) . '"'
             . ' data-cookie-name="maispace_consent"'
             . ' data-cookie-lifetime="365"'
             . ' data-record-endpoint="/maispace/consent/record"'
-            . '></script>' . "\n";
+            . ' defer></script>' . "\n";
 
         $afterEvent = new AfterBannerRenderedEvent($injection);
         /** @var AfterBannerRenderedEvent $afterEvent */
         $afterEvent = $this->eventDispatcher->dispatch($afterEvent);
         $injection = $afterEvent->getHtml();
 
-        $modifiedBody = str_replace('</body>', $injection . '</body>', $body);
+        $modifiedBody = str_replace('</head>', $headInjection . '</head>', $body);
+        $modifiedBody = str_replace('</body>', $injection . '</body>', $modifiedBody);
 
         $stream = new Stream('php://temp', 'rw');
         $stream->write($modifiedBody);

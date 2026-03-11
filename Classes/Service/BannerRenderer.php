@@ -54,4 +54,11 @@ class BannerRenderer
 
         return PathUtility::getAbsoluteWebPath($extPath . 'Resources/Public/JavaScript/consent.js');
     }
+
+    public function getCssPath(): string
+    {
+        $extPath = ExtensionManagementUtility::extPath(self::EXT_KEY);
+
+        return PathUtility::getAbsoluteWebPath($extPath . 'Resources/Public/Css/consent.css');
+    }
 }

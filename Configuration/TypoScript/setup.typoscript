@@ -32,3 +32,12 @@ plugin.tx_maispace_consent {
         }
     }
 }
+
+lib.contentElement {
+    dataProcessing {
+        200 = Maispace\MaispaceConsent\DataProcessing\ConsentGatingProcessor
+    }
+    layoutRootPaths {
+        50 = EXT:maispace_consent/Resources/Private/Layouts/ContentElements/
+    }
+}
