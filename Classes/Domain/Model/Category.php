@@ -14,17 +14,28 @@ class Category
     private int $sorting = 0;
 
     /**
-     * @param array{uid?: int|string, pid?: int|string, name?: string, description?: string, is_essential?: int|string|bool, sorting?: int|string} $row
+     * @param array<string, mixed> $row
      */
     public static function fromRow(array $row): self
     {
         $category = new self();
-        $category->uid = (int)($row['uid'] ?? 0);
-        $category->pid = (int)($row['pid'] ?? 0);
-        $category->name = (string)($row['name'] ?? '');
-        $category->description = (string)($row['description'] ?? '');
+
+        $uid = $row['uid'] ?? null;
+        $category->uid = is_int($uid) ? $uid : (int)(is_string($uid) ? $uid : 0);
+
+        $pid = $row['pid'] ?? null;
+        $category->pid = is_int($pid) ? $pid : (int)(is_string($pid) ? $pid : 0);
+
+        $name = $row['name'] ?? null;
+        $category->name = is_string($name) ? $name : '';
+
+        $description = $row['description'] ?? null;
+        $category->description = is_string($description) ? $description : '';
+
         $category->isEssential = (bool)($row['is_essential'] ?? false);
-        $category->sorting = (int)($row['sorting'] ?? 0);
+
+        $sorting = $row['sorting'] ?? null;
+        $category->sorting = is_int($sorting) ? $sorting : (int)(is_string($sorting) ? $sorting : 0);
 
         return $category;
     }

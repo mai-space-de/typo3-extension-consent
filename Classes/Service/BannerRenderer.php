@@ -25,7 +25,9 @@ class BannerRenderer
         $view->setLayoutRootPaths([$extPath . 'Resources/Private/Layouts/']);
         $view->assignMultiple($variables);
 
-        return (string)$view->render();
+        $html = $view->render();
+
+        return is_string($html) ? $html : '';
     }
 
     /**
@@ -41,7 +43,9 @@ class BannerRenderer
         $view->setLayoutRootPaths([$extPath . 'Resources/Private/Layouts/']);
         $view->assignMultiple($variables);
 
-        return (string)$view->render();
+        $html = $view->render();
+
+        return is_string($html) ? $html : '';
     }
 
     public function getJsPath(): string

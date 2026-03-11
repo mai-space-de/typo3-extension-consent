@@ -101,7 +101,8 @@ class ConsentController
         $parsedBody = $request->getParsedBody();
 
         if (is_array($parsedBody)) {
-            $uid = is_numeric($parsedBody['uid'] ?? null) ? (int)$parsedBody['uid'] : 0;
+            $rawUid = $parsedBody['uid'] ?? null;
+            $uid = is_numeric($rawUid) ? (int)$rawUid : 0;
             $name = trim(is_string($parsedBody['name'] ?? null) ? $parsedBody['name'] : '');
             $description = trim(is_string($parsedBody['description'] ?? null) ? $parsedBody['description'] : '');
             $isEssential = isset($parsedBody['is_essential']) && (bool)$parsedBody['is_essential'];
@@ -122,7 +123,8 @@ class ConsentController
         $parsedBody = $request->getParsedBody();
 
         if (is_array($parsedBody)) {
-            $uid = is_numeric($parsedBody['uid'] ?? null) ? (int)$parsedBody['uid'] : 0;
+            $rawUid = $parsedBody['uid'] ?? null;
+            $uid = is_numeric($rawUid) ? (int)$rawUid : 0;
 
             if ($uid > 0) {
                 $this->categoryService->deleteCategory($uid);

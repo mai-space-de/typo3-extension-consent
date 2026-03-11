@@ -4,6 +4,7 @@ declare(strict_types = 1);
 
 namespace Maispace\MaispaceConsent\Domain\Repository;
 
+use Doctrine\DBAL\ParameterType;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 
 class StatisticRepository
@@ -43,15 +44,21 @@ class StatisticRepository
 
         $result = [];
         foreach ($rows as $row) {
-            $uid = (int)$row['category_uid'];
+            $rawUid = $row['category_uid'] ?? null;
+            $uid = is_int($rawUid) ? $rawUid : (int)(is_string($rawUid) ? $rawUid : 0);
+
             if (!isset($result[$uid])) {
                 $result[$uid] = ['accepted' => 0, 'rejected' => 0];
             }
 
-            if ((int)$row['accepted'] === 1) {
-                $result[$uid]['accepted'] += (int)$row['cnt'];
+            $rawAccepted = $row['accepted'] ?? null;
+            $rawCnt = $row['cnt'] ?? null;
+            $cnt = is_int($rawCnt) ? $rawCnt : (int)(is_string($rawCnt) ? $rawCnt : 0);
+
+            if ((is_int($rawAccepted) ? $rawAccepted : (int)(is_string($rawAccepted) ? $rawAccepted : 0)) === 1) {
+                $result[$uid]['accepted'] += $cnt;
             } else {
-                $result[$uid]['rejected'] += (int)$row['cnt'];
+                $result[$uid]['rejected'] += $cnt;
             }
         }
 
@@ -74,7 +81,7 @@ class StatisticRepository
             ->addSelectLiteral('COUNT(*) AS cnt')
             ->from(self::TABLE)
             ->where(
-                $queryBuilder->expr()->gte('tstamp', $queryBuilder->createNamedParameter($since, \PDO::PARAM_INT))
+                $queryBuilder->expr()->gte('tstamp', $queryBuilder->createNamedParameter($since, ParameterType::INTEGER))
             )
             ->groupBy('activity_date', 'accepted')
             ->orderBy('activity_date', 'ASC')
@@ -83,15 +90,21 @@ class StatisticRepository
 
         $result = [];
         foreach ($rows as $row) {
-            $date = (string)$row['activity_date'];
+            $rawDate = $row['activity_date'] ?? null;
+            $date = is_string($rawDate) ? $rawDate : '';
+
             if (!isset($result[$date])) {
                 $result[$date] = ['accepted' => 0, 'rejected' => 0];
             }
 
-            if ((int)$row['accepted'] === 1) {
-                $result[$date]['accepted'] += (int)$row['cnt'];
+            $rawAccepted = $row['accepted'] ?? null;
+            $rawCnt = $row['cnt'] ?? null;
+            $cnt = is_int($rawCnt) ? $rawCnt : (int)(is_string($rawCnt) ? $rawCnt : 0);
+
+            if ((is_int($rawAccepted) ? $rawAccepted : (int)(is_string($rawAccepted) ? $rawAccepted : 0)) === 1) {
+                $result[$date]['accepted'] += $cnt;
             } else {
-                $result[$date]['rejected'] += (int)$row['cnt'];
+                $result[$date]['rejected'] += $cnt;
             }
         }
 
@@ -109,7 +122,7 @@ class StatisticRepository
         $queryBuilder
             ->delete(self::TABLE)
             ->where(
-                $queryBuilder->expr()->lt('tstamp', $queryBuilder->createNamedParameter($cutoff, \PDO::PARAM_INT))
+                $queryBuilder->expr()->lt('tstamp', $queryBuilder->createNamedParameter($cutoff, ParameterType::INTEGER))
             )
             ->executeStatement();
     }

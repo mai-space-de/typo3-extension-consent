@@ -4,6 +4,7 @@ declare(strict_types = 1);
 
 namespace Maispace\MaispaceConsent\Domain\Repository;
 
+use Doctrine\DBAL\ParameterType;
 use Maispace\MaispaceConsent\Domain\Model\Category;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 
@@ -28,8 +29,8 @@ class CategoryRepository
             ->select('*')
             ->from(self::TABLE)
             ->where(
-                $queryBuilder->expr()->eq('deleted', $queryBuilder->createNamedParameter(0, \PDO::PARAM_INT)),
-                $queryBuilder->expr()->eq('hidden', $queryBuilder->createNamedParameter(0, \PDO::PARAM_INT))
+                $queryBuilder->expr()->eq('deleted', $queryBuilder->createNamedParameter(0, ParameterType::INTEGER)),
+                $queryBuilder->expr()->eq('hidden', $queryBuilder->createNamedParameter(0, ParameterType::INTEGER))
             )
             ->orderBy('sorting', 'ASC')
             ->executeQuery()
@@ -45,8 +46,8 @@ class CategoryRepository
             ->select('*')
             ->from(self::TABLE)
             ->where(
-                $queryBuilder->expr()->eq('uid', $queryBuilder->createNamedParameter($uid, \PDO::PARAM_INT)),
-                $queryBuilder->expr()->eq('deleted', $queryBuilder->createNamedParameter(0, \PDO::PARAM_INT))
+                $queryBuilder->expr()->eq('uid', $queryBuilder->createNamedParameter($uid, ParameterType::INTEGER)),
+                $queryBuilder->expr()->eq('deleted', $queryBuilder->createNamedParameter(0, ParameterType::INTEGER))
             )
             ->executeQuery()
             ->fetchAssociative();
@@ -71,7 +72,7 @@ class CategoryRepository
             'sorting'      => $category->getSorting(),
         ]);
 
-        $uid = (int)$connection->lastInsertId();
+        $uid = intval($connection->lastInsertId());
         $category->setUid($uid);
     }
 
