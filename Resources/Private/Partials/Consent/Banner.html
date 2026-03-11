@@ -1,0 +1,46 @@
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers" data-namespace-typo3-fluid="true">
+<div
+    id="maispace-consent-banner"
+    class="maispace-consent-banner maispace-consent-banner--{settings.banner.position}"
+    aria-live="polite"
+    role="dialog"
+    aria-labelledby="maispace-consent-banner-title"
+    aria-describedby="maispace-consent-banner-desc"
+    hidden
+>
+    <div class="maispace-consent-banner__inner">
+        <div class="maispace-consent-banner__content">
+            <h2 id="maispace-consent-banner-title" class="maispace-consent-banner__title">
+                Cookie Preferences
+            </h2>
+            <p id="maispace-consent-banner-desc" class="maispace-consent-banner__description">
+                We use cookies to improve your experience. You can choose which categories of cookies you allow.
+                Essential cookies are always active as they are required for the website to function properly.
+            </p>
+        </div>
+        <div class="maispace-consent-banner__actions">
+            <button
+                type="button"
+                class="maispace-consent-banner__btn maispace-consent-banner__btn--primary"
+                data-maispace-consent-action="accept-all"
+            >
+                Accept all
+            </button>
+            <button
+                type="button"
+                class="maispace-consent-banner__btn maispace-consent-banner__btn--secondary"
+                data-maispace-consent-action="reject-all"
+            >
+                Reject all
+            </button>
+            <button
+                type="button"
+                class="maispace-consent-banner__btn maispace-consent-banner__btn--outline"
+                data-maispace-consent-action="open-modal"
+            >
+                Customize
+            </button>
+        </div>
+    </div>
+</div>
+</html>

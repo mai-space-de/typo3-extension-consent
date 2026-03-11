@@ -1,0 +1,95 @@
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers" data-namespace-typo3-fluid="true">
+<div
+    id="maispace-consent-modal"
+    class="maispace-consent-modal"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="maispace-consent-modal-title"
+    hidden
+>
+    <div class="maispace-consent-modal__backdrop" data-maispace-consent-action="close-modal" aria-hidden="true"></div>
+    <div class="maispace-consent-modal__dialog">
+        <div class="maispace-consent-modal__header">
+            <h2 id="maispace-consent-modal-title" class="maispace-consent-modal__title">
+                Manage Cookie Preferences
+            </h2>
+            <button
+                type="button"
+                class="maispace-consent-modal__close"
+                data-maispace-consent-action="close-modal"
+                aria-label="Close"
+            >
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+
+        <div class="maispace-consent-modal__body">
+            <p class="maispace-consent-modal__intro">
+                Select which categories of cookies you consent to. Essential cookies cannot be disabled
+                as they are required for the website to function.
+            </p>
+
+            <div class="maispace-consent-modal__categories">
+                <f:for each="{categories}" as="category">
+                    <div class="maispace-consent-modal__category">
+                        <div class="maispace-consent-modal__category-header">
+                            <label
+                                class="maispace-consent-modal__category-label"
+                                for="maispace-consent-category-{category.uid}"
+                            >
+                                <input
+                                    type="checkbox"
+                                    id="maispace-consent-category-{category.uid}"
+                                    class="maispace-consent-modal__category-checkbox"
+                                    data-maispace-consent-category="{category.uid}"
+                                    <f:if condition="{category.isEssential}">
+                                        disabled="disabled"
+                                        checked="checked"
+                                    </f:if>
+                                />
+                                <span class="maispace-consent-modal__category-name">
+                                    {category.name}
+                                    <f:if condition="{category.isEssential}">
+                                        <span class="maispace-consent-modal__category-badge">Essential</span>
+                                    </f:if>
+                                </span>
+                            </label>
+                        </div>
+                        <f:if condition="{settings.modal.showCategoryDescriptions}">
+                            <f:if condition="{category.description}">
+                                <p class="maispace-consent-modal__category-description">
+                                    {category.description}
+                                </p>
+                            </f:if>
+                        </f:if>
+                    </div>
+                </f:for>
+            </div>
+        </div>
+
+        <div class="maispace-consent-modal__footer">
+            <button
+                type="button"
+                class="maispace-consent-modal__btn maispace-consent-modal__btn--primary"
+                data-maispace-consent-action="save-preferences"
+            >
+                Save preferences
+            </button>
+            <button
+                type="button"
+                class="maispace-consent-modal__btn maispace-consent-modal__btn--secondary"
+                data-maispace-consent-action="accept-all"
+            >
+                Accept all
+            </button>
+            <button
+                type="button"
+                class="maispace-consent-modal__btn maispace-consent-modal__btn--outline"
+                data-maispace-consent-action="reject-all"
+            >
+                Reject all
+            </button>
+        </div>
+    </div>
+</div>
+</html>

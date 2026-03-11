@@ -1,0 +1,12 @@
+# maispace/consent - Consent Management for TYPO3 with Cookie Banner and Consent Modal
+
+Features: 
+
+* Add additional fields to all content elements in the TYPO3 backend to allow editors to assign content elements to a specific consent category. (multiple categories can be assigned)
+* Add a cookie banner to the frontend that allows users to give or revoke their consent for specific categories of content. The cookie banner should be customizable in terms of design and text.
+* Add a consent modal that allows users to manage their consent preferences in more detail. The consent modal should be accessible from the cookie banner and should allow users to see which content elements are assigned to which categories, and to give or revoke their consent for each category individually.
+* Store the user's consent preferences in a cookie and use this information to determine which content elements should be displayed to the user based on their consent preferences. If a user has not given consent for a specific category, the content elements assigned to that category should be hidden from the user.
+* Provide a backend module for administrators to manage the consent categories and to view statistics about user consent preferences. The backend module should allow administrators to create and edit consent categories, and to view statistics about how many users have given or revoked their consent for each category. The statistics should be presented in a clear and easy-to-understand format, such as charts or tables.
+* Ensure that the extension is compliant with relevant data protection regulations, such as the GDPR, and that it provides users with clear and transparent information about how their data is being used and how they can manage their consent preferences.
+* Provide documentation for the extension, including installation instructions, configuration options, and usage guidelines. The documentation should be clear and easy to understand, and should include examples of how to use the extension in different scenarios.
+* Ensure that the extension is compatible with the latest version of TYPO3 and that it follows best practices for TYPO3 extension development, including using the appropriate APIs and adhering to TYPO3 coding standards. The extension should also be tested thoroughly to ensure that it works as expected and does not cause any issues with other extensions or the TYPO3 core.
