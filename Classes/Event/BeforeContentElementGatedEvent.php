@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Maispace\MaispaceConsent\Event;
 
@@ -8,6 +8,9 @@ final class BeforeContentElementGatedEvent
 {
     private bool $skip;
 
+    /**
+     * @param int[] $categoryUids
+     */
     public function __construct(
         private readonly int $contentElementUid,
         private array $categoryUids,
@@ -21,11 +24,17 @@ final class BeforeContentElementGatedEvent
         return $this->contentElementUid;
     }
 
+    /**
+     * @return int[]
+     */
     public function getCategoryUids(): array
     {
         return $this->categoryUids;
     }
 
+    /**
+     * @param int[] $categoryUids
+     */
     public function setCategoryUids(array $categoryUids): void
     {
         $this->categoryUids = $categoryUids;

@@ -1,6 +1,6 @@
 # maispace/consent - Consent Management for TYPO3 with Cookie Banner and Consent Modal
 
-Features: 
+Features:
 
 * Add additional fields to all content elements in the TYPO3 backend to allow editors to assign content elements to a specific consent category. (multiple categories can be assigned)
 * Add a cookie banner to the frontend that allows users to give or revoke their consent for specific categories of content. The cookie banner should be customizable in terms of design and text.

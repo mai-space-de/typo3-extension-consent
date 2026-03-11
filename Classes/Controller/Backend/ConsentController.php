@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Maispace\MaispaceConsent\Controller\Backend;
 
@@ -23,7 +23,8 @@ class ConsentController
         private readonly StatisticRepository $statisticRepository,
         private readonly ModuleTemplateFactory $moduleTemplateFactory,
         private readonly UriBuilder $uriBuilder,
-    ) {}
+    ) {
+    }
 
     public function indexAction(ServerRequestInterface $request): ResponseInterface
     {
@@ -36,8 +37,6 @@ class ConsentController
             'categories'    => $categories,
             'statisticsUri' => (string)$this->uriBuilder->buildUriFromRoute('maispace_consent.statistics'),
         ]);
-
-        $moduleTemplate->setContent($view->render());
 
         return $moduleTemplate->renderResponse('Backend/Index');
     }
@@ -74,8 +73,6 @@ class ConsentController
             'indexUri'       => (string)$this->uriBuilder->buildUriFromRoute('maispace_consent'),
         ]);
 
-        $moduleTemplate->setContent($view->render());
-
         return $moduleTemplate->renderResponse('Backend/Statistics');
     }
 
@@ -84,8 +81,8 @@ class ConsentController
         $parsedBody = $request->getParsedBody();
 
         if (is_array($parsedBody)) {
-            $name = trim((string)($parsedBody['name'] ?? ''));
-            $description = trim((string)($parsedBody['description'] ?? ''));
+            $name = trim(is_string($parsedBody['name'] ?? null) ? $parsedBody['name'] : '');
+            $description = trim(is_string($parsedBody['description'] ?? null) ? $parsedBody['description'] : '');
             $isEssential = isset($parsedBody['is_essential']) && (bool)$parsedBody['is_essential'];
 
             if ($name !== '') {
@@ -104,9 +101,9 @@ class ConsentController
         $parsedBody = $request->getParsedBody();
 
         if (is_array($parsedBody)) {
-            $uid = (int)($parsedBody['uid'] ?? 0);
-            $name = trim((string)($parsedBody['name'] ?? ''));
-            $description = trim((string)($parsedBody['description'] ?? ''));
+            $uid = is_numeric($parsedBody['uid'] ?? null) ? (int)$parsedBody['uid'] : 0;
+            $name = trim(is_string($parsedBody['name'] ?? null) ? $parsedBody['name'] : '');
+            $description = trim(is_string($parsedBody['description'] ?? null) ? $parsedBody['description'] : '');
             $isEssential = isset($parsedBody['is_essential']) && (bool)$parsedBody['is_essential'];
 
             if ($uid > 0 && $name !== '') {
@@ -125,7 +122,7 @@ class ConsentController
         $parsedBody = $request->getParsedBody();
 
         if (is_array($parsedBody)) {
-            $uid = (int)($parsedBody['uid'] ?? 0);
+            $uid = is_numeric($parsedBody['uid'] ?? null) ? (int)$parsedBody['uid'] : 0;
 
             if ($uid > 0) {
                 $this->categoryService->deleteCategory($uid);

@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Maispace\MaispaceConsent\Service;
 
@@ -11,7 +11,8 @@ class CategoryService
 {
     public function __construct(
         private readonly CategoryRepository $categoryRepository,
-    ) {}
+    ) {
+    }
 
     /**
      * @return Category[]
@@ -28,7 +29,7 @@ class CategoryService
     {
         return array_filter(
             $this->categoryRepository->findAll(),
-            static fn(Category $category) => $category->isEssential()
+            static fn (Category $category) => $category->isEssential()
         );
     }
 

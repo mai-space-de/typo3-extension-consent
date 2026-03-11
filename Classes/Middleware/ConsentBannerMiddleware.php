@@ -1,12 +1,13 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Maispace\MaispaceConsent\Middleware;
 
 use Maispace\MaispaceConsent\Domain\Model\Category;
 use Maispace\MaispaceConsent\Event\AfterBannerRenderedEvent;
 use Maispace\MaispaceConsent\Event\BeforeBannerRenderedEvent;
+use Maispace\MaispaceConsent\Service\BannerRenderer;
 use Maispace\MaispaceConsent\Service\CategoryService;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -14,18 +15,15 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use TYPO3\CMS\Core\Http\Stream;
-use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
-use TYPO3\CMS\Core\Utility\PathUtility;
-use TYPO3\CMS\Fluid\View\StandaloneView;
 
 class ConsentBannerMiddleware implements MiddlewareInterface
 {
-    private const EXT_KEY = 'maispace_consent';
-
     public function __construct(
         private readonly CategoryService $categoryService,
         private readonly EventDispatcherInterface $eventDispatcher,
-    ) {}
+        private readonly BannerRenderer $bannerRenderer,
+    ) {
+    }
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
@@ -36,9 +34,15 @@ class ConsentBannerMiddleware implements MiddlewareInterface
             return $response;
         }
 
+        $body = (string)$response->getBody();
+
+        if (!str_contains($body, '</body>')) {
+            return $response;
+        }
+
         $categories = $this->categoryService->getAllCategories();
 
-        $categoriesData = array_map(static fn(Category $c) => [
+        $categoriesData = array_map(static fn (Category $c) => [
             'uid'         => $c->getUid(),
             'name'        => $c->getName(),
             'isEssential' => $c->isEssential(),
@@ -62,29 +66,9 @@ class ConsentBannerMiddleware implements MiddlewareInterface
 
         $variables = $beforeEvent->getVariables();
 
-        $extPath = ExtensionManagementUtility::extPath(self::EXT_KEY);
-
-        $bannerView = new StandaloneView();
-        $bannerView->setTemplatePathAndFilename(
-            $extPath . 'Resources/Private/Partials/Consent/Banner.html'
-        );
-        $bannerView->setPartialRootPaths([$extPath . 'Resources/Private/Partials/']);
-        $bannerView->setLayoutRootPaths([$extPath . 'Resources/Private/Layouts/']);
-        $bannerView->assignMultiple($variables);
-        $bannerHtml = $bannerView->render();
-
-        $modalView = new StandaloneView();
-        $modalView->setTemplatePathAndFilename(
-            $extPath . 'Resources/Private/Partials/Consent/Modal.html'
-        );
-        $modalView->setPartialRootPaths([$extPath . 'Resources/Private/Partials/']);
-        $modalView->setLayoutRootPaths([$extPath . 'Resources/Private/Layouts/']);
-        $modalView->assignMultiple($variables);
-        $modalHtml = $modalView->render();
-
-        $jsPath = PathUtility::getAbsoluteWebPath(
-            $extPath . 'Resources/Public/JavaScript/consent.js'
-        );
+        $bannerHtml = $this->bannerRenderer->renderBannerHtml($variables);
+        $modalHtml = $this->bannerRenderer->renderModalHtml($variables);
+        $jsPath = $this->bannerRenderer->getJsPath();
 
         $categoriesJson = json_encode($categoriesData, JSON_THROW_ON_ERROR);
 
@@ -104,12 +88,6 @@ class ConsentBannerMiddleware implements MiddlewareInterface
         /** @var AfterBannerRenderedEvent $afterEvent */
         $afterEvent = $this->eventDispatcher->dispatch($afterEvent);
         $injection = $afterEvent->getHtml();
-
-        $body = (string)$response->getBody();
-
-        if (!str_contains($body, '</body>')) {
-            return $response;
-        }
 
         $modifiedBody = str_replace('</body>', $injection . '</body>', $body);
 

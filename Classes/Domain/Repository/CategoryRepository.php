@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Maispace\MaispaceConsent\Domain\Repository;
 
@@ -13,7 +13,8 @@ class CategoryRepository
 
     public function __construct(
         private readonly ConnectionPool $connectionPool,
-    ) {}
+    ) {
+    }
 
     /**
      * Returns all non-deleted, non-hidden categories ordered by sorting.
@@ -34,7 +35,7 @@ class CategoryRepository
             ->executeQuery()
             ->fetchAllAssociative();
 
-        return array_map(static fn(array $row) => Category::fromRow($row), $rows);
+        return array_map(static fn (array $row) => Category::fromRow($row), $rows);
     }
 
     public function findByUid(int $uid): ?Category
@@ -115,7 +116,7 @@ class CategoryRepository
             $connection->update(
                 self::TABLE,
                 ['sorting' => $sorting],
-                ['uid' => (int)$uid]
+                ['uid'     => (int)$uid]
             );
         }
     }

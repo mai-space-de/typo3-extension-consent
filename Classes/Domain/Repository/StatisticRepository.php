@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Maispace\MaispaceConsent\Domain\Repository;
 
@@ -12,7 +12,8 @@ class StatisticRepository
 
     public function __construct(
         private readonly ConnectionPool $connectionPool,
-    ) {}
+    ) {
+    }
 
     public function record(int $categoryUid, bool $accepted): void
     {

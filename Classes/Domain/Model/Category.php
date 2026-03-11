@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Maispace\MaispaceConsent\Domain\Model;
 
@@ -13,6 +13,9 @@ class Category
     private bool $isEssential = false;
     private int $sorting = 0;
 
+    /**
+     * @param array{uid?: int|string, pid?: int|string, name?: string, description?: string, is_essential?: int|string|bool, sorting?: int|string} $row
+     */
     public static function fromRow(array $row): self
     {
         $category = new self();

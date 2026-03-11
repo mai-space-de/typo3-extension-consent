@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Maispace\MaispaceConsent\Service;
 
@@ -20,7 +20,7 @@ class ConsentCookieService
         $cookies = $request->getCookieParams();
         $cookieValue = $cookies[self::COOKIE_NAME] ?? '';
 
-        if ($cookieValue === '') {
+        if (!is_string($cookieValue) || $cookieValue === '') {
             return [];
         }
 
@@ -41,7 +41,7 @@ class ConsentCookieService
      * Returns true only if every category UID in $categoryUids has a decision (true or false) in $preferences.
      *
      * @param array<int|string, bool> $preferences
-     * @param int[] $categoryUids
+     * @param int[]                   $categoryUids
      */
     public function areAllDecided(array $preferences, array $categoryUids): bool
     {
@@ -61,7 +61,7 @@ class ConsentCookieService
      */
     public function buildCookieValue(array $preferences): string
     {
-        $encoded = json_encode($preferences);
+        $encoded = json_encode($preferences, JSON_FORCE_OBJECT);
 
         return $encoded !== false ? $encoded : '{}';
     }

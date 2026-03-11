@@ -1,12 +1,11 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Maispace\MaispaceConsent\Tests\Unit\Service;
 
 use Maispace\MaispaceConsent\Service\ConsentCookieService;
 use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;

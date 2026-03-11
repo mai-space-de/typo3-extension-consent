@@ -1,11 +1,10 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Maispace\MaispaceConsent\Middleware;
 
 use Maispace\MaispaceConsent\Domain\Repository\StatisticRepository;
-use Maispace\MaispaceConsent\Service\ConsentCookieService;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -18,8 +17,8 @@ class ConsentRecordMiddleware implements MiddlewareInterface
 
     public function __construct(
         private readonly StatisticRepository $statisticRepository,
-        private readonly ConsentCookieService $consentCookieService,
-    ) {}
+    ) {
+    }
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
