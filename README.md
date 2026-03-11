@@ -20,8 +20,8 @@ A TYPO3 extension that adds a cookie banner and consent modal to the frontend, l
 | Consent modal for per-category preference management | Triggered from banner |
 | Consent preferences stored in a first-party cookie | `maispace_consent` cookie |
 | Content elements hidden until consent is granted | DataProcessor + JavaScript runtime |
-| JavaScript runtime for full client-side consent UX | `Resources/Public/JavaScript/consent.js` |
-| CSS styling for banner, modal and placeholder | `Resources/Public/Css/consent.css` |
+| JavaScript runtime for full client-side consent UX | `Resources/Public/JavaScript/consent.js` (registered via `maispace/assets` ViewHelpers) |
+| CSS styling for banner, modal and placeholder | `Resources/Public/Css/consent.css` (registered via `maispace/assets` ViewHelpers) |
 | Backend module for managing categories | `Web > Consent` module |
 | Consent statistics per category (tables + progress bar) | Backend module dashboard |
 | CSV export of consent statistics | One-click download from statistics view |
@@ -43,7 +43,9 @@ Include the TypoScript setup in your site package:
 @import 'EXT:maispace_consent/Configuration/TypoScript/setup.typoscript'
 ```
 
-The cookie banner, CSS, JavaScript and middleware are registered automatically — no manual PageRenderer wiring required.
+The cookie banner and middleware are registered automatically. CSS and JavaScript are
+included via [`maispace/assets`](https://github.com/mai-space-de/typo3-extension-assets)
+ViewHelpers through TYPO3's AssetCollector — no manual PageRenderer wiring required.
 
 Run the Database Analyser in **Admin Tools → Database Analyser** to create the two extension tables after installation.
 

@@ -10,6 +10,7 @@
         }
     ],
     "require": {
+        "maispace/assets": "^13.1",
         "php": "^8.2",
         "typo3/cms-core": "^13.4"
     },

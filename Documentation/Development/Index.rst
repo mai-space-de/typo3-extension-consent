@@ -92,28 +92,21 @@ push and pull request:
 Adding a custom JavaScript
 ==========================
 
-The extension ships ``Resources/Public/JavaScript/consent.js`` which is
-loaded as a plain ``<script defer>`` tag.  The script element carries the
-configuration in ``data-*`` attributes:
+Frontend assets (CSS and JavaScript) are registered via the ``<mai:css>``
+and ``<mai:js>`` ViewHelpers from the ``maispace/assets`` package.  The
+extension ships
+``EXT:maispace_consent/Resources/Private/Templates/Frontend/Assets.html``
+which is rendered through a ``page.8 = FLUIDTEMPLATE`` TypoScript object.
 
-.. list-table::
-   :header-rows: 1
-   :widths: 40 60
+Runtime configuration is passed from ``ConsentBannerMiddleware`` via an
+inline JSON element rather than ``data-*`` attributes, so the script can
+be registered through the AssetCollector without any custom script tag:
 
-   * - Attribute
-     - Default value
-   * - ``data-cookie-name``
-     - ``maispace_consent``
-   * - ``data-cookie-lifetime``
-     - ``365``
-   * - ``data-record-endpoint``
-     - ``/maispace/consent/record``
+.. code-block:: html
 
-The script is identified by ``id="maispace-consent-script"`` so the runtime
-can read these attributes even inside a deferred script.
-
-To replace the runtime entirely, override ``BannerRenderer::getJsPath()``
-via Dependency Injection decoration.
+   <script type="application/json" id="maispace-consent-config">
+     {"cookieName":"maispace_consent","cookieLifetime":365,"recordEndpoint":"/maispace/consent/record"}
+   </script>
 
 Cookie structure
 ================

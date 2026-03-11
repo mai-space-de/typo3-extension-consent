@@ -3,21 +3,46 @@
  *
  * Reads consent cookie, shows/hides the banner, drives the modal,
  * applies content-element gating and POSTs statistics to the record endpoint.
+ *
+ * Configuration is read from the JSON element injected by ConsentBannerMiddleware:
+ *   <script type="application/json" id="maispace-consent-config">
+ *     {"cookieName":"maispace_consent","cookieLifetime":365,"recordEndpoint":"/maispace/consent/record"}
+ *   </script>
+ *
+ * CSS and JavaScript are registered with TYPO3's AssetCollector via
+ * <mai:css> / <mai:js> ViewHelpers from the maispace/assets extension
+ * (rendered during normal TYPO3 page rendering via TypoScript page.8).
  */
 (function () {
     'use strict';
 
     // -------------------------------------------------------------------------
-    // Bootstrap — locate the injected script element to read configuration
+    // Bootstrap — read runtime configuration from the injected JSON element
     // -------------------------------------------------------------------------
-    const scriptEl = document.getElementById('maispace-consent-script');
-    if (!scriptEl) {
+    const configEl = document.getElementById('maispace-consent-config');
+    if (!configEl) {
         return;
     }
 
-    const cookieName = scriptEl.dataset.cookieName || 'maispace_consent';
-    const cookieLifetime = parseInt(scriptEl.dataset.cookieLifetime || '365', 10);
-    const recordEndpoint = scriptEl.dataset.recordEndpoint || '/maispace/consent/record';
+    let parsedConfig;
+    try {
+        parsedConfig = JSON.parse(configEl.textContent || '{}');
+    } catch (e) {
+        return;
+    }
+    const runtimeConfig = (parsedConfig && typeof parsedConfig === 'object' && !Array.isArray(parsedConfig))
+        ? parsedConfig
+        : {};
+
+    const cookieName = (typeof runtimeConfig.cookieName === 'string' && runtimeConfig.cookieName)
+        ? runtimeConfig.cookieName
+        : 'maispace_consent';
+    const cookieLifetime = (typeof runtimeConfig.cookieLifetime === 'number' && runtimeConfig.cookieLifetime > 0)
+        ? runtimeConfig.cookieLifetime
+        : 365;
+    const recordEndpoint = (typeof runtimeConfig.recordEndpoint === 'string' && runtimeConfig.recordEndpoint)
+        ? runtimeConfig.recordEndpoint
+        : '/maispace/consent/record';
 
     // Read category definitions from the embedded JSON element
     const categoriesEl = document.getElementById('maispace-consent-categories');

@@ -135,14 +135,25 @@ under that path to replace the default templates.
 CSS and JavaScript
 ==================
 
-The extension injects its stylesheet and JavaScript automatically via the
-``ConsentBannerMiddleware``.  To use your own styles, suppress the default
-CSS by overriding the ``BannerRenderer::getCssPath()`` method via a
-Dependency Injection decoration, or simply add your own stylesheet after the
-default one.
+Frontend assets are registered with TYPO3's **AssetCollector** via the
+`<mai:css>` and `<mai:js>` ViewHelpers from the `maispace/assets` package.
+The extension ships a dedicated Fluid template that is rendered as a TypoScript
+``FLUIDTEMPLATE`` object during normal TYPO3 page rendering:
 
-The stylesheet is injected as a ``<link>`` tag before ``</head>`` and the
-JavaScript as a deferred ``<script>`` tag before ``</body>``.
+.. code-block:: typoscript
+
+   page.8 = FLUIDTEMPLATE
+   page.8 {
+       file = EXT:maispace_consent/Resources/Private/Templates/Frontend/Assets.html
+   }
+
+This ensures the stylesheet is placed in ``<head>`` and the deferred script in
+the footer — both with proper caching — before the
+``ConsentBannerMiddleware`` injects the banner/modal HTML.
+
+Override the default stylesheet or script by registering your own TypoScript
+``page.includeCSS`` / ``page.includeJSFooter`` entries at a higher priority,
+or by wrapping the ``page.8`` object with a condition.
 
 Internationalisation
 ====================
