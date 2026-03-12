@@ -51,8 +51,14 @@ class ConsentBannerMiddleware implements MiddlewareInterface
         $variables = [
             'categories' => $categories,
             'settings'   => [
+                'cookie' => [
+                    'name'     => 'maispace_consent',
+                    'lifetime' => 365,
+                    'sameSite' => 'Lax',
+                ],
                 'banner' => ['position' => 'bottom'],
                 'modal'  => ['showCategoryDescriptions' => 1],
+                'record' => ['endpoint' => '/maispace/consent/record'],
             ],
         ];
 
@@ -69,12 +75,30 @@ class ConsentBannerMiddleware implements MiddlewareInterface
         $bannerHtml = $this->bannerRenderer->renderBannerHtml($variables);
         $modalHtml = $this->bannerRenderer->renderModalHtml($variables);
 
-        $categoriesJson = json_encode($categoriesData, JSON_THROW_ON_ERROR);
+        // Extract runtime-configurable values from settings (may be overridden by event listeners).
+        $settings = is_array($variables['settings'] ?? null) ? $variables['settings'] : [];
+        $cookieSettings = is_array($settings['cookie'] ?? null) ? $settings['cookie'] : [];
+        $recordSettings = is_array($settings['record'] ?? null) ? $settings['record'] : [];
+
+        $cookieName = (is_string($cookieSettings['name'] ?? null) && $cookieSettings['name'] !== '')
+            ? $cookieSettings['name'] : 'maispace_consent';
+        $cookieLifetime = (is_int($cookieSettings['lifetime'] ?? null) && $cookieSettings['lifetime'] > 0)
+            ? $cookieSettings['lifetime'] : 365;
+        $cookieSameSite = (is_string($cookieSettings['sameSite'] ?? null) && $cookieSettings['sameSite'] !== '')
+            ? $cookieSettings['sameSite'] : 'Lax';
+        $recordEndpoint = (is_string($recordSettings['endpoint'] ?? null) && $recordSettings['endpoint'] !== '')
+            ? $recordSettings['endpoint'] : '/maispace/consent/record';
+
+        // JSON_HEX_TAG converts < and > to Unicode escapes, preventing </script> injection.
+        $jsonFlags = JSON_THROW_ON_ERROR | JSON_HEX_TAG;
+
+        $categoriesJson = json_encode($categoriesData, $jsonFlags);
         $configJson = json_encode([
-            'cookieName'      => 'maispace_consent',
-            'cookieLifetime'  => 365,
-            'recordEndpoint'  => '/maispace/consent/record',
-        ], JSON_THROW_ON_ERROR);
+            'cookieName'      => $cookieName,
+            'cookieLifetime'  => $cookieLifetime,
+            'cookieSameSite'  => $cookieSameSite,
+            'recordEndpoint'  => $recordEndpoint,
+        ], $jsonFlags);
 
         $injection = "\n"
             . '<script type="application/json" id="maispace-consent-config">'

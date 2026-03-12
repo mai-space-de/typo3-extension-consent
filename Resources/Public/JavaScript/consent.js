@@ -40,6 +40,9 @@
     const cookieLifetime = (typeof runtimeConfig.cookieLifetime === 'number' && runtimeConfig.cookieLifetime > 0)
         ? runtimeConfig.cookieLifetime
         : 365;
+    const cookieSameSite = (typeof runtimeConfig.cookieSameSite === 'string' && runtimeConfig.cookieSameSite)
+        ? runtimeConfig.cookieSameSite
+        : 'Lax';
     const recordEndpoint = (typeof runtimeConfig.recordEndpoint === 'string' && runtimeConfig.recordEndpoint)
         ? runtimeConfig.recordEndpoint
         : '/maispace/consent/record';
@@ -84,11 +87,14 @@
     function setCookie(name, value, days) {
         const expires = new Date();
         expires.setDate(expires.getDate() + days);
+        // SameSite=None requires the Secure flag; fall back to Lax if not on HTTPS.
+        const isSecure = location.protocol === 'https:';
+        const effectiveSameSite = (cookieSameSite === 'None' && !isSecure) ? 'Lax' : cookieSameSite;
         let cookie =
             name + '=' + encodeURIComponent(value) +
             '; expires=' + expires.toUTCString() +
-            '; path=/; SameSite=Lax';
-        if (location.protocol === 'https:') {
+            '; path=/; SameSite=' + effectiveSameSite;
+        if (isSecure) {
             cookie += '; Secure';
         }
         document.cookie = cookie;

@@ -48,6 +48,7 @@ final class ConsentGatingProcessorTest extends TestCase
         self::assertFalse($result['maispace_consent']['isGated']);
         self::assertSame([], $result['maispace_consent']['categoryUids']);
         self::assertSame('', $result['maispace_consent']['categoryList']);
+        self::assertFalse($result['maispace_consent']['showPlaceholder']);
     }
 
     #[Test]
@@ -66,6 +67,29 @@ final class ConsentGatingProcessorTest extends TestCase
         self::assertTrue($result['maispace_consent']['isGated']);
         self::assertSame([2, 3], $result['maispace_consent']['categoryUids']);
         self::assertSame('2,3', $result['maispace_consent']['categoryList']);
+        self::assertFalse($result['maispace_consent']['showPlaceholder']);
+    }
+
+    #[Test]
+    public function setsGatedWithPlaceholderWhenProcessorConfigEnablesIt(): void
+    {
+        $this->eventDispatcher
+            ->expects(self::once())
+            ->method('dispatch')
+            ->willReturnArgument(0);
+
+        $cObj = $this->createMock(ContentObjectRenderer::class);
+        $processedData = $this->buildProcessedData(5, '2');
+        $processorConfig = [
+            'placeholder'        => '1',
+            'placeholderPartial' => 'Custom/Placeholder',
+        ];
+
+        $result = $this->subject->process($cObj, [], $processorConfig, $processedData);
+
+        self::assertTrue($result['maispace_consent']['isGated']);
+        self::assertTrue($result['maispace_consent']['showPlaceholder']);
+        self::assertSame('Custom/Placeholder', $result['maispace_consent']['placeholderPartial']);
     }
 
     #[Test]
@@ -87,6 +111,28 @@ final class ConsentGatingProcessorTest extends TestCase
 
         self::assertFalse($result['maispace_consent']['isGated']);
         self::assertSame([], $result['maispace_consent']['categoryUids']);
+    }
+
+    #[Test]
+    public function setsNotGatedWhenEventEmptiesCategoryUids(): void
+    {
+        $this->eventDispatcher
+            ->expects(self::once())
+            ->method('dispatch')
+            ->willReturnCallback(static function (BeforeContentElementGatedEvent $event) {
+                $event->setCategoryUids([]);
+
+                return $event;
+            });
+
+        $cObj = $this->createMock(ContentObjectRenderer::class);
+        $processedData = $this->buildProcessedData(10, '1,2');
+
+        $result = $this->subject->process($cObj, [], [], $processedData);
+
+        self::assertFalse($result['maispace_consent']['isGated']);
+        self::assertSame([], $result['maispace_consent']['categoryUids']);
+        self::assertSame('', $result['maispace_consent']['categoryList']);
     }
 
     #[Test]

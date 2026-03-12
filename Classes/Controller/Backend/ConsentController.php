@@ -155,7 +155,7 @@ class ConsentController
 
             $lines[] = implode(',', [
                 $uid,
-                '"' . str_replace('"', '""', $category->getName()) . '"',
+                '"' . str_replace('"', '""', $this->sanitizeCsvValue($category->getName())) . '"',
                 $category->isEssential() ? 'yes' : 'no',
                 $counts['accepted'],
                 $counts['rejected'],
@@ -177,6 +177,19 @@ class ConsentController
             ->withHeader('Content-Disposition', 'attachment; filename="' . $filename . '"')
             ->withHeader('Cache-Control', 'no-cache, no-store, must-revalidate')
             ->withBody($stream);
+    }
+
+    /**
+     * Prefix cell values that start with formula-triggering characters (=, +, -, @, |, %)
+     * to prevent CSV/spreadsheet formula injection (CWE-1236).
+     */
+    private function sanitizeCsvValue(string $value): string
+    {
+        if ($value !== '' && str_contains('=+-@|%', $value[0])) {
+            return "'" . $value;
+        }
+
+        return $value;
     }
 
     private function createView(string $template): StandaloneView

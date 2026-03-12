@@ -46,6 +46,13 @@ class ConsentGatingProcessor implements DataProcessorInterface
         array $processorConfiguration,
         array $processedData,
     ): array {
+        $showPlaceholder = isset($processorConfiguration['placeholder'])
+            && (bool)$processorConfiguration['placeholder'];
+        $placeholderPartial = (is_string($processorConfiguration['placeholderPartial'] ?? null)
+            && $processorConfiguration['placeholderPartial'] !== '')
+            ? $processorConfiguration['placeholderPartial']
+            : 'Consent/Placeholder';
+
         $row = is_array($processedData['data'] ?? null) ? $processedData['data'] : [];
         $rawCategories = $row[self::FIELD_CATEGORIES] ?? '';
 
@@ -55,9 +62,11 @@ class ConsentGatingProcessor implements DataProcessorInterface
 
         if ($categoryUids === []) {
             $processedData['maispace_consent'] = [
-                'isGated'      => false,
-                'categoryUids' => [],
-                'categoryList' => '',
+                'isGated'            => false,
+                'categoryUids'       => [],
+                'categoryList'       => '',
+                'showPlaceholder'    => false,
+                'placeholderPartial' => $placeholderPartial,
             ];
 
             return $processedData;
@@ -71,9 +80,11 @@ class ConsentGatingProcessor implements DataProcessorInterface
 
         if ($event->shouldSkip()) {
             $processedData['maispace_consent'] = [
-                'isGated'      => false,
-                'categoryUids' => [],
-                'categoryList' => '',
+                'isGated'            => false,
+                'categoryUids'       => [],
+                'categoryList'       => '',
+                'showPlaceholder'    => false,
+                'placeholderPartial' => $placeholderPartial,
             ];
 
             return $processedData;
@@ -81,10 +92,26 @@ class ConsentGatingProcessor implements DataProcessorInterface
 
         $resolvedUids = $event->getCategoryUids();
 
+        // If a listener empties the UID list, treat as not-gated to avoid
+        // permanently-hidden content with no path to become visible.
+        if ($resolvedUids === []) {
+            $processedData['maispace_consent'] = [
+                'isGated'            => false,
+                'categoryUids'       => [],
+                'categoryList'       => '',
+                'showPlaceholder'    => false,
+                'placeholderPartial' => $placeholderPartial,
+            ];
+
+            return $processedData;
+        }
+
         $processedData['maispace_consent'] = [
-            'isGated'      => true,
-            'categoryUids' => $resolvedUids,
-            'categoryList' => implode(',', $resolvedUids),
+            'isGated'            => true,
+            'categoryUids'       => $resolvedUids,
+            'categoryList'       => implode(',', $resolvedUids),
+            'showPlaceholder'    => $showPlaceholder,
+            'placeholderPartial' => $placeholderPartial,
         ];
 
         return $processedData;

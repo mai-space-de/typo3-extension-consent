@@ -8,6 +8,11 @@
         >
             <f:render section="Main" />
         </div>
+        <f:if condition="{maispace_consent.showPlaceholder}">
+            <div data-maispace-consent-placeholder="{data.uid}" hidden="hidden">
+                <f:render partial="{maispace_consent.placeholderPartial}" arguments="{data: data}" />
+            </div>
+        </f:if>
     </f:then>
     <f:else>
         <f:render section="Main" />

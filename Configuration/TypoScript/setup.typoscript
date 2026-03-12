@@ -44,8 +44,15 @@ page.8 {
 lib.contentElement {
     dataProcessing {
         200 = Maispace\MaispaceConsent\DataProcessing\ConsentGatingProcessor
+        200 {
+            placeholder = 0
+            placeholderPartial = Consent/Placeholder
+        }
     }
     layoutRootPaths {
         50 = EXT:maispace_consent/Resources/Private/Layouts/ContentElements/
+    }
+    partialRootPaths {
+        50 = EXT:maispace_consent/Resources/Private/Partials/
     }
 }

@@ -155,6 +155,102 @@ final class ConsentBannerMiddlewareTest extends TestCase
     }
 
     #[Test]
+    public function injectsConfigJsonWithSettingsOverridableViaEvent(): void
+    {
+        $request = $this->createMock(ServerRequestInterface::class);
+
+        $htmlBody = '<html><body></body></html>';
+        $stream = $this->createMock(StreamInterface::class);
+        $stream->method('__toString')->willReturn($htmlBody);
+
+        $capturedBody = '';
+
+        $originalResponse = $this->createMock(ResponseInterface::class);
+        $originalResponse->method('getHeaderLine')->willReturn('text/html');
+        $originalResponse->method('getBody')->willReturn($stream);
+        $originalResponse->method('withBody')->willReturnCallback(
+            static function (\Psr\Http\Message\StreamInterface $s) use (&$capturedBody, $originalResponse) {
+                $capturedBody = (string)$s;
+
+                return $originalResponse;
+            }
+        );
+
+        $handler = $this->createMock(RequestHandlerInterface::class);
+        $handler->method('handle')->willReturn($originalResponse);
+
+        $this->categoryService->method('getAllCategories')->willReturn([]);
+
+        // Event listener overrides the cookie name
+        $this->eventDispatcher
+            ->method('dispatch')
+            ->willReturnCallback(static function (object $event) {
+                if ($event instanceof \Maispace\MaispaceConsent\Event\BeforeBannerRenderedEvent) {
+                    $vars = $event->getVariables();
+                    $vars['settings']['cookie']['name'] = 'custom_cookie';
+                    $event->setVariables($vars);
+                }
+
+                return $event;
+            });
+
+        $this->bannerRenderer->method('renderBannerHtml')->willReturn('');
+        $this->bannerRenderer->method('renderModalHtml')->willReturn('');
+
+        $this->subject->process($request, $handler);
+
+        self::assertStringContainsString('"cookieName":"custom_cookie"', $capturedBody);
+    }
+
+    #[Test]
+    public function encodesJsonWithHexTagFlagToPreventXss(): void
+    {
+        $request = $this->createMock(ServerRequestInterface::class);
+
+        $htmlBody = '<html><body></body></html>';
+        $stream = $this->createMock(StreamInterface::class);
+        $stream->method('__toString')->willReturn($htmlBody);
+
+        $capturedBody = '';
+
+        $originalResponse = $this->createMock(ResponseInterface::class);
+        $originalResponse->method('getHeaderLine')->willReturn('text/html');
+        $originalResponse->method('getBody')->willReturn($stream);
+        $originalResponse->method('withBody')->willReturnCallback(
+            static function (\Psr\Http\Message\StreamInterface $s) use (&$capturedBody, $originalResponse) {
+                $capturedBody = (string)$s;
+
+                return $originalResponse;
+            }
+        );
+
+        $handler = $this->createMock(RequestHandlerInterface::class);
+        $handler->method('handle')->willReturn($originalResponse);
+
+        // Category with a name containing </script> to test XSS encoding
+        $category = Category::fromRow([
+            'uid'          => 1,
+            'pid'          => 0,
+            'name'         => '</script><script>alert(1)',
+            'description'  => '',
+            'is_essential' => 0,
+            'sorting'      => 0,
+        ]);
+
+        $this->categoryService->method('getAllCategories')->willReturn([$category]);
+        $this->eventDispatcher->method('dispatch')->willReturnArgument(0);
+        $this->bannerRenderer->method('renderBannerHtml')->willReturn('');
+        $this->bannerRenderer->method('renderModalHtml')->willReturn('');
+
+        $this->subject->process($request, $handler);
+
+        // The literal </script> must not appear in the JSON output
+        self::assertStringNotContainsString('</script>', $capturedBody);
+        // Instead, < and > are Unicode-escaped by JSON_HEX_TAG
+        self::assertStringContainsString('\u003C', $capturedBody);
+    }
+
+    #[Test]
     public function skipsInjectionWhenBannerEventIsDisabled(): void
     {
         $request = $this->createMock(ServerRequestInterface::class);
