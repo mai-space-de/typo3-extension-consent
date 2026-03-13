@@ -11,6 +11,8 @@ use TYPO3\CMS\Fluid\View\StandaloneView;
 class BannerRenderer
 {
     private const EXT_KEY = 'maispace_consent';
+    private const DEFAULT_PARTIALS_SUBPATH = 'Resources/Private/Partials/';
+    private const DEFAULT_LAYOUTS_SUBPATH  = 'Resources/Private/Layouts/';
 
     /**
      * @param array<string, mixed> $variables
@@ -22,15 +24,15 @@ class BannerRenderer
 
         $partialRootPaths = $this->resolveRootPaths(
             $viewSettings['partialRootPaths'] ?? [],
-            $extPath . 'Resources/Private/Partials/'
+            $extPath . self::DEFAULT_PARTIALS_SUBPATH
         );
         $layoutRootPaths = $this->resolveRootPaths(
             $viewSettings['layoutRootPaths'] ?? [],
-            $extPath . 'Resources/Private/Layouts/'
+            $extPath . self::DEFAULT_LAYOUTS_SUBPATH
         );
 
         $templateFile = $this->resolveOverridableTemplate($partialRootPaths, 'Consent/Banner.html')
-            ?? $extPath . 'Resources/Private/Partials/Consent/Banner.html';
+            ?? $extPath . self::DEFAULT_PARTIALS_SUBPATH . 'Consent/Banner.html';
 
         $view = new StandaloneView();
         $view->setTemplatePathAndFilename($templateFile);
@@ -53,15 +55,15 @@ class BannerRenderer
 
         $partialRootPaths = $this->resolveRootPaths(
             $viewSettings['partialRootPaths'] ?? [],
-            $extPath . 'Resources/Private/Partials/'
+            $extPath . self::DEFAULT_PARTIALS_SUBPATH
         );
         $layoutRootPaths = $this->resolveRootPaths(
             $viewSettings['layoutRootPaths'] ?? [],
-            $extPath . 'Resources/Private/Layouts/'
+            $extPath . self::DEFAULT_LAYOUTS_SUBPATH
         );
 
         $templateFile = $this->resolveOverridableTemplate($partialRootPaths, 'Consent/Modal.html')
-            ?? $extPath . 'Resources/Private/Partials/Consent/Modal.html';
+            ?? $extPath . self::DEFAULT_PARTIALS_SUBPATH . 'Consent/Modal.html';
 
         $view = new StandaloneView();
         $view->setTemplatePathAndFilename($templateFile);
@@ -115,7 +117,11 @@ class BannerRenderer
                 continue;
             }
             if (str_starts_with($path, 'EXT:')) {
-                $path = (string)GeneralUtility::getFileAbsFileName($path);
+                $resolvedPath = GeneralUtility::getFileAbsFileName($path);
+                if ($resolvedPath === false || $resolvedPath === '') {
+                    continue;
+                }
+                $path = $resolvedPath;
             }
             if ($path !== '') {
                 $resolved[] = rtrim($path, '/') . '/';

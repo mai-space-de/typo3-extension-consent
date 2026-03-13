@@ -16,6 +16,16 @@ class ConsentSettingsService
     private const TS_PLUGIN_KEY = 'tx_maispace_consent.';
 
     /**
+     * Maps TypoScript view path keys (with trailing dot) to the corresponding
+     * settings array key (without trailing dot).
+     */
+    private const VIEW_PATH_KEYS = [
+        'templateRootPaths.' => 'templateRootPaths',
+        'partialRootPaths.'  => 'partialRootPaths',
+        'layoutRootPaths.'   => 'layoutRootPaths',
+    ];
+
+    /**
      * Returns the effective settings for the current request.
      *
      * Settings are read from the TypoScript setup attribute attached to the
@@ -166,7 +176,7 @@ class ConsentSettingsService
         // view.* — handle path arrays (templateRootPaths, partialRootPaths, layoutRootPaths)
         if (isset($ts['view.']) && is_array($ts['view.'])) {
             $v = $ts['view.'];
-            foreach (['templateRootPaths.' => 'templateRootPaths', 'partialRootPaths.' => 'partialRootPaths', 'layoutRootPaths.' => 'layoutRootPaths'] as $tsKey => $settingsKey) {
+            foreach (self::VIEW_PATH_KEYS as $tsKey => $settingsKey) {
                 if (!isset($v[$tsKey]) || !is_array($v[$tsKey])) {
                     continue;
                 }
