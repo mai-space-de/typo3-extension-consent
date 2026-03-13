@@ -35,9 +35,10 @@ class ConsentGatingProcessor implements DataProcessorInterface
     }
 
     /**
-     * @param array<string, mixed>                 $contentObjectConfiguration
-     * @param array<string, mixed>                 $processorConfiguration
-     * @param array<string, mixed>                 $processedData
+     * @param array<string, mixed> $contentObjectConfiguration
+     * @param array<string, mixed> $processorConfiguration
+     * @param array<string, mixed> $processedData
+     *
      * @return array<string, mixed>
      */
     public function process(
@@ -57,7 +58,7 @@ class ConsentGatingProcessor implements DataProcessorInterface
         $rawCategories = $row[self::FIELD_CATEGORIES] ?? '';
 
         $categoryUids = $this->parseCategoryUids(
-            is_string($rawCategories) ? $rawCategories : (string)$rawCategories
+            is_string($rawCategories) ? $rawCategories : ''
         );
 
         if ($categoryUids === []) {
@@ -72,7 +73,8 @@ class ConsentGatingProcessor implements DataProcessorInterface
             return $processedData;
         }
 
-        $contentElementUid = is_int($row['uid'] ?? null) ? $row['uid'] : (int)($row['uid'] ?? 0);
+        $uidValue = $row['uid'] ?? null;
+        $contentElementUid = is_int($uidValue) ? $uidValue : 0;
 
         $event = new BeforeContentElementGatedEvent($contentElementUid, $categoryUids);
         /** @var BeforeContentElementGatedEvent $event */
