@@ -8,6 +8,7 @@ use Maispace\MaispaceConsent\Domain\Model\Category;
 use Maispace\MaispaceConsent\Middleware\ConsentBannerMiddleware;
 use Maispace\MaispaceConsent\Service\BannerRenderer;
 use Maispace\MaispaceConsent\Service\CategoryService;
+use Maispace\MaispaceConsent\Service\ConsentSettingsService;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -24,6 +25,7 @@ final class ConsentBannerMiddlewareTest extends TestCase
     private CategoryService&MockObject $categoryService;
     private EventDispatcherInterface&MockObject $eventDispatcher;
     private BannerRenderer&MockObject $bannerRenderer;
+    private ConsentSettingsService&MockObject $consentSettingsService;
     private ConsentBannerMiddleware $subject;
 
     protected function setUp(): void
@@ -31,11 +33,29 @@ final class ConsentBannerMiddlewareTest extends TestCase
         $this->categoryService = $this->createMock(CategoryService::class);
         $this->eventDispatcher = $this->createMock(EventDispatcherInterface::class);
         $this->bannerRenderer = $this->createMock(BannerRenderer::class);
+        $this->consentSettingsService = $this->createMock(ConsentSettingsService::class);
+
+        // Default: banner enabled, sane settings
+        $this->consentSettingsService
+            ->method('getSettings')
+            ->willReturn([
+                'cookie'     => ['name' => 'maispace_consent', 'lifetime' => 365, 'sameSite' => 'Lax'],
+                'banner'     => ['enable' => 1, 'position' => 'bottom', 'showOnEveryPage' => 0],
+                'modal'      => ['showCategoryDescriptions' => 1],
+                'record'     => ['endpoint' => '/maispace/consent/record'],
+                'statistics' => ['enable' => 1, 'retentionDays' => 90],
+                'view'       => [
+                    'templateRootPaths' => ['0' => 'EXT:maispace_consent/Resources/Private/Templates/'],
+                    'partialRootPaths'  => ['0' => 'EXT:maispace_consent/Resources/Private/Partials/'],
+                    'layoutRootPaths'   => ['0' => 'EXT:maispace_consent/Resources/Private/Layouts/'],
+                ],
+            ]);
 
         $this->subject = new ConsentBannerMiddleware(
             $this->categoryService,
             $this->eventDispatcher,
             $this->bannerRenderer,
+            $this->consentSettingsService,
         );
     }
 
@@ -283,5 +303,100 @@ final class ConsentBannerMiddlewareTest extends TestCase
 
         // Original response returned (no modification)
         self::assertSame($response, $result);
+    }
+
+    #[Test]
+    public function skipsInjectionWhenBannerEnableIsZeroInSettings(): void
+    {
+        $this->consentSettingsService = $this->createMock(ConsentSettingsService::class);
+        $this->consentSettingsService
+            ->method('getSettings')
+            ->willReturn([
+                'banner' => ['enable' => 0, 'position' => 'bottom', 'showOnEveryPage' => 0],
+            ]);
+
+        $subject = new ConsentBannerMiddleware(
+            $this->categoryService,
+            $this->eventDispatcher,
+            $this->bannerRenderer,
+            $this->consentSettingsService,
+        );
+
+        $htmlBody = '<html><body><p>Content</p></body></html>';
+        $stream = $this->createMock(StreamInterface::class);
+        $stream->method('__toString')->willReturn($htmlBody);
+
+        $response = $this->createMock(ResponseInterface::class);
+        $response->method('getHeaderLine')->with('Content-Type')->willReturn('text/html');
+        $response->method('getBody')->willReturn($stream);
+
+        $request = $this->createMock(ServerRequestInterface::class);
+
+        $handler = $this->createMock(RequestHandlerInterface::class);
+        $handler->method('handle')->willReturn($response);
+
+        $this->categoryService->expects(self::never())->method('getAllCategories');
+
+        $result = $subject->process($request, $handler);
+
+        self::assertSame($response, $result);
+    }
+
+    #[Test]
+    public function injectsShowOnEveryPageInConfigJson(): void
+    {
+        $this->consentSettingsService = $this->createMock(ConsentSettingsService::class);
+        $this->consentSettingsService
+            ->method('getSettings')
+            ->willReturn([
+                'cookie'     => ['name' => 'maispace_consent', 'lifetime' => 365, 'sameSite' => 'Lax'],
+                'banner'     => ['enable' => 1, 'position' => 'bottom', 'showOnEveryPage' => 1],
+                'modal'      => ['showCategoryDescriptions' => 1],
+                'record'     => ['endpoint' => '/maispace/consent/record'],
+                'statistics' => ['enable' => 1, 'retentionDays' => 90],
+                'view'       => [
+                    'templateRootPaths' => ['0' => 'EXT:maispace_consent/Resources/Private/Templates/'],
+                    'partialRootPaths'  => ['0' => 'EXT:maispace_consent/Resources/Private/Partials/'],
+                    'layoutRootPaths'   => ['0' => 'EXT:maispace_consent/Resources/Private/Layouts/'],
+                ],
+            ]);
+
+        $subject = new ConsentBannerMiddleware(
+            $this->categoryService,
+            $this->eventDispatcher,
+            $this->bannerRenderer,
+            $this->consentSettingsService,
+        );
+
+        $htmlBody = '<html><body></body></html>';
+        $stream = $this->createMock(StreamInterface::class);
+        $stream->method('__toString')->willReturn($htmlBody);
+
+        $capturedBody = '';
+
+        $originalResponse = $this->createMock(ResponseInterface::class);
+        $originalResponse->method('getHeaderLine')->willReturn('text/html');
+        $originalResponse->method('getBody')->willReturn($stream);
+        $originalResponse->method('withBody')->willReturnCallback(
+            static function (StreamInterface $s) use (&$capturedBody, $originalResponse) {
+                $capturedBody = (string)$s;
+
+                return $originalResponse;
+            }
+        );
+
+        $request = $this->createMock(ServerRequestInterface::class);
+
+        $handler = $this->createMock(RequestHandlerInterface::class);
+        $handler->method('handle')->willReturn($originalResponse);
+
+        $this->categoryService->method('getAllCategories')->willReturn([]);
+        $this->eventDispatcher->method('dispatch')->willReturnArgument(0);
+        $this->bannerRenderer->method('renderBannerHtml')->willReturn('');
+        $this->bannerRenderer->method('renderModalHtml')->willReturn('');
+
+        $subject->process($request, $handler);
+
+        self::assertStringContainsString('"showOnEveryPage":true', $capturedBody);
     }
 }
