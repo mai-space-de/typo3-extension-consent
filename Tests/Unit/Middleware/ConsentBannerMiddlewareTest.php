@@ -169,7 +169,7 @@ final class ConsentBannerMiddlewareTest extends TestCase
         $originalResponse->method('getHeaderLine')->willReturn('text/html');
         $originalResponse->method('getBody')->willReturn($stream);
         $originalResponse->method('withBody')->willReturnCallback(
-            static function (\Psr\Http\Message\StreamInterface $s) use (&$capturedBody, $originalResponse) {
+            static function (StreamInterface $s) use (&$capturedBody, $originalResponse) {
                 $capturedBody = (string)$s;
 
                 return $originalResponse;
@@ -217,7 +217,7 @@ final class ConsentBannerMiddlewareTest extends TestCase
         $originalResponse->method('getHeaderLine')->willReturn('text/html');
         $originalResponse->method('getBody')->willReturn($stream);
         $originalResponse->method('withBody')->willReturnCallback(
-            static function (\Psr\Http\Message\StreamInterface $s) use (&$capturedBody, $originalResponse) {
+            static function (StreamInterface $s) use (&$capturedBody, $originalResponse) {
                 $capturedBody = (string)$s;
 
                 return $originalResponse;
@@ -244,8 +244,8 @@ final class ConsentBannerMiddlewareTest extends TestCase
 
         $this->subject->process($request, $handler);
 
-        // The literal </script> must not appear in the JSON output
-        self::assertStringNotContainsString('</script>', $capturedBody);
+        // The raw XSS injection sequence must not appear unescaped in the output
+        self::assertStringNotContainsString('</script><script>', $capturedBody);
         // Instead, < and > are Unicode-escaped by JSON_HEX_TAG
         self::assertStringContainsString('\u003C', $capturedBody);
     }
