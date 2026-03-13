@@ -169,6 +169,47 @@ final class ConsentSettingsServiceTest extends TestCase
     }
 
     #[Test]
+    public function typoScriptViewPathsWithIntegerKeysAreAccepted(): void
+    {
+        // PHP may store TypoScript numeric indices as integers, not strings
+        $tsPlugin = [
+            'view.' => [
+                'partialRootPaths.' => [
+                    0  => 'EXT:maispace_consent/Resources/Private/Partials/',
+                    10 => 'EXT:my_sitepackage/Resources/Private/Partials/',
+                ],
+            ],
+        ];
+
+        $settings = $this->subject->getSettings($this->buildRequest($tsPlugin));
+
+        self::assertArrayHasKey('0', $settings['view']['partialRootPaths']);
+        self::assertArrayHasKey('10', $settings['view']['partialRootPaths']);
+    }
+
+    #[Test]
+    public function retentionDaysNonNumericValueIsIgnored(): void
+    {
+        $tsPlugin = ['statistics.' => ['retentionDays' => 'invalid']];
+
+        $settings = $this->subject->getSettings($this->buildRequest($tsPlugin));
+
+        // Non-numeric value must not override the 90-day default
+        self::assertSame(90, $settings['statistics']['retentionDays']);
+    }
+
+    #[Test]
+    public function retentionDaysZeroIsAccepted(): void
+    {
+        // retentionDays = 0 means "keep forever" and is a valid override
+        $tsPlugin = ['statistics.' => ['retentionDays' => '0']];
+
+        $settings = $this->subject->getSettings($this->buildRequest($tsPlugin));
+
+        self::assertSame(0, $settings['statistics']['retentionDays']);
+    }
+
+    #[Test]
     public function cookieLifetimeZeroOrNegativeIsIgnored(): void
     {
         $tsPlugin = ['cookie.' => ['lifetime' => '0']];

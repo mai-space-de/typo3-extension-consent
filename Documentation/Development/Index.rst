@@ -109,7 +109,7 @@ be registered through the AssetCollector without any custom script tag:
 .. code-block:: html
 
    <script type="application/json" id="maispace-consent-config">
-     {"cookieName":"maispace_consent","cookieLifetime":365,"recordEndpoint":"/maispace/consent/record","showOnEveryPage":false}
+     {"cookieName":"maispace_consent","cookieLifetime":365,"cookieSameSite":"Lax","recordEndpoint":"/maispace/consent/record","showOnEveryPage":false}
    </script>
 
 Cookie structure

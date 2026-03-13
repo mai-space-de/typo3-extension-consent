@@ -168,7 +168,7 @@ class ConsentSettingsService
             if (array_key_exists('enable', $s)) {
                 $result['statistics']['enable'] = (int)$s['enable'];
             }
-            if (array_key_exists('retentionDays', $s)) {
+            if (array_key_exists('retentionDays', $s) && is_numeric($s['retentionDays']) && (int)$s['retentionDays'] >= 0) {
                 $result['statistics']['retentionDays'] = (int)$s['retentionDays'];
             }
         }
@@ -182,9 +182,12 @@ class ConsentSettingsService
                 }
                 $paths = [];
                 foreach ($v[$tsKey] as $idx => $path) {
-                    // Skip dot-suffix keys (sub-objects) and non-string values
-                    if (is_string($idx) && !str_ends_with($idx, '.') && is_string($path) && $path !== '') {
-                        $paths[$idx] = $path;
+                    // Accept both integer and string indices; skip dot-suffix sub-object keys
+                    if (is_string($idx) && str_ends_with($idx, '.')) {
+                        continue;
+                    }
+                    if (is_string($path) && $path !== '') {
+                        $paths[(string)$idx] = $path;
                     }
                 }
                 if ($paths !== []) {

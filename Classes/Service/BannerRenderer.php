@@ -95,19 +95,17 @@ class BannerRenderer
      * Converts a settings path array (keyed by TypoScript index) to an ordered
      * list of resolved absolute filesystem paths.
      *
-     * The default path is prepended at the lowest priority so that site-package
-     * overrides at index 10, 20, etc. take precedence.
+     * The default extension path is always prepended at the lowest priority so
+     * that Fluid can fall back to the built-in templates even when a site
+     * package provides only partial overrides.  Site-package overrides at
+     * higher indices take precedence over lower ones.
      *
      * @param array<string, string> $configuredPaths  e.g. ['0' => 'EXT:...', '10' => 'EXT:...']
-     * @param string $defaultPath  Absolute fallback path
+     * @param string $defaultPath  Absolute fallback path (always included)
      * @return string[]
      */
     private function resolveRootPaths(array $configuredPaths, string $defaultPath): array
     {
-        if ($configuredPaths === []) {
-            return [$defaultPath];
-        }
-
         // Sort by key ascending so higher indices override lower ones
         ksort($configuredPaths);
 
@@ -123,12 +121,20 @@ class BannerRenderer
                 }
                 $path = $resolvedPath;
             }
-            if ($path !== '') {
-                $resolved[] = rtrim($path, '/') . '/';
+            if ($path === '') {
+                continue;
             }
+            $normalised = rtrim($path, '/') . '/';
+            $resolved[] = $normalised;
         }
 
-        return $resolved !== [] ? $resolved : [$defaultPath];
+        // Always ensure the default path is present (at lowest priority)
+        $normalisedDefault = rtrim($defaultPath, '/') . '/';
+        if (!in_array($normalisedDefault, $resolved, true)) {
+            array_unshift($resolved, $normalisedDefault);
+        }
+
+        return $resolved;
     }
 
     /**
