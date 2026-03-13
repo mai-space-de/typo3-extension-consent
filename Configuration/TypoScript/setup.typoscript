@@ -32,3 +32,27 @@ plugin.tx_maispace_consent {
         }
     }
 }
+
+# Register consent CSS and JS via maispace/assets ViewHelpers during normal page rendering.
+# The ViewHelpers use TYPO3's AssetCollector so assets are placed in <head>/<footer>
+# before the ConsentBannerMiddleware injects the banner/modal HTML.
+page.8 = FLUIDTEMPLATE
+page.8 {
+    file = EXT:maispace_consent/Resources/Private/Templates/Frontend/Assets.html
+}
+
+lib.contentElement {
+    dataProcessing {
+        200 = Maispace\MaispaceConsent\DataProcessing\ConsentGatingProcessor
+        200 {
+            placeholder = 0
+            placeholderPartial = Consent/Placeholder
+        }
+    }
+    layoutRootPaths {
+        50 = EXT:maispace_consent/Resources/Private/Layouts/ContentElements/
+    }
+    partialRootPaths {
+        50 = EXT:maispace_consent/Resources/Private/Partials/
+    }
+}

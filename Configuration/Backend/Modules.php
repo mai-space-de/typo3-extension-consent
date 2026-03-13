@@ -27,6 +27,9 @@ return [
             'deleteCategory' => [
                 'target' => \Maispace\MaispaceConsent\Controller\Backend\ConsentController::class . '::deleteCategoryAction',
             ],
+            'exportStatisticsCsv' => [
+                'target' => \Maispace\MaispaceConsent\Controller\Backend\ConsentController::class . '::exportStatisticsCsvAction',
+            ],
         ],
     ],
 ];

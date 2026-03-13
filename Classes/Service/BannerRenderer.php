@@ -5,7 +5,6 @@ declare(strict_types = 1);
 namespace Maispace\MaispaceConsent\Service;
 
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
-use TYPO3\CMS\Core\Utility\PathUtility;
 use TYPO3\CMS\Fluid\View\StandaloneView;
 
 class BannerRenderer
@@ -46,12 +45,5 @@ class BannerRenderer
         $html = $view->render();
 
         return is_string($html) ? $html : '';
-    }
-
-    public function getJsPath(): string
-    {
-        $extPath = ExtensionManagementUtility::extPath(self::EXT_KEY);
-
-        return PathUtility::getAbsoluteWebPath($extPath . 'Resources/Public/JavaScript/consent.js');
     }
 }

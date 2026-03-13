@@ -1,0 +1,422 @@
+/**
+ * Maispace Consent — frontend styles
+ *
+ * Provides positioning for the banner, overlay for the modal and basic
+ * responsive layout.  All selectors are namespaced with `.maispace-consent-`
+ * so they do not interfere with the host site's styles.
+ */
+
+/* -------------------------------------------------------------------------- */
+/* Banner                                                                      */
+/* -------------------------------------------------------------------------- */
+
+.maispace-consent-banner {
+    position: fixed;
+    z-index: 9999;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 1rem;
+    background: #fff;
+    border-top: 1px solid #dee2e6;
+    box-shadow: 0 -2px 8px rgba(0, 0, 0, .12);
+    font-family: inherit;
+    font-size: .9375rem;
+    line-height: 1.5;
+    color: #212529;
+}
+
+.maispace-consent-banner--top {
+    top: 0;
+    bottom: auto;
+    border-top: none;
+    border-bottom: 1px solid #dee2e6;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, .12);
+}
+
+.maispace-consent-banner--bottom-left {
+    bottom: 1rem;
+    left: 1rem;
+    right: auto;
+    max-width: 400px;
+    border-radius: .5rem;
+    border: 1px solid #dee2e6;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, .15);
+}
+
+.maispace-consent-banner--bottom-right {
+    bottom: 1rem;
+    right: 1rem;
+    left: auto;
+    max-width: 400px;
+    border-radius: .5rem;
+    border: 1px solid #dee2e6;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, .15);
+}
+
+.maispace-consent-banner__inner {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: .75rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.maispace-consent-banner__content {
+    flex: 1 1 300px;
+}
+
+.maispace-consent-banner__title {
+    margin: 0 0 .25rem;
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.maispace-consent-banner__description {
+    margin: 0;
+    font-size: .875rem;
+    color: #495057;
+}
+
+.maispace-consent-banner__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .5rem;
+    align-items: center;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Modal                                                                       */
+/* -------------------------------------------------------------------------- */
+
+.maispace-consent-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: inherit;
+    font-size: .9375rem;
+    line-height: 1.5;
+    color: #212529;
+}
+
+.maispace-consent-modal__backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, .5);
+    cursor: pointer;
+}
+
+.maispace-consent-modal__dialog {
+    position: relative;
+    z-index: 1;
+    background: #fff;
+    border-radius: .5rem;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, .2);
+    width: 90%;
+    max-width: 600px;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.maispace-consent-modal__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid #dee2e6;
+    flex-shrink: 0;
+}
+
+.maispace-consent-modal__title {
+    margin: 0;
+    font-size: 1.125rem;
+    font-weight: 600;
+}
+
+.maispace-consent-modal__close {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    padding: 0;
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: .25rem;
+    cursor: pointer;
+    font-size: 1.25rem;
+    line-height: 1;
+    color: #6c757d;
+    transition: color .15s, border-color .15s;
+}
+
+.maispace-consent-modal__close:hover,
+.maispace-consent-modal__close:focus {
+    color: #212529;
+    border-color: #adb5bd;
+    outline: none;
+}
+
+.maispace-consent-modal__body {
+    padding: 1.25rem;
+    overflow-y: auto;
+    flex: 1 1 auto;
+}
+
+.maispace-consent-modal__intro {
+    margin: 0 0 1rem;
+    font-size: .875rem;
+    color: #495057;
+}
+
+.maispace-consent-modal__categories {
+    display: flex;
+    flex-direction: column;
+    gap: .75rem;
+}
+
+.maispace-consent-modal__category {
+    padding: .75rem 1rem;
+    background: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: .375rem;
+}
+
+.maispace-consent-modal__category-header {
+    display: flex;
+    align-items: flex-start;
+}
+
+.maispace-consent-modal__category-label {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    cursor: pointer;
+    font-weight: 500;
+    margin: 0;
+}
+
+.maispace-consent-modal__category-label input[type="checkbox"]:disabled {
+    cursor: not-allowed;
+    opacity: .6;
+}
+
+.maispace-consent-modal__category-label input[type="checkbox"]:disabled + .maispace-consent-modal__category-name {
+    cursor: not-allowed;
+    opacity: .7;
+}
+
+.maispace-consent-modal__category-checkbox {
+    width: 1.125rem;
+    height: 1.125rem;
+    flex-shrink: 0;
+    cursor: pointer;
+    accent-color: #0d6efd;
+}
+
+.maispace-consent-modal__category-name {
+    display: flex;
+    align-items: center;
+    gap: .375rem;
+    font-size: .9375rem;
+}
+
+.maispace-consent-modal__category-badge {
+    display: inline-block;
+    padding: .125rem .4rem;
+    font-size: .75rem;
+    font-weight: 600;
+    border-radius: .25rem;
+    background: #198754;
+    color: #fff;
+    vertical-align: middle;
+}
+
+.maispace-consent-modal__category-description {
+    margin: .375rem 0 0 1.625rem;
+    font-size: .8125rem;
+    color: #6c757d;
+}
+
+.maispace-consent-modal__footer {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .5rem;
+    padding: 1rem 1.25rem;
+    border-top: 1px solid #dee2e6;
+    flex-shrink: 0;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Shared buttons                                                              */
+/* -------------------------------------------------------------------------- */
+
+.maispace-consent-banner__btn,
+.maispace-consent-modal__btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: .4375rem 1rem;
+    font-size: .875rem;
+    font-weight: 500;
+    line-height: 1.5;
+    border-radius: .375rem;
+    border: 1px solid transparent;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background-color .15s, color .15s, border-color .15s, box-shadow .15s;
+    text-decoration: none;
+}
+
+/* Primary — filled */
+.maispace-consent-banner__btn--primary,
+.maispace-consent-modal__btn--primary {
+    background-color: #0d6efd;
+    border-color: #0d6efd;
+    color: #fff;
+}
+
+.maispace-consent-banner__btn--primary:hover,
+.maispace-consent-banner__btn--primary:focus,
+.maispace-consent-modal__btn--primary:hover,
+.maispace-consent-modal__btn--primary:focus {
+    background-color: #0b5ed7;
+    border-color: #0a58ca;
+    color: #fff;
+    outline: none;
+}
+
+/* Secondary — outlined */
+.maispace-consent-banner__btn--secondary,
+.maispace-consent-modal__btn--secondary {
+    background-color: #6c757d;
+    border-color: #6c757d;
+    color: #fff;
+}
+
+.maispace-consent-banner__btn--secondary:hover,
+.maispace-consent-banner__btn--secondary:focus,
+.maispace-consent-modal__btn--secondary:hover,
+.maispace-consent-modal__btn--secondary:focus {
+    background-color: #5c636a;
+    border-color: #565e64;
+    color: #fff;
+    outline: none;
+}
+
+/* Outline — ghost */
+.maispace-consent-banner__btn--outline,
+.maispace-consent-modal__btn--outline {
+    background-color: transparent;
+    border-color: #6c757d;
+    color: #6c757d;
+}
+
+.maispace-consent-banner__btn--outline:hover,
+.maispace-consent-banner__btn--outline:focus,
+.maispace-consent-modal__btn--outline:hover,
+.maispace-consent-modal__btn--outline:focus {
+    background-color: #6c757d;
+    border-color: #6c757d;
+    color: #fff;
+    outline: none;
+}
+
+/* Focus rings for keyboard navigation */
+.maispace-consent-banner__btn:focus-visible,
+.maispace-consent-modal__btn:focus-visible,
+.maispace-consent-modal__close:focus-visible,
+.maispace-consent-modal__category-checkbox:focus-visible {
+    box-shadow: 0 0 0 .25rem rgba(13, 110, 253, .25);
+    outline: none;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Placeholder for gated content                                               */
+/* -------------------------------------------------------------------------- */
+
+.maispace-consent-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 1rem;
+    background: #f8f9fa;
+    border: 2px dashed #dee2e6;
+    border-radius: .5rem;
+    text-align: center;
+    color: #6c757d;
+}
+
+.maispace-consent-placeholder p {
+    margin: 0 0 .75rem;
+    font-size: .9375rem;
+}
+
+.maispace-consent-placeholder button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: .4375rem 1rem;
+    font-size: .875rem;
+    font-weight: 500;
+    line-height: 1.5;
+    border-radius: .375rem;
+    border: 1px solid #0d6efd;
+    background: transparent;
+    color: #0d6efd;
+    cursor: pointer;
+    transition: background-color .15s, color .15s;
+}
+
+.maispace-consent-placeholder button:hover,
+.maispace-consent-placeholder button:focus {
+    background-color: #0d6efd;
+    color: #fff;
+    outline: none;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Responsive adjustments                                                      */
+/* -------------------------------------------------------------------------- */
+
+@media (max-width: 575.98px) {
+    .maispace-consent-banner__inner {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .maispace-consent-banner__actions {
+        width: 100%;
+    }
+
+    .maispace-consent-banner__btn {
+        flex: 1 1 auto;
+        text-align: center;
+    }
+
+    .maispace-consent-modal__footer {
+        flex-direction: column;
+    }
+
+    .maispace-consent-modal__btn {
+        width: 100%;
+    }
+}
+
+/* -------------------------------------------------------------------------- */
+/* Print — hide consent UI                                                     */
+/* -------------------------------------------------------------------------- */
+
+@media print {
+    .maispace-consent-banner,
+    .maispace-consent-modal {
+        display: none !important;
+    }
+}

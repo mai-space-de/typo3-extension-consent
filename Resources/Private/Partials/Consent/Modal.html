@@ -11,13 +11,13 @@
     <div class="maispace-consent-modal__dialog">
         <div class="maispace-consent-modal__header">
             <h2 id="maispace-consent-modal-title" class="maispace-consent-modal__title">
-                Manage Cookie Preferences
+                <f:translate key="LLL:EXT:maispace_consent/Resources/Private/Language/locallang_fe.xlf:modal.title" default="Manage Cookie Preferences" />
             </h2>
             <button
                 type="button"
                 class="maispace-consent-modal__close"
                 data-maispace-consent-action="close-modal"
-                aria-label="Close"
+                aria-label="{f:translate(key: 'LLL:EXT:maispace_consent/Resources/Private/Language/locallang_fe.xlf:modal.close', default: 'Close')}"
             >
                 <span aria-hidden="true">&times;</span>
             </button>
@@ -25,8 +25,7 @@
 
         <div class="maispace-consent-modal__body">
             <p class="maispace-consent-modal__intro">
-                Select which categories of cookies you consent to. Essential cookies cannot be disabled
-                as they are required for the website to function.
+                <f:translate key="LLL:EXT:maispace_consent/Resources/Private/Language/locallang_fe.xlf:modal.intro" default="Select which categories of cookies you consent to. Essential cookies cannot be disabled as they are required for the website to function." />
             </p>
 
             <div class="maispace-consent-modal__categories">
@@ -50,7 +49,9 @@
                                 <span class="maispace-consent-modal__category-name">
                                     {category.name}
                                     <f:if condition="{category.isEssential}">
-                                        <span class="maispace-consent-modal__category-badge">Essential</span>
+                                        <span class="maispace-consent-modal__category-badge">
+                                            <f:translate key="LLL:EXT:maispace_consent/Resources/Private/Language/locallang_fe.xlf:modal.essential" default="Essential" />
+                                        </span>
                                     </f:if>
                                 </span>
                             </label>
@@ -73,21 +74,21 @@
                 class="maispace-consent-modal__btn maispace-consent-modal__btn--primary"
                 data-maispace-consent-action="save-preferences"
             >
-                Save preferences
+                <f:translate key="LLL:EXT:maispace_consent/Resources/Private/Language/locallang_fe.xlf:modal.savePreferences" default="Save preferences" />
             </button>
             <button
                 type="button"
                 class="maispace-consent-modal__btn maispace-consent-modal__btn--secondary"
                 data-maispace-consent-action="accept-all"
             >
-                Accept all
+                <f:translate key="LLL:EXT:maispace_consent/Resources/Private/Language/locallang_fe.xlf:modal.acceptAll" default="Accept all" />
             </button>
             <button
                 type="button"
                 class="maispace-consent-modal__btn maispace-consent-modal__btn--outline"
                 data-maispace-consent-action="reject-all"
             >
-                Reject all
+                <f:translate key="LLL:EXT:maispace_consent/Resources/Private/Language/locallang_fe.xlf:modal.rejectAll" default="Reject all" />
             </button>
         </div>
     </div>
