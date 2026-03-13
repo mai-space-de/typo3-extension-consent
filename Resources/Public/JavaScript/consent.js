@@ -46,6 +46,7 @@
     const recordEndpoint = (typeof runtimeConfig.recordEndpoint === 'string' && runtimeConfig.recordEndpoint)
         ? runtimeConfig.recordEndpoint
         : '/maispace/consent/record';
+    const showOnEveryPage = runtimeConfig.showOnEveryPage === true;
 
     // Read category definitions from the embedded JSON element
     const categoriesEl = document.getElementById('maispace-consent-categories');
@@ -359,7 +360,7 @@
         const prefs = getPreferences();
         applyGating(prefs);
 
-        if (!areAllDecided(prefs)) {
+        if (!areAllDecided(prefs) || showOnEveryPage) {
             showBanner();
         }
     }

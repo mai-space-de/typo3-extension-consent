@@ -5,6 +5,7 @@ declare(strict_types = 1);
 namespace Maispace\MaispaceConsent\Middleware;
 
 use Maispace\MaispaceConsent\Domain\Repository\StatisticRepository;
+use Maispace\MaispaceConsent\Service\ConsentSettingsService;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -17,6 +18,7 @@ class ConsentRecordMiddleware implements MiddlewareInterface
 
     public function __construct(
         private readonly StatisticRepository $statisticRepository,
+        private readonly ConsentSettingsService $consentSettingsService,
     ) {
     }
 
@@ -27,6 +29,14 @@ class ConsentRecordMiddleware implements MiddlewareInterface
 
         if ($request->getMethod() !== 'POST' || $path !== self::RECORD_PATH) {
             return $handler->handle($request);
+        }
+
+        $settings = $this->consentSettingsService->getSettings($request);
+        $statisticsSettings = is_array($settings['statistics'] ?? null) ? $settings['statistics'] : [];
+
+        // Honour statistics.enable = 0 TypoScript setting.
+        if ((int)($statisticsSettings['enable'] ?? 1) === 0) {
+            return new JsonResponse(['status' => 'ok']);
         }
 
         $body = (string)$request->getBody();
@@ -44,6 +54,12 @@ class ConsentRecordMiddleware implements MiddlewareInterface
             }
 
             $this->statisticRepository->record((int)$categoryUid, $accepted);
+        }
+
+        // Purge old entries according to statistics.retentionDays.
+        $retentionDays = (int)($statisticsSettings['retentionDays'] ?? 90);
+        if ($retentionDays > 0) {
+            $this->statisticRepository->deleteOldEntries($retentionDays);
         }
 
         return new JsonResponse(['status' => 'ok']);

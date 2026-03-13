@@ -9,6 +9,7 @@ use Maispace\MaispaceConsent\Event\AfterBannerRenderedEvent;
 use Maispace\MaispaceConsent\Event\BeforeBannerRenderedEvent;
 use Maispace\MaispaceConsent\Service\BannerRenderer;
 use Maispace\MaispaceConsent\Service\CategoryService;
+use Maispace\MaispaceConsent\Service\ConsentSettingsService;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -22,6 +23,7 @@ class ConsentBannerMiddleware implements MiddlewareInterface
         private readonly CategoryService $categoryService,
         private readonly EventDispatcherInterface $eventDispatcher,
         private readonly BannerRenderer $bannerRenderer,
+        private readonly ConsentSettingsService $consentSettingsService,
     ) {
     }
 
@@ -40,6 +42,14 @@ class ConsentBannerMiddleware implements MiddlewareInterface
             return $response;
         }
 
+        $settings = $this->consentSettingsService->getSettings($request);
+
+        // Honour the banner.enable = 0 TypoScript setting.
+        $bannerSettings = is_array($settings['banner'] ?? null) ? $settings['banner'] : [];
+        if ((int)($bannerSettings['enable'] ?? 1) === 0) {
+            return $response;
+        }
+
         $categories = $this->categoryService->getAllCategories();
 
         $categoriesData = array_map(static fn (Category $c) => [
@@ -50,16 +60,7 @@ class ConsentBannerMiddleware implements MiddlewareInterface
 
         $variables = [
             'categories' => $categories,
-            'settings'   => [
-                'cookie' => [
-                    'name'     => 'maispace_consent',
-                    'lifetime' => 365,
-                    'sameSite' => 'Lax',
-                ],
-                'banner' => ['position' => 'bottom'],
-                'modal'  => ['showCategoryDescriptions' => 1],
-                'record' => ['endpoint' => '/maispace/consent/record'],
-            ],
+            'settings'   => $settings,
         ];
 
         $beforeEvent = new BeforeBannerRenderedEvent($variables);
@@ -78,6 +79,7 @@ class ConsentBannerMiddleware implements MiddlewareInterface
         // Extract runtime-configurable values from settings (may be overridden by event listeners).
         $settings = is_array($variables['settings'] ?? null) ? $variables['settings'] : [];
         $cookieSettings = is_array($settings['cookie'] ?? null) ? $settings['cookie'] : [];
+        $bannerSettings = is_array($settings['banner'] ?? null) ? $settings['banner'] : [];
         $recordSettings = is_array($settings['record'] ?? null) ? $settings['record'] : [];
 
         $cookieName = (is_string($cookieSettings['name'] ?? null) && $cookieSettings['name'] !== '')
@@ -88,16 +90,18 @@ class ConsentBannerMiddleware implements MiddlewareInterface
             ? $cookieSettings['sameSite'] : 'Lax';
         $recordEndpoint = (is_string($recordSettings['endpoint'] ?? null) && $recordSettings['endpoint'] !== '')
             ? $recordSettings['endpoint'] : '/maispace/consent/record';
+        $showOnEveryPage = (int)($bannerSettings['showOnEveryPage'] ?? 0) === 1;
 
         // JSON_HEX_TAG converts < and > to Unicode escapes, preventing </script> injection.
         $jsonFlags = JSON_THROW_ON_ERROR | JSON_HEX_TAG;
 
         $categoriesJson = json_encode($categoriesData, $jsonFlags);
         $configJson = json_encode([
-            'cookieName'      => $cookieName,
-            'cookieLifetime'  => $cookieLifetime,
-            'cookieSameSite'  => $cookieSameSite,
-            'recordEndpoint'  => $recordEndpoint,
+            'cookieName'        => $cookieName,
+            'cookieLifetime'    => $cookieLifetime,
+            'cookieSameSite'    => $cookieSameSite,
+            'recordEndpoint'    => $recordEndpoint,
+            'showOnEveryPage'   => $showOnEveryPage,
         ], $jsonFlags);
 
         $injection = "\n"

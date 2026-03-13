@@ -34,8 +34,12 @@ required.
      - Cookie parsing, preference read/write, essential category handling
    * - ``Tests/Unit/Service/CategoryServiceTest.php``
      - Category CRUD, ordering, essential flag
+   * - ``Tests/Unit/Service/ConsentSettingsServiceTest.php``
+     - TypoScript settings reading, defaults, value merging
    * - ``Tests/Unit/Middleware/ConsentBannerMiddlewareTest.php``
-     - Banner injection, CSS/JS injection, suppression conditions
+     - Banner injection, CSS/JS injection, suppression conditions, ``banner.enable``
+   * - ``Tests/Unit/Middleware/ConsentRecordMiddlewareTest.php``
+     - Statistics recording, ``statistics.enable``, ``statistics.retentionDays``
    * - ``Tests/Unit/DataProcessing/ConsentGatingProcessorTest.php``
      - Element gating, skip event, category UID override
 
@@ -105,7 +109,7 @@ be registered through the AssetCollector without any custom script tag:
 .. code-block:: html
 
    <script type="application/json" id="maispace-consent-config">
-     {"cookieName":"maispace_consent","cookieLifetime":365,"recordEndpoint":"/maispace/consent/record"}
+     {"cookieName":"maispace_consent","cookieLifetime":365,"cookieSameSite":"Lax","recordEndpoint":"/maispace/consent/record","showOnEveryPage":false}
    </script>
 
 Cookie structure
