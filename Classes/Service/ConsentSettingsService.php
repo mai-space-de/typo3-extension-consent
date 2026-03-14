@@ -99,9 +99,17 @@ class ConsentSettingsService
         }
 
         $setup = $frontendTypoScript->getSetupArray();
-        $plugin = $setup['plugin.'][self::TS_PLUGIN_KEY] ?? null;
+        $pluginSetup = $setup['plugin.'] ?? null;
+        if (!is_array($pluginSetup)) {
+            return [];
+        }
 
-        return is_array($plugin) ? $plugin : [];
+        $plugin = $pluginSetup[self::TS_PLUGIN_KEY] ?? null;
+
+        /** @var array<string, mixed> $result */
+        $result = is_array($plugin) ? $plugin : [];
+
+        return $result;
     }
 
     /**
@@ -111,7 +119,8 @@ class ConsentSettingsService
      * a dot (e.g. `'cookie.'`) and scalar values do not (e.g. `'name'`).
      *
      * @param array<string, mixed> $defaults
-     * @param array<string, mixed> $ts  Raw TypoScript sub-array for plugin.tx_maispace_consent
+     * @param array<string, mixed> $ts       Raw TypoScript sub-array for plugin.tx_maispace_consent
+     *
      * @return array<string, mixed>
      */
     private function applyTypoScriptSettings(array $defaults, array $ts): array
@@ -119,69 +128,80 @@ class ConsentSettingsService
         $result = $defaults;
 
         // cookie.*
-        if (isset($ts['cookie.']) && is_array($ts['cookie.'])) {
-            $c = $ts['cookie.'];
-            if (isset($c['name']) && is_string($c['name']) && $c['name'] !== '') {
-                $result['cookie']['name'] = $c['name'];
+        $cookieTs = $ts['cookie.'] ?? null;
+        if (is_array($cookieTs)) {
+            $name = $cookieTs['name'] ?? null;
+            if (is_string($name) && $name !== '') {
+                $result['cookie']['name'] = $name;
             }
-            if (isset($c['lifetime']) && (int)$c['lifetime'] > 0) {
-                $result['cookie']['lifetime'] = (int)$c['lifetime'];
+            $lifetime = $cookieTs['lifetime'] ?? null;
+            if (is_numeric($lifetime) && (int)$lifetime > 0) {
+                $result['cookie']['lifetime'] = (int)$lifetime;
             }
-            if (isset($c['sameSite']) && is_string($c['sameSite']) && $c['sameSite'] !== '') {
-                $result['cookie']['sameSite'] = $c['sameSite'];
+            $sameSite = $cookieTs['sameSite'] ?? null;
+            if (is_string($sameSite) && $sameSite !== '') {
+                $result['cookie']['sameSite'] = $sameSite;
             }
         }
 
         // banner.*
-        if (isset($ts['banner.']) && is_array($ts['banner.'])) {
-            $b = $ts['banner.'];
-            if (array_key_exists('enable', $b)) {
-                $result['banner']['enable'] = (int)$b['enable'];
+        $bannerTs = $ts['banner.'] ?? null;
+        if (is_array($bannerTs)) {
+            $enable = $bannerTs['enable'] ?? null;
+            if ($enable !== null && is_numeric($enable)) {
+                $result['banner']['enable'] = (int)$enable;
             }
-            if (isset($b['position']) && is_string($b['position']) && $b['position'] !== '') {
-                $result['banner']['position'] = $b['position'];
+            $position = $bannerTs['position'] ?? null;
+            if (is_string($position) && $position !== '') {
+                $result['banner']['position'] = $position;
             }
-            if (array_key_exists('showOnEveryPage', $b)) {
-                $result['banner']['showOnEveryPage'] = (int)$b['showOnEveryPage'];
+            $showOnEveryPage = $bannerTs['showOnEveryPage'] ?? null;
+            if ($showOnEveryPage !== null && is_numeric($showOnEveryPage)) {
+                $result['banner']['showOnEveryPage'] = (int)$showOnEveryPage;
             }
         }
 
         // modal.*
-        if (isset($ts['modal.']) && is_array($ts['modal.'])) {
-            $m = $ts['modal.'];
-            if (array_key_exists('showCategoryDescriptions', $m)) {
-                $result['modal']['showCategoryDescriptions'] = (int)$m['showCategoryDescriptions'];
+        $modalTs = $ts['modal.'] ?? null;
+        if (is_array($modalTs)) {
+            $showCategoryDescriptions = $modalTs['showCategoryDescriptions'] ?? null;
+            if ($showCategoryDescriptions !== null && is_numeric($showCategoryDescriptions)) {
+                $result['modal']['showCategoryDescriptions'] = (int)$showCategoryDescriptions;
             }
         }
 
         // record.*
-        if (isset($ts['record.']) && is_array($ts['record.'])) {
-            $r = $ts['record.'];
-            if (isset($r['endpoint']) && is_string($r['endpoint']) && $r['endpoint'] !== '') {
-                $result['record']['endpoint'] = $r['endpoint'];
+        $recordTs = $ts['record.'] ?? null;
+        if (is_array($recordTs)) {
+            $endpoint = $recordTs['endpoint'] ?? null;
+            if (is_string($endpoint) && $endpoint !== '') {
+                $result['record']['endpoint'] = $endpoint;
             }
         }
 
         // statistics.*
-        if (isset($ts['statistics.']) && is_array($ts['statistics.'])) {
-            $s = $ts['statistics.'];
-            if (array_key_exists('enable', $s)) {
-                $result['statistics']['enable'] = (int)$s['enable'];
+        $statisticsTs = $ts['statistics.'] ?? null;
+        if (is_array($statisticsTs)) {
+            $enable = $statisticsTs['enable'] ?? null;
+            if ($enable !== null && is_numeric($enable)) {
+                $result['statistics']['enable'] = (int)$enable;
             }
-            if (array_key_exists('retentionDays', $s) && is_numeric($s['retentionDays']) && (int)$s['retentionDays'] >= 0) {
-                $result['statistics']['retentionDays'] = (int)$s['retentionDays'];
+            $retentionDays = $statisticsTs['retentionDays'] ?? null;
+            if ($retentionDays !== null && is_numeric($retentionDays) && (int)$retentionDays >= 0) {
+                $result['statistics']['retentionDays'] = (int)$retentionDays;
             }
         }
 
         // view.* — handle path arrays (templateRootPaths, partialRootPaths, layoutRootPaths)
-        if (isset($ts['view.']) && is_array($ts['view.'])) {
-            $v = $ts['view.'];
+        $viewTs = $ts['view.'] ?? null;
+        if (is_array($viewTs)) {
             foreach (self::VIEW_PATH_KEYS as $tsKey => $settingsKey) {
-                if (!isset($v[$tsKey]) || !is_array($v[$tsKey])) {
+                $pathsArray = $viewTs[$tsKey] ?? null;
+                if (!is_array($pathsArray)) {
                     continue;
                 }
                 $paths = [];
-                foreach ($v[$tsKey] as $idx => $path) {
+                foreach ($pathsArray as $idx => $path) {
                     // Accept both integer and string indices; skip dot-suffix sub-object keys
                     if (is_string($idx) && str_ends_with($idx, '.')) {
                         continue;

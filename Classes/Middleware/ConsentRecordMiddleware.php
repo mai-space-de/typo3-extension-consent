@@ -35,7 +35,8 @@ class ConsentRecordMiddleware implements MiddlewareInterface
         $statisticsSettings = is_array($settings['statistics'] ?? null) ? $settings['statistics'] : [];
 
         // Honour statistics.enable = 0 TypoScript setting.
-        if ((int)($statisticsSettings['enable'] ?? 1) === 0) {
+        $enableRaw = $statisticsSettings['enable'] ?? 1;
+        if (is_numeric($enableRaw) && (int)$enableRaw === 0) {
             return new JsonResponse(['status' => 'ok']);
         }
 
@@ -57,7 +58,8 @@ class ConsentRecordMiddleware implements MiddlewareInterface
         }
 
         // Purge old entries according to statistics.retentionDays.
-        $retentionDays = (int)($statisticsSettings['retentionDays'] ?? 90);
+        $retentionDaysRaw = $statisticsSettings['retentionDays'] ?? 90;
+        $retentionDays = is_numeric($retentionDaysRaw) ? (int)$retentionDaysRaw : 90;
         if ($retentionDays > 0) {
             $this->statisticRepository->deleteOldEntries($retentionDays);
         }

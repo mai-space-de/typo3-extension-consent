@@ -46,7 +46,8 @@ class ConsentBannerMiddleware implements MiddlewareInterface
 
         // Honour the banner.enable = 0 TypoScript setting.
         $bannerSettings = is_array($settings['banner'] ?? null) ? $settings['banner'] : [];
-        if ((int)($bannerSettings['enable'] ?? 1) === 0) {
+        $enableRaw = $bannerSettings['enable'] ?? 1;
+        if (is_numeric($enableRaw) && (int)$enableRaw === 0) {
             return $response;
         }
 
@@ -90,7 +91,8 @@ class ConsentBannerMiddleware implements MiddlewareInterface
             ? $cookieSettings['sameSite'] : 'Lax';
         $recordEndpoint = (is_string($recordSettings['endpoint'] ?? null) && $recordSettings['endpoint'] !== '')
             ? $recordSettings['endpoint'] : '/maispace/consent/record';
-        $showOnEveryPage = (int)($bannerSettings['showOnEveryPage'] ?? 0) === 1;
+        $showOnEveryPageRaw = $bannerSettings['showOnEveryPage'] ?? 0;
+        $showOnEveryPage = is_numeric($showOnEveryPageRaw) && (int)$showOnEveryPageRaw === 1;
 
         // JSON_HEX_TAG converts < and > to Unicode escapes, preventing </script> injection.
         $jsonFlags = JSON_THROW_ON_ERROR | JSON_HEX_TAG;
