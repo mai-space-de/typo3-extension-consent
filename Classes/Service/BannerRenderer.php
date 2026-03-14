@@ -12,7 +12,7 @@ class BannerRenderer
 {
     private const EXT_KEY = 'maispace_consent';
     private const DEFAULT_PARTIALS_SUBPATH = 'Resources/Private/Partials/';
-    private const DEFAULT_LAYOUTS_SUBPATH  = 'Resources/Private/Layouts/';
+    private const DEFAULT_LAYOUTS_SUBPATH = 'Resources/Private/Layouts/';
 
     /**
      * @param array<string, mixed> $variables
@@ -22,12 +22,14 @@ class BannerRenderer
         $extPath = ExtensionManagementUtility::extPath(self::EXT_KEY);
         $viewSettings = $this->extractViewSettings($variables);
 
+        $configuredPartials = $viewSettings['partialRootPaths'] ?? [];
         $partialRootPaths = $this->resolveRootPaths(
-            $viewSettings['partialRootPaths'] ?? [],
+            is_array($configuredPartials) ? $configuredPartials : [],
             $extPath . self::DEFAULT_PARTIALS_SUBPATH
         );
+        $configuredLayouts = $viewSettings['layoutRootPaths'] ?? [];
         $layoutRootPaths = $this->resolveRootPaths(
-            $viewSettings['layoutRootPaths'] ?? [],
+            is_array($configuredLayouts) ? $configuredLayouts : [],
             $extPath . self::DEFAULT_LAYOUTS_SUBPATH
         );
 
@@ -53,12 +55,14 @@ class BannerRenderer
         $extPath = ExtensionManagementUtility::extPath(self::EXT_KEY);
         $viewSettings = $this->extractViewSettings($variables);
 
+        $configuredPartials = $viewSettings['partialRootPaths'] ?? [];
         $partialRootPaths = $this->resolveRootPaths(
-            $viewSettings['partialRootPaths'] ?? [],
+            is_array($configuredPartials) ? $configuredPartials : [],
             $extPath . self::DEFAULT_PARTIALS_SUBPATH
         );
+        $configuredLayouts = $viewSettings['layoutRootPaths'] ?? [];
         $layoutRootPaths = $this->resolveRootPaths(
-            $viewSettings['layoutRootPaths'] ?? [],
+            is_array($configuredLayouts) ? $configuredLayouts : [],
             $extPath . self::DEFAULT_LAYOUTS_SUBPATH
         );
 
@@ -82,13 +86,18 @@ class BannerRenderer
 
     /**
      * @param array<string, mixed> $variables
+     *
      * @return array<string, mixed>
      */
     private function extractViewSettings(array $variables): array
     {
         $settings = is_array($variables['settings'] ?? null) ? $variables['settings'] : [];
+        $view = $settings['view'] ?? null;
 
-        return is_array($settings['view'] ?? null) ? $settings['view'] : [];
+        /** @var array<string, mixed> $result */
+        $result = is_array($view) ? $view : [];
+
+        return $result;
     }
 
     /**
@@ -100,8 +109,9 @@ class BannerRenderer
      * package provides only partial overrides.  Site-package overrides at
      * higher indices take precedence over lower ones.
      *
-     * @param array<string, string> $configuredPaths  e.g. ['0' => 'EXT:...', '10' => 'EXT:...']
-     * @param string $defaultPath  Absolute fallback path (always included)
+     * @param array<int|string, mixed> $configuredPaths e.g. ['0' => 'EXT:...', '10' => 'EXT:...']
+     * @param string                   $defaultPath     Absolute fallback path (always included)
+     *
      * @return string[]
      */
     private function resolveRootPaths(array $configuredPaths, string $defaultPath): array
@@ -116,13 +126,10 @@ class BannerRenderer
             }
             if (str_starts_with($path, 'EXT:')) {
                 $resolvedPath = GeneralUtility::getFileAbsFileName($path);
-                if ($resolvedPath === false || $resolvedPath === '') {
+                if ($resolvedPath === '') {
                     continue;
                 }
                 $path = $resolvedPath;
-            }
-            if ($path === '') {
-                continue;
             }
             $normalised = rtrim($path, '/') . '/';
             $resolved[] = $normalised;
@@ -142,8 +149,8 @@ class BannerRenderer
      * iterate in reverse) for a partial template file and returns the first
      * match, or null if none is found.
      *
-     * @param string[] $rootPaths  Resolved absolute partial root paths
-     * @param string $relativePath  e.g. 'Consent/Banner.html'
+     * @param string[] $rootPaths    Resolved absolute partial root paths
+     * @param string   $relativePath e.g. 'Consent/Banner.html'
      */
     private function resolveOverridableTemplate(array $rootPaths, string $relativePath): ?string
     {

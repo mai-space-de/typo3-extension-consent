@@ -9,6 +9,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
+use TYPO3\CMS\Core\TypoScript\AST\Node\RootNode;
 use TYPO3\CMS\Core\TypoScript\FrontendTypoScript;
 
 #[CoversClass(ConsentSettingsService::class)]
@@ -259,8 +260,8 @@ final class ConsentSettingsServiceTest extends TestCase
             ],
         ];
 
-        $frontendTypoScript = $this->createMock(FrontendTypoScript::class);
-        $frontendTypoScript->method('getSetupArray')->willReturn($setup);
+        $frontendTypoScript = new FrontendTypoScript(new RootNode(), [], [], []);
+        $frontendTypoScript->setSetupArray($setup);
 
         $request = $this->createMock(ServerRequestInterface::class);
         $request->method('getAttribute')->with('frontend.typoscript')->willReturn($frontendTypoScript);
