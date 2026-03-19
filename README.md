@@ -1,6 +1,6 @@
 # maispace/consent — Consent Management for TYPO3
 
-[![CI](https://github.com/mai-space-de/typo3-extension-consent/actions/workflows/ci.yml/badge.svg)](https://github.com/mai-space-de/typo3-extension-consent/actions/workflows/ci.yml)
+[![CI](https://github.com/mai-space-de/typo3-extension-consent/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/mai-space-de/typo3-extension-consent/actions/workflows/ci.yml)
 [![PHP](https://img.shields.io/badge/PHP-8.2%2B-blue)](https://www.php.net/)
 [![TYPO3](https://img.shields.io/badge/TYPO3-13.4%20LTS-orange)](https://typo3.org/)
 [![License: GPL v2](https://img.shields.io/badge/License-GPL%20v2-blue.svg)](https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html)
