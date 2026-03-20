@@ -2,7 +2,7 @@
 
 declare(strict_types = 1);
 
-namespace Maispace\MaispaceConsent\Service;
+namespace Maispace\MaiConsent\Service;
 
 use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Core\TypoScript\FrontendTypoScript;
@@ -57,7 +57,7 @@ class ConsentSettingsService
     {
         return [
             'cookie' => [
-                'name'     => 'maispace_consent',
+                'name'     => 'mai_consent',
                 'lifetime' => 365,
                 'sameSite' => 'Lax',
             ],

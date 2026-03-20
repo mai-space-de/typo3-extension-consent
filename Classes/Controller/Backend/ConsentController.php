@@ -2,10 +2,10 @@
 
 declare(strict_types = 1);
 
-namespace Maispace\MaispaceConsent\Controller\Backend;
+namespace Maispace\MaiConsent\Controller\Backend;
 
-use Maispace\MaispaceConsent\Domain\Repository\StatisticRepository;
-use Maispace\MaispaceConsent\Service\CategoryService;
+use Maispace\MaiConsent\Domain\Repository\StatisticRepository;
+use Maispace\MaiConsent\Service\CategoryService;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Backend\Routing\UriBuilder;
@@ -18,7 +18,7 @@ use TYPO3\CMS\Fluid\View\StandaloneView;
 
 class ConsentController
 {
-    private const EXT_KEY = 'maispace_consent';
+    private const EXT_KEY = 'mai_consent';
 
     public function __construct(
         private readonly CategoryService $categoryService,
@@ -72,7 +72,7 @@ class ConsentController
         $view->assignMultiple([
             'statisticsData' => $statisticsData,
             'dailyActivity'  => $dailyActivity,
-            'indexUri'       => (string)$this->uriBuilder->buildUriFromRoute('maispace_consent'),
+            'indexUri'       => (string)$this->uriBuilder->buildUriFromRoute('mai_consent'),
         ]);
 
         return $moduleTemplate->renderResponse('Backend/Statistics');
@@ -93,7 +93,7 @@ class ConsentController
         }
 
         return new RedirectResponse(
-            (string)$this->uriBuilder->buildUriFromRoute('maispace_consent'),
+            (string)$this->uriBuilder->buildUriFromRoute('mai_consent'),
             303
         );
     }
@@ -115,7 +115,7 @@ class ConsentController
         }
 
         return new RedirectResponse(
-            (string)$this->uriBuilder->buildUriFromRoute('maispace_consent'),
+            (string)$this->uriBuilder->buildUriFromRoute('mai_consent'),
             303
         );
     }
@@ -134,7 +134,7 @@ class ConsentController
         }
 
         return new RedirectResponse(
-            (string)$this->uriBuilder->buildUriFromRoute('maispace_consent'),
+            (string)$this->uriBuilder->buildUriFromRoute('mai_consent'),
             303
         );
     }

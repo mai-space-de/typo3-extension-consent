@@ -1,4 +1,4 @@
-CREATE TABLE tx_maispace_consent_category (
+CREATE TABLE tx_maiconsent_category (
     uid int(11) NOT NULL auto_increment,
     pid int(11) DEFAULT '0' NOT NULL,
     tstamp int(11) DEFAULT '0' NOT NULL,
@@ -13,7 +13,7 @@ CREATE TABLE tx_maispace_consent_category (
     KEY parent (pid)
 );
 
-CREATE TABLE tx_maispace_consent_statistic (
+CREATE TABLE tx_maiconsent_statistic (
     uid int(11) NOT NULL auto_increment,
     pid int(11) DEFAULT '0' NOT NULL,
     tstamp int(11) DEFAULT '0' NOT NULL,
@@ -25,5 +25,5 @@ CREATE TABLE tx_maispace_consent_statistic (
 );
 
 CREATE TABLE tt_content (
-    tx_maispace_consent_categories varchar(255) DEFAULT '' NOT NULL
+    tx_maiconsent_categories varchar(255) DEFAULT '' NOT NULL
 );

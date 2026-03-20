@@ -2,11 +2,11 @@
 
 declare(strict_types = 1);
 
-namespace Maispace\MaispaceConsent\Tests\Unit\Service;
+namespace Maispace\MaiConsent\Tests\Unit\Service;
 
-use Maispace\MaispaceConsent\Domain\Model\Category;
-use Maispace\MaispaceConsent\Domain\Repository\CategoryRepository;
-use Maispace\MaispaceConsent\Service\CategoryService;
+use Maispace\MaiConsent\Domain\Model\Category;
+use Maispace\MaiConsent\Domain\Repository\CategoryRepository;
+use Maispace\MaiConsent\Service\CategoryService;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;

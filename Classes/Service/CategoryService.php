@@ -2,10 +2,10 @@
 
 declare(strict_types = 1);
 
-namespace Maispace\MaispaceConsent\Service;
+namespace Maispace\MaiConsent\Service;
 
-use Maispace\MaispaceConsent\Domain\Model\Category;
-use Maispace\MaispaceConsent\Domain\Repository\CategoryRepository;
+use Maispace\MaiConsent\Domain\Model\Category;
+use Maispace\MaiConsent\Domain\Repository\CategoryRepository;
 
 class CategoryService
 {

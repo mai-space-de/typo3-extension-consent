@@ -2,14 +2,14 @@
 
 declare(strict_types = 1);
 
-namespace Maispace\MaispaceConsent\Middleware;
+namespace Maispace\MaiConsent\Middleware;
 
-use Maispace\MaispaceConsent\Domain\Model\Category;
-use Maispace\MaispaceConsent\Event\AfterBannerRenderedEvent;
-use Maispace\MaispaceConsent\Event\BeforeBannerRenderedEvent;
-use Maispace\MaispaceConsent\Service\BannerRenderer;
-use Maispace\MaispaceConsent\Service\CategoryService;
-use Maispace\MaispaceConsent\Service\ConsentSettingsService;
+use Maispace\MaiConsent\Domain\Model\Category;
+use Maispace\MaiConsent\Event\AfterBannerRenderedEvent;
+use Maispace\MaiConsent\Event\BeforeBannerRenderedEvent;
+use Maispace\MaiConsent\Service\BannerRenderer;
+use Maispace\MaiConsent\Service\CategoryService;
+use Maispace\MaiConsent\Service\ConsentSettingsService;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -84,7 +84,7 @@ class ConsentBannerMiddleware implements MiddlewareInterface
         $recordSettings = is_array($settings['record'] ?? null) ? $settings['record'] : [];
 
         $cookieName = (is_string($cookieSettings['name'] ?? null) && $cookieSettings['name'] !== '')
-            ? $cookieSettings['name'] : 'maispace_consent';
+            ? $cookieSettings['name'] : 'mai_consent';
         $cookieLifetime = (is_int($cookieSettings['lifetime'] ?? null) && $cookieSettings['lifetime'] > 0)
             ? $cookieSettings['lifetime'] : 365;
         $cookieSameSite = (is_string($cookieSettings['sameSite'] ?? null) && $cookieSettings['sameSite'] !== '')

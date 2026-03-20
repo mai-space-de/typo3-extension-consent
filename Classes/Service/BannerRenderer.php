@@ -2,7 +2,7 @@
 
 declare(strict_types = 1);
 
-namespace Maispace\MaispaceConsent\Service;
+namespace Maispace\MaiConsent\Service;
 
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -10,7 +10,7 @@ use TYPO3\CMS\Fluid\View\StandaloneView;
 
 class BannerRenderer
 {
-    private const EXT_KEY = 'maispace_consent';
+    private const EXT_KEY = 'mai_consent';
     private const DEFAULT_PARTIALS_SUBPATH = 'Resources/Private/Partials/';
     private const DEFAULT_LAYOUTS_SUBPATH = 'Resources/Private/Layouts/';
 

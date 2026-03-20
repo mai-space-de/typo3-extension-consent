@@ -2,7 +2,7 @@
 
 declare(strict_types = 1);
 
-namespace Maispace\MaispaceConsent\Domain\Model;
+namespace Maispace\MaiConsent\Domain\Model;
 
 class Category
 {

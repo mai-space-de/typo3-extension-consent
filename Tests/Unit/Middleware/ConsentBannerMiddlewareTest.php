@@ -2,13 +2,13 @@
 
 declare(strict_types = 1);
 
-namespace Maispace\MaispaceConsent\Tests\Unit\Middleware;
+namespace Maispace\MaiConsent\Tests\Unit\Middleware;
 
-use Maispace\MaispaceConsent\Domain\Model\Category;
-use Maispace\MaispaceConsent\Middleware\ConsentBannerMiddleware;
-use Maispace\MaispaceConsent\Service\BannerRenderer;
-use Maispace\MaispaceConsent\Service\CategoryService;
-use Maispace\MaispaceConsent\Service\ConsentSettingsService;
+use Maispace\MaiConsent\Domain\Model\Category;
+use Maispace\MaiConsent\Middleware\ConsentBannerMiddleware;
+use Maispace\MaiConsent\Service\BannerRenderer;
+use Maispace\MaiConsent\Service\CategoryService;
+use Maispace\MaiConsent\Service\ConsentSettingsService;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -39,7 +39,7 @@ final class ConsentBannerMiddlewareTest extends TestCase
         $this->consentSettingsService
             ->method('getSettings')
             ->willReturn([
-                'cookie'     => ['name' => 'maispace_consent', 'lifetime' => 365, 'sameSite' => 'Lax'],
+                'cookie'     => ['name' => 'mai_consent', 'lifetime' => 365, 'sameSite' => 'Lax'],
                 'banner'     => ['enable' => 1, 'position' => 'bottom', 'showOnEveryPage' => 0],
                 'modal'      => ['showCategoryDescriptions' => 1],
                 'record'     => ['endpoint' => '/maispace/consent/record'],
@@ -205,7 +205,7 @@ final class ConsentBannerMiddlewareTest extends TestCase
         $this->eventDispatcher
             ->method('dispatch')
             ->willReturnCallback(static function (object $event) {
-                if ($event instanceof \Maispace\MaispaceConsent\Event\BeforeBannerRenderedEvent) {
+                if ($event instanceof \Maispace\MaiConsent\Event\BeforeBannerRenderedEvent) {
                     $vars = $event->getVariables();
                     $vars['settings']['cookie']['name'] = 'custom_cookie';
                     $event->setVariables($vars);
@@ -292,7 +292,7 @@ final class ConsentBannerMiddlewareTest extends TestCase
         $this->eventDispatcher
             ->method('dispatch')
             ->willReturnCallback(static function (object $event) {
-                if ($event instanceof \Maispace\MaispaceConsent\Event\BeforeBannerRenderedEvent) {
+                if ($event instanceof \Maispace\MaiConsent\Event\BeforeBannerRenderedEvent) {
                     $event->disable();
                 }
 
@@ -349,7 +349,7 @@ final class ConsentBannerMiddlewareTest extends TestCase
         $this->consentSettingsService
             ->method('getSettings')
             ->willReturn([
-                'cookie'     => ['name' => 'maispace_consent', 'lifetime' => 365, 'sameSite' => 'Lax'],
+                'cookie'     => ['name' => 'mai_consent', 'lifetime' => 365, 'sameSite' => 'Lax'],
                 'banner'     => ['enable' => 1, 'position' => 'bottom', 'showOnEveryPage' => 1],
                 'modal'      => ['showCategoryDescriptions' => 1],
                 'record'     => ['endpoint' => '/maispace/consent/record'],

@@ -2,10 +2,10 @@
 
 declare(strict_types = 1);
 
-namespace Maispace\MaispaceConsent\Middleware;
+namespace Maispace\MaiConsent\Middleware;
 
-use Maispace\MaispaceConsent\Domain\Repository\StatisticRepository;
-use Maispace\MaispaceConsent\Service\ConsentSettingsService;
+use Maispace\MaiConsent\Domain\Repository\StatisticRepository;
+use Maispace\MaiConsent\Service\ConsentSettingsService;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;

@@ -2,14 +2,14 @@
 
 declare(strict_types = 1);
 
-namespace Maispace\MaispaceConsent\Domain\Repository;
+namespace Maispace\MaiConsent\Domain\Repository;
 
 use Doctrine\DBAL\ParameterType;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 
 class StatisticRepository
 {
-    private const TABLE = 'tx_maispace_consent_statistic';
+    private const TABLE = 'tx_maiconsent_statistic';
 
     public function __construct(
         private readonly ConnectionPool $connectionPool,

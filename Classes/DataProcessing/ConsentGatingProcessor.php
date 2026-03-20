@@ -2,9 +2,9 @@
 
 declare(strict_types = 1);
 
-namespace Maispace\MaispaceConsent\DataProcessing;
+namespace Maispace\MaiConsent\DataProcessing;
 
-use Maispace\MaispaceConsent\Event\BeforeContentElementGatedEvent;
+use Maispace\MaiConsent\Event\BeforeContentElementGatedEvent;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
 use TYPO3\CMS\Frontend\ContentObject\DataProcessorInterface;
@@ -13,7 +13,7 @@ use TYPO3\CMS\Frontend\ContentObject\DataProcessorInterface;
  * Adds consent-gating information to every content element's template variables.
  *
  * When a content element has one or more consent categories assigned via the
- * `tx_maispace_consent_categories` field the processor sets
+ * `tx_maiconsent_categories` field the processor sets
  * `maispace_consent.isGated = true` and `maispace_consent.categoryUids` so that
  * a layout override can wrap the element in a hidden container.
  *
@@ -21,13 +21,13 @@ use TYPO3\CMS\Frontend\ContentObject\DataProcessorInterface;
  *
  *     lib.contentElement {
  *         dataProcessing {
- *             200 = Maispace\MaispaceConsent\DataProcessing\ConsentGatingProcessor
+ *             200 = Maispace\MaiConsent\DataProcessing\ConsentGatingProcessor
  *         }
  *     }
  */
 class ConsentGatingProcessor implements DataProcessorInterface
 {
-    private const FIELD_CATEGORIES = 'tx_maispace_consent_categories';
+    private const FIELD_CATEGORIES = 'tx_maiconsent_categories';
 
     public function __construct(
         private readonly EventDispatcherInterface $eventDispatcher,
@@ -62,7 +62,7 @@ class ConsentGatingProcessor implements DataProcessorInterface
         );
 
         if ($categoryUids === []) {
-            $processedData['maispace_consent'] = [
+            $processedData['mai_consent'] = [
                 'isGated'            => false,
                 'categoryUids'       => [],
                 'categoryList'       => '',
@@ -81,7 +81,7 @@ class ConsentGatingProcessor implements DataProcessorInterface
         $event = $this->eventDispatcher->dispatch($event);
 
         if ($event->shouldSkip()) {
-            $processedData['maispace_consent'] = [
+            $processedData['mai_consent'] = [
                 'isGated'            => false,
                 'categoryUids'       => [],
                 'categoryList'       => '',
@@ -97,7 +97,7 @@ class ConsentGatingProcessor implements DataProcessorInterface
         // If a listener empties the UID list, treat as not-gated to avoid
         // permanently-hidden content with no path to become visible.
         if ($resolvedUids === []) {
-            $processedData['maispace_consent'] = [
+            $processedData['mai_consent'] = [
                 'isGated'            => false,
                 'categoryUids'       => [],
                 'categoryList'       => '',
@@ -108,7 +108,7 @@ class ConsentGatingProcessor implements DataProcessorInterface
             return $processedData;
         }
 
-        $processedData['maispace_consent'] = [
+        $processedData['mai_consent'] = [
             'isGated'            => true,
             'categoryUids'       => $resolvedUids,
             'categoryList'       => implode(',', $resolvedUids),

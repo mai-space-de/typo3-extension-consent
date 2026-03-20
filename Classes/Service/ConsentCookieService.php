@@ -2,13 +2,13 @@
 
 declare(strict_types = 1);
 
-namespace Maispace\MaispaceConsent\Service;
+namespace Maispace\MaiConsent\Service;
 
 use Psr\Http\Message\ServerRequestInterface;
 
 class ConsentCookieService
 {
-    private const COOKIE_NAME = 'maispace_consent';
+    private const COOKIE_NAME = 'mai_consent';
 
     /**
      * Parses the consent cookie from the request and returns a preference map.

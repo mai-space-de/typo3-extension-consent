@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 return [
-    'maispace_consent' => [
+    'mai_consent' => [
         'parent'         => 'web',
         'position'       => ['after' => 'web_info'],
         'access'         => 'user',
@@ -13,22 +13,22 @@ return [
         'labels'         => 'LLL:EXT:maispace_consent/Resources/Private/Language/locallang_mod.xlf',
         'routes'         => [
             '_default' => [
-                'target' => \Maispace\MaispaceConsent\Controller\Backend\ConsentController::class . '::indexAction',
+                'target' => \Maispace\MaiConsent\Controller\Backend\ConsentController::class . '::indexAction',
             ],
             'statistics' => [
-                'target' => \Maispace\MaispaceConsent\Controller\Backend\ConsentController::class . '::statisticsAction',
+                'target' => \Maispace\MaiConsent\Controller\Backend\ConsentController::class . '::statisticsAction',
             ],
             'createCategory' => [
-                'target' => \Maispace\MaispaceConsent\Controller\Backend\ConsentController::class . '::createCategoryAction',
+                'target' => \Maispace\MaiConsent\Controller\Backend\ConsentController::class . '::createCategoryAction',
             ],
             'updateCategory' => [
-                'target' => \Maispace\MaispaceConsent\Controller\Backend\ConsentController::class . '::updateCategoryAction',
+                'target' => \Maispace\MaiConsent\Controller\Backend\ConsentController::class . '::updateCategoryAction',
             ],
             'deleteCategory' => [
-                'target' => \Maispace\MaispaceConsent\Controller\Backend\ConsentController::class . '::deleteCategoryAction',
+                'target' => \Maispace\MaiConsent\Controller\Backend\ConsentController::class . '::deleteCategoryAction',
             ],
             'exportStatisticsCsv' => [
-                'target' => \Maispace\MaispaceConsent\Controller\Backend\ConsentController::class . '::exportStatisticsCsvAction',
+                'target' => \Maispace\MaiConsent\Controller\Backend\ConsentController::class . '::exportStatisticsCsvAction',
             ],
         ],
     ],

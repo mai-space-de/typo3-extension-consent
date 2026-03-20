@@ -2,11 +2,11 @@
 
 declare(strict_types = 1);
 
-namespace Maispace\MaispaceConsent\Tests\Unit\Middleware;
+namespace Maispace\MaiConsent\Tests\Unit\Middleware;
 
-use Maispace\MaispaceConsent\Domain\Repository\StatisticRepository;
-use Maispace\MaispaceConsent\Middleware\ConsentRecordMiddleware;
-use Maispace\MaispaceConsent\Service\ConsentSettingsService;
+use Maispace\MaiConsent\Domain\Repository\StatisticRepository;
+use Maispace\MaiConsent\Middleware\ConsentRecordMiddleware;
+use Maispace\MaiConsent\Service\ConsentSettingsService;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;

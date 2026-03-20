@@ -2,9 +2,9 @@
 
 declare(strict_types = 1);
 
-namespace Maispace\MaispaceConsent\Tests\Unit\Service;
+namespace Maispace\MaiConsent\Tests\Unit\Service;
 
-use Maispace\MaispaceConsent\Service\ConsentCookieService;
+use Maispace\MaiConsent\Service\ConsentCookieService;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
@@ -155,7 +155,7 @@ final class ConsentCookieServiceTest extends TestCase
     {
         $request = $this->createMock(ServerRequestInterface::class);
         $request->method('getCookieParams')->willReturn([
-            'maispace_consent' => '{"1": true, "2": false}',
+            'mai_consent' => '{"1": true, "2": false}',
         ]);
 
         $result = $this->subject->getPreferences($request);

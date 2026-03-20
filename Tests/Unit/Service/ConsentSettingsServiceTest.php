@@ -2,9 +2,9 @@
 
 declare(strict_types = 1);
 
-namespace Maispace\MaispaceConsent\Tests\Unit\Service;
+namespace Maispace\MaiConsent\Tests\Unit\Service;
 
-use Maispace\MaispaceConsent\Service\ConsentSettingsService;
+use Maispace\MaiConsent\Service\ConsentSettingsService;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
@@ -34,7 +34,7 @@ final class ConsentSettingsServiceTest extends TestCase
 
         $settings = $this->subject->getSettings($request);
 
-        self::assertSame('maispace_consent', $settings['cookie']['name']);
+        self::assertSame('mai_consent', $settings['cookie']['name']);
         self::assertSame(365, $settings['cookie']['lifetime']);
         self::assertSame('Lax', $settings['cookie']['sameSite']);
         self::assertSame(1, $settings['banner']['enable']);
@@ -54,7 +54,7 @@ final class ConsentSettingsServiceTest extends TestCase
 
         $settings = $this->subject->getSettings($request);
 
-        self::assertSame('maispace_consent', $settings['cookie']['name']);
+        self::assertSame('mai_consent', $settings['cookie']['name']);
         self::assertSame(1, $settings['banner']['enable']);
     }
 
@@ -228,7 +228,7 @@ final class ConsentSettingsServiceTest extends TestCase
 
         $settings = $this->subject->getSettings($this->buildRequest($tsPlugin));
 
-        self::assertSame('maispace_consent', $settings['cookie']['name']);
+        self::assertSame('mai_consent', $settings['cookie']['name']);
     }
 
     #[Test]
@@ -238,7 +238,7 @@ final class ConsentSettingsServiceTest extends TestCase
 
         $settings = $this->subject->getSettings($this->buildRequest($tsPlugin));
 
-        self::assertSame('maispace_consent', $settings['cookie']['name']);
+        self::assertSame('mai_consent', $settings['cookie']['name']);
         self::assertSame(1, $settings['banner']['enable']);
     }
 

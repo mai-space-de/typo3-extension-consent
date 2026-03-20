@@ -2,10 +2,10 @@
 
 declare(strict_types = 1);
 
-namespace Maispace\MaispaceConsent\Tests\Unit\DataProcessing;
+namespace Maispace\MaiConsent\Tests\Unit\DataProcessing;
 
-use Maispace\MaispaceConsent\DataProcessing\ConsentGatingProcessor;
-use Maispace\MaispaceConsent\Event\BeforeContentElementGatedEvent;
+use Maispace\MaiConsent\DataProcessing\ConsentGatingProcessor;
+use Maispace\MaiConsent\Event\BeforeContentElementGatedEvent;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -30,7 +30,7 @@ final class ConsentGatingProcessorTest extends TestCase
         return [
             'data' => [
                 'uid'                            => $uid,
-                'tx_maispace_consent_categories' => $categories,
+                'tx_maiconsent_categories' => $categories,
             ],
         ];
     }
@@ -45,10 +45,10 @@ final class ConsentGatingProcessorTest extends TestCase
 
         $result = $this->subject->process($cObj, [], [], $processedData);
 
-        self::assertFalse($result['maispace_consent']['isGated']);
-        self::assertSame([], $result['maispace_consent']['categoryUids']);
-        self::assertSame('', $result['maispace_consent']['categoryList']);
-        self::assertFalse($result['maispace_consent']['showPlaceholder']);
+        self::assertFalse($result['mai_consent']['isGated']);
+        self::assertSame([], $result['mai_consent']['categoryUids']);
+        self::assertSame('', $result['mai_consent']['categoryList']);
+        self::assertFalse($result['mai_consent']['showPlaceholder']);
     }
 
     #[Test]
@@ -64,10 +64,10 @@ final class ConsentGatingProcessorTest extends TestCase
 
         $result = $this->subject->process($cObj, [], [], $processedData);
 
-        self::assertTrue($result['maispace_consent']['isGated']);
-        self::assertSame([2, 3], $result['maispace_consent']['categoryUids']);
-        self::assertSame('2,3', $result['maispace_consent']['categoryList']);
-        self::assertFalse($result['maispace_consent']['showPlaceholder']);
+        self::assertTrue($result['mai_consent']['isGated']);
+        self::assertSame([2, 3], $result['mai_consent']['categoryUids']);
+        self::assertSame('2,3', $result['mai_consent']['categoryList']);
+        self::assertFalse($result['mai_consent']['showPlaceholder']);
     }
 
     #[Test]
@@ -87,9 +87,9 @@ final class ConsentGatingProcessorTest extends TestCase
 
         $result = $this->subject->process($cObj, [], $processorConfig, $processedData);
 
-        self::assertTrue($result['maispace_consent']['isGated']);
-        self::assertTrue($result['maispace_consent']['showPlaceholder']);
-        self::assertSame('Custom/Placeholder', $result['maispace_consent']['placeholderPartial']);
+        self::assertTrue($result['mai_consent']['isGated']);
+        self::assertTrue($result['mai_consent']['showPlaceholder']);
+        self::assertSame('Custom/Placeholder', $result['mai_consent']['placeholderPartial']);
     }
 
     #[Test]
@@ -109,8 +109,8 @@ final class ConsentGatingProcessorTest extends TestCase
 
         $result = $this->subject->process($cObj, [], [], $processedData);
 
-        self::assertFalse($result['maispace_consent']['isGated']);
-        self::assertSame([], $result['maispace_consent']['categoryUids']);
+        self::assertFalse($result['mai_consent']['isGated']);
+        self::assertSame([], $result['mai_consent']['categoryUids']);
     }
 
     #[Test]
@@ -130,9 +130,9 @@ final class ConsentGatingProcessorTest extends TestCase
 
         $result = $this->subject->process($cObj, [], [], $processedData);
 
-        self::assertFalse($result['maispace_consent']['isGated']);
-        self::assertSame([], $result['maispace_consent']['categoryUids']);
-        self::assertSame('', $result['maispace_consent']['categoryList']);
+        self::assertFalse($result['mai_consent']['isGated']);
+        self::assertSame([], $result['mai_consent']['categoryUids']);
+        self::assertSame('', $result['mai_consent']['categoryList']);
     }
 
     #[Test]
@@ -152,9 +152,9 @@ final class ConsentGatingProcessorTest extends TestCase
 
         $result = $this->subject->process($cObj, [], [], $processedData);
 
-        self::assertTrue($result['maispace_consent']['isGated']);
-        self::assertSame([99], $result['maispace_consent']['categoryUids']);
-        self::assertSame('99', $result['maispace_consent']['categoryList']);
+        self::assertTrue($result['mai_consent']['isGated']);
+        self::assertSame([99], $result['mai_consent']['categoryUids']);
+        self::assertSame('99', $result['mai_consent']['categoryList']);
     }
 
     #[Test]
@@ -170,8 +170,8 @@ final class ConsentGatingProcessorTest extends TestCase
 
         $result = $this->subject->process($cObj, [], [], $processedData);
 
-        self::assertTrue($result['maispace_consent']['isGated']);
-        self::assertSame([1, 3], $result['maispace_consent']['categoryUids']);
+        self::assertTrue($result['mai_consent']['isGated']);
+        self::assertSame([1, 3], $result['mai_consent']['categoryUids']);
     }
 
     #[Test]

@@ -2,15 +2,15 @@
 
 declare(strict_types = 1);
 
-namespace Maispace\MaispaceConsent\Domain\Repository;
+namespace Maispace\MaiConsent\Domain\Repository;
 
 use Doctrine\DBAL\ParameterType;
-use Maispace\MaispaceConsent\Domain\Model\Category;
+use Maispace\MaiConsent\Domain\Model\Category;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 
 class CategoryRepository
 {
-    private const TABLE = 'tx_maispace_consent_category';
+    private const TABLE = 'tx_maiconsent_category';
 
     public function __construct(
         private readonly ConnectionPool $connectionPool,

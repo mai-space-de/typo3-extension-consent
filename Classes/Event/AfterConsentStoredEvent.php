@@ -2,7 +2,7 @@
 
 declare(strict_types = 1);
 
-namespace Maispace\MaispaceConsent\Event;
+namespace Maispace\MaiConsent\Event;
 
 final class AfterConsentStoredEvent
 {
