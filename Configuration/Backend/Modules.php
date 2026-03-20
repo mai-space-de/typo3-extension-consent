@@ -10,7 +10,7 @@ return [
         'workspaces'     => 'live',
         'iconIdentifier' => 'maispace-consent',
         'path'           => '/module/maispace/consent',
-        'labels'         => 'LLL:EXT:maispace_consent/Resources/Private/Language/locallang_mod.xlf',
+        'labels'         => 'LLL:EXT:mai_consent/Resources/Private/Language/locallang_mod.xlf',
         'routes'         => [
             '_default' => [
                 'target' => \Maispace\MaiConsent\Controller\Backend\ConsentController::class . '::indexAction',

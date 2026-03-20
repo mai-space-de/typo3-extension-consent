@@ -28,7 +28,7 @@ Include the extension's TypoScript in your site package's setup file:
 
 .. code-block:: typoscript
 
-   @import 'EXT:maispace_consent/Configuration/TypoScript/setup.typoscript'
+   @import 'EXT:mai_consent/Configuration/TypoScript/setup.typoscript'
 
 This registers the ``lib.contentElement`` data processor and all plugin
 settings with their defaults.
@@ -39,8 +39,8 @@ Database update
 After installation run the TYPO3 Database Analyser in the Admin Tools to
 create the two tables the extension requires:
 
-* ``tx_maispace_consent_category`` — consent categories
-* ``tx_maispace_consent_statistic`` — anonymised consent event log
+* ``tx_mai_consent_category`` — consent categories
+* ``tx_mai_consent_statistic`` — anonymised consent event log
 
 No further configuration is required for basic operation. The cookie banner
 and record middleware are registered automatically.

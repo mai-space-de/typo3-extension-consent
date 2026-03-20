@@ -99,7 +99,7 @@ Adding a custom JavaScript
 Frontend assets (CSS and JavaScript) are registered via the ``<mai:css>``
 and ``<mai:js>`` ViewHelpers from the ``maispace/assets`` package.  The
 extension ships
-``EXT:maispace_consent/Resources/Private/Templates/Frontend/Assets.html``
+``EXT:mai_consent/Resources/Private/Templates/Frontend/Assets.html``
 which is rendered through a ``page.8 = FLUIDTEMPLATE`` TypoScript object.
 
 Runtime configuration is passed from ``ConsentBannerMiddleware`` via an
@@ -109,7 +109,7 @@ be registered through the AssetCollector without any custom script tag:
 .. code-block:: html
 
    <script type="application/json" id="maispace-consent-config">
-     {"cookieName":"maispace_consent","cookieLifetime":365,"cookieSameSite":"Lax","recordEndpoint":"/maispace/consent/record","showOnEveryPage":false}
+     {"cookieName":"mai_consent","cookieLifetime":365,"cookieSameSite":"Lax","recordEndpoint":"/maispace/consent/record","showOnEveryPage":false}
    </script>
 
 Cookie structure

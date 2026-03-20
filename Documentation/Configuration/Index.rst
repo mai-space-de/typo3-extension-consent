@@ -4,14 +4,14 @@
 Configuration
 =============
 
-All settings live under the ``plugin.tx_maispace_consent`` TypoScript
+All settings live under the ``plugin.tx_mai_consent`` TypoScript
 namespace.
 
 .. code-block:: typoscript
 
-   plugin.tx_maispace_consent {
+   plugin.tx_mai_consent {
        cookie {
-           name = maispace_consent      # cookie name
+           name = mai_consent      # cookie name
            lifetime = 365               # days until the cookie expires
            sameSite = Lax               # Strict | Lax | None
        }
@@ -32,9 +32,9 @@ namespace.
            retentionDays = 90           # delete events older than N days (0 = keep forever)
        }
        view {
-           templateRootPaths.0 = EXT:maispace_consent/Resources/Private/Templates/
-           partialRootPaths.0  = EXT:maispace_consent/Resources/Private/Partials/
-           layoutRootPaths.0   = EXT:maispace_consent/Resources/Private/Layouts/
+           templateRootPaths.0 = EXT:mai_consent/Resources/Private/Templates/
+           partialRootPaths.0  = EXT:mai_consent/Resources/Private/Partials/
+           layoutRootPaths.0   = EXT:mai_consent/Resources/Private/Layouts/
        }
    }
 
@@ -48,7 +48,7 @@ Reference
 
 .. confval:: cookie.name
    :type: string
-   :default: maispace_consent
+   :default: mai_consent
 
    Name of the first-party cookie that stores user preferences.
 
@@ -125,7 +125,7 @@ Override any Fluid template by adding a higher-priority path:
 
 .. code-block:: typoscript
 
-   plugin.tx_maispace_consent.view {
+   plugin.tx_mai_consent.view {
        partialRootPaths.10 = EXT:my_sitepackage/Resources/Private/Partials/
    }
 
@@ -144,7 +144,7 @@ The extension ships a dedicated Fluid template that is rendered as a TypoScript
 
    page.8 = FLUIDTEMPLATE
    page.8 {
-       file = EXT:maispace_consent/Resources/Private/Templates/Frontend/Assets.html
+       file = EXT:mai_consent/Resources/Private/Templates/Frontend/Assets.html
    }
 
 This ensures the stylesheet is placed in ``<head>`` and the deferred script in
@@ -159,7 +159,7 @@ Internationalisation
 ====================
 
 All visible frontend texts are defined in
-``EXT:maispace_consent/Resources/Private/Language/locallang_fe.xlf``.
+``EXT:mai_consent/Resources/Private/Language/locallang_fe.xlf``.
 Override individual labels by providing a language override file in your
 site configuration.
 

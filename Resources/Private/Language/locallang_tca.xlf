@@ -1,26 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
-    <file source-language="en" datatype="plaintext" original="EXT:maispace_consent/Resources/Private/Language/locallang_tca.xlf">
+    <file source-language="en" datatype="plaintext" original="EXT:mai_consent/Resources/Private/Language/locallang_tca.xlf">
         <body>
             <trans-unit id="tab.consent">
                 <source>Consent</source>
             </trans-unit>
-            <trans-unit id="tt_content.tx_maispace_consent_categories">
+            <trans-unit id="tt_content.tx_mai_consent_categories">
                 <source>Consent Categories</source>
             </trans-unit>
-            <trans-unit id="tt_content.tx_maispace_consent_categories.description">
+            <trans-unit id="tt_content.tx_mai_consent_categories.description">
                 <source>Assign consent categories to this content element. The element will only be shown to users who have given consent for all selected categories.</source>
             </trans-unit>
-            <trans-unit id="tx_maispace_consent_category">
+            <trans-unit id="tx_mai_consent_category">
                 <source>Consent Category</source>
             </trans-unit>
-            <trans-unit id="tx_maispace_consent_category.name">
+            <trans-unit id="tx_mai_consent_category.name">
                 <source>Name</source>
             </trans-unit>
-            <trans-unit id="tx_maispace_consent_category.description">
+            <trans-unit id="tx_mai_consent_category.description">
                 <source>Description</source>
             </trans-unit>
-            <trans-unit id="tx_maispace_consent_category.is_essential">
+            <trans-unit id="tx_mai_consent_category.is_essential">
                 <source>Essential</source>
             </trans-unit>
         </body>

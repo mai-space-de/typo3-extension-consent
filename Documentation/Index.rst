@@ -4,7 +4,7 @@
 Maispace Consent Management
 ==================================
 
-:Extension key:   maispace_consent
+:Extension key:   mai_consent
 :Package name:    maispace/consent
 :Version:         |release|
 :Language:        en

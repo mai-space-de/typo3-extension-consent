@@ -45,9 +45,9 @@ final class ConsentBannerMiddlewareTest extends TestCase
                 'record'     => ['endpoint' => '/maispace/consent/record'],
                 'statistics' => ['enable' => 1, 'retentionDays' => 90],
                 'view'       => [
-                    'templateRootPaths' => ['0' => 'EXT:maispace_consent/Resources/Private/Templates/'],
-                    'partialRootPaths'  => ['0' => 'EXT:maispace_consent/Resources/Private/Partials/'],
-                    'layoutRootPaths'   => ['0' => 'EXT:maispace_consent/Resources/Private/Layouts/'],
+                    'templateRootPaths' => ['0' => 'EXT:mai_consent/Resources/Private/Templates/'],
+                    'partialRootPaths'  => ['0' => 'EXT:mai_consent/Resources/Private/Partials/'],
+                    'layoutRootPaths'   => ['0' => 'EXT:mai_consent/Resources/Private/Layouts/'],
                 ],
             ]);
 
@@ -355,9 +355,9 @@ final class ConsentBannerMiddlewareTest extends TestCase
                 'record'     => ['endpoint' => '/maispace/consent/record'],
                 'statistics' => ['enable' => 1, 'retentionDays' => 90],
                 'view'       => [
-                    'templateRootPaths' => ['0' => 'EXT:maispace_consent/Resources/Private/Templates/'],
-                    'partialRootPaths'  => ['0' => 'EXT:maispace_consent/Resources/Private/Partials/'],
-                    'layoutRootPaths'   => ['0' => 'EXT:maispace_consent/Resources/Private/Layouts/'],
+                    'templateRootPaths' => ['0' => 'EXT:mai_consent/Resources/Private/Templates/'],
+                    'partialRootPaths'  => ['0' => 'EXT:mai_consent/Resources/Private/Partials/'],
+                    'layoutRootPaths'   => ['0' => 'EXT:mai_consent/Resources/Private/Layouts/'],
                 ],
             ]);
 

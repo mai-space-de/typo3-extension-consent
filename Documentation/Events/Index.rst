@@ -39,7 +39,7 @@ Register event listeners in ``EXT:my_sitepackage/Configuration/Services.yaml``:
        tags:
          - name: event.listener
            identifier: 'my-sitepackage/modify-banner'
-           event: Maispace\MaispaceConsent\Event\BeforeBannerRenderedEvent
+           event: Maispace\MaiConsent\Event\BeforeBannerRenderedEvent
 
 BeforeBannerRenderedEvent
 =========================
@@ -49,7 +49,7 @@ and modal partials.
 
 .. code-block:: php
 
-   use Maispace\MaispaceConsent\Event\BeforeBannerRenderedEvent;
+   use Maispace\MaiConsent\Event\BeforeBannerRenderedEvent;
 
    final class ModifyBannerVariables
    {
@@ -72,7 +72,7 @@ modal + script tag) has been assembled.
 
 .. code-block:: php
 
-   use Maispace\MaispaceConsent\Event\AfterBannerRenderedEvent;
+   use Maispace\MaiConsent\Event\AfterBannerRenderedEvent;
 
    final class WrapInjection
    {
@@ -90,7 +90,7 @@ preferences are persisted as statistics.
 
 .. code-block:: php
 
-   use Maispace\MaispaceConsent\Event\BeforeConsentStoredEvent;
+   use Maispace\MaiConsent\Event\BeforeConsentStoredEvent;
 
    final class ValidatePreferences
    {
@@ -119,7 +119,7 @@ The event provides read-only access to the stored preferences map.
 
 .. code-block:: php
 
-   use Maispace\MaispaceConsent\Event\AfterConsentStoredEvent;
+   use Maispace\MaiConsent\Event\AfterConsentStoredEvent;
 
    final class TriggerAnalyticsOptIn
    {
@@ -137,7 +137,7 @@ Dispatched in ``ConsentGatingProcessor`` once per gated content element.
 
 .. code-block:: php
 
-   use Maispace\MaispaceConsent\Event\BeforeContentElementGatedEvent;
+   use Maispace\MaiConsent\Event\BeforeContentElementGatedEvent;
 
    final class SkipGatingForAdmins
    {

@@ -1,16 +1,16 @@
 <html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers" data-namespace-typo3-fluid="true">
-<f:if condition="{maispace_consent.isGated}">
+<f:if condition="{mai_consent.isGated}">
     <f:then>
         <div
-            data-maispace-consent-required="{maispace_consent.categoryList}"
+            data-maispace-consent-required="{mai_consent.categoryList}"
             data-maispace-consent-uid="{data.uid}"
             hidden="hidden"
         >
             <f:render section="Main" />
         </div>
-        <f:if condition="{maispace_consent.showPlaceholder}">
+        <f:if condition="{mai_consent.showPlaceholder}">
             <div data-maispace-consent-placeholder="{data.uid}" hidden="hidden">
-                <f:render partial="{maispace_consent.placeholderPartial}" arguments="{data: data}" />
+                <f:render partial="{mai_consent.placeholderPartial}" arguments="{data: data}" />
             </div>
         </f:if>
     </f:then>

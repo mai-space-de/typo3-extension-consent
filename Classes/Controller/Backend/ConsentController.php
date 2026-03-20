@@ -37,7 +37,7 @@ class ConsentController
         $view = $this->createView('Backend/Index');
         $view->assignMultiple([
             'categories'    => $categories,
-            'statisticsUri' => (string)$this->uriBuilder->buildUriFromRoute('maispace_consent.statistics'),
+            'statisticsUri' => (string)$this->uriBuilder->buildUriFromRoute('mai_consent.statistics'),
         ]);
 
         return $moduleTemplate->renderResponse('Backend/Index');

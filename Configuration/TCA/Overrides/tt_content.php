@@ -9,7 +9,7 @@ defined('TYPO3') or die();
 $newColumns = [
     'tx_maiconsent_categories' => [
         'exclude' => true,
-        'label'   => 'LLL:EXT:maispace_consent/Resources/Private/Language/locallang_tca.xlf:tt_content.tx_maiconsent_categories',
+        'label'   => 'LLL:EXT:mai_consent/Resources/Private/Language/locallang_tca.xlf:tt_content.tx_maiconsent_categories',
         'config'  => [
             'type'                => 'select',
             'renderType'          => 'selectMultipleSideBySide',
@@ -18,7 +18,7 @@ $newColumns = [
             'size'                => 5,
             'maxitems'            => 99,
             'minitems'            => 0,
-            'fieldDescription'    => 'LLL:EXT:maispace_consent/Resources/Private/Language/locallang_tca.xlf:tt_content.tx_maiconsent_categories.description',
+            'fieldDescription'    => 'LLL:EXT:mai_consent/Resources/Private/Language/locallang_tca.xlf:tt_content.tx_maiconsent_categories.description',
         ],
     ],
 ];
@@ -27,7 +27,7 @@ ExtensionManagementUtility::addTCAcolumns('tt_content', $newColumns);
 
 ExtensionManagementUtility::addToAllTCAtypes(
     'tt_content',
-    '--div--;LLL:EXT:maispace_consent/Resources/Private/Language/locallang_tca.xlf:tab.consent,tx_maiconsent_categories',
+    '--div--;LLL:EXT:mai_consent/Resources/Private/Language/locallang_tca.xlf:tab.consent,tx_maiconsent_categories',
     '',
     'after:categories'
 );

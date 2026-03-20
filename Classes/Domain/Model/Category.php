@@ -10,7 +10,7 @@ class Category
     private int $pid = 0;
     private string $name = '';
     private string $description = '';
-    private bool $isEssential = false;
+    public bool $isEssential = false;
     private int $sorting = 0;
 
     /**

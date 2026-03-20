@@ -156,7 +156,7 @@ final class ConsentSettingsServiceTest extends TestCase
         $tsPlugin = [
             'view.' => [
                 'partialRootPaths.' => [
-                    '0'  => 'EXT:maispace_consent/Resources/Private/Partials/',
+                    '0'  => 'EXT:mai_consent/Resources/Private/Partials/',
                     '10' => 'EXT:my_sitepackage/Resources/Private/Partials/',
                 ],
             ],
@@ -176,7 +176,7 @@ final class ConsentSettingsServiceTest extends TestCase
         $tsPlugin = [
             'view.' => [
                 'partialRootPaths.' => [
-                    0  => 'EXT:maispace_consent/Resources/Private/Partials/',
+                    0  => 'EXT:mai_consent/Resources/Private/Partials/',
                     10 => 'EXT:my_sitepackage/Resources/Private/Partials/',
                 ],
             ],
@@ -247,7 +247,7 @@ final class ConsentSettingsServiceTest extends TestCase
     // -------------------------------------------------------------------------
 
     /**
-     * Builds a mock request that exposes $tsPlugin as the tx_maispace_consent
+     * Builds a mock request that exposes $tsPlugin as the tx_mai_consent
      * section of the TypoScript setup.
      *
      * @param array<string, mixed> $tsPlugin
@@ -256,7 +256,7 @@ final class ConsentSettingsServiceTest extends TestCase
     {
         $setup = [
             'plugin.' => [
-                'tx_maispace_consent.' => $tsPlugin,
+                'tx_mai_consent.' => $tsPlugin,
             ],
         ];
 

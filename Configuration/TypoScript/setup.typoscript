@@ -1,6 +1,6 @@
-plugin.tx_maispace_consent {
+plugin.tx_mai_consent {
     cookie {
-        name = maispace_consent
+        name = mai_consent
         lifetime = 365
         sameSite = Lax
     }
@@ -22,13 +22,13 @@ plugin.tx_maispace_consent {
     }
     view {
         templateRootPaths {
-            0 = EXT:maispace_consent/Resources/Private/Templates/
+            0 = EXT:mai_consent/Resources/Private/Templates/
         }
         partialRootPaths {
-            0 = EXT:maispace_consent/Resources/Private/Partials/
+            0 = EXT:mai_consent/Resources/Private/Partials/
         }
         layoutRootPaths {
-            0 = EXT:maispace_consent/Resources/Private/Layouts/
+            0 = EXT:mai_consent/Resources/Private/Layouts/
         }
     }
 }
@@ -38,21 +38,21 @@ plugin.tx_maispace_consent {
 # before the ConsentBannerMiddleware injects the banner/modal HTML.
 page.8 = FLUIDTEMPLATE
 page.8 {
-    file = EXT:maispace_consent/Resources/Private/Templates/Frontend/Assets.html
+    file = EXT:mai_consent/Resources/Private/Templates/Frontend/Assets.html
 }
 
 lib.contentElement {
     dataProcessing {
-        200 = Maispace\MaispaceConsent\DataProcessing\ConsentGatingProcessor
+        200 = Maispace\MaiConsent\DataProcessing\ConsentGatingProcessor
         200 {
             placeholder = 0
             placeholderPartial = Consent/Placeholder
         }
     }
     layoutRootPaths {
-        50 = EXT:maispace_consent/Resources/Private/Layouts/ContentElements/
+        50 = EXT:mai_consent/Resources/Private/Layouts/ContentElements/
     }
     partialRootPaths {
-        50 = EXT:maispace_consent/Resources/Private/Partials/
+        50 = EXT:mai_consent/Resources/Private/Partials/
     }
 }

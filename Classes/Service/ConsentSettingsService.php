@@ -8,12 +8,12 @@ use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Core\TypoScript\FrontendTypoScript;
 
 /**
- * Provides merged consent settings: TypoScript plugin.tx_maispace_consent
+ * Provides merged consent settings: TypoScript plugin.tx_mai_consent
  * overrides built-in defaults so every option is always populated.
  */
 class ConsentSettingsService
 {
-    private const TS_PLUGIN_KEY = 'tx_maispace_consent.';
+    private const TS_PLUGIN_KEY = 'tx_mai_consent.';
 
     /**
      * Maps TypoScript view path keys (with trailing dot) to the corresponding
@@ -77,9 +77,9 @@ class ConsentSettingsService
                 'retentionDays' => 90,
             ],
             'view' => [
-                'templateRootPaths' => ['0' => 'EXT:maispace_consent/Resources/Private/Templates/'],
-                'partialRootPaths'  => ['0' => 'EXT:maispace_consent/Resources/Private/Partials/'],
-                'layoutRootPaths'   => ['0' => 'EXT:maispace_consent/Resources/Private/Layouts/'],
+                'templateRootPaths' => ['0' => 'EXT:mai_consent/Resources/Private/Templates/'],
+                'partialRootPaths'  => ['0' => 'EXT:mai_consent/Resources/Private/Partials/'],
+                'layoutRootPaths'   => ['0' => 'EXT:mai_consent/Resources/Private/Layouts/'],
             ],
         ];
     }
@@ -119,7 +119,7 @@ class ConsentSettingsService
      * a dot (e.g. `'cookie.'`) and scalar values do not (e.g. `'name'`).
      *
      * @param array<string, mixed> $defaults
-     * @param array<string, mixed> $ts       Raw TypoScript sub-array for plugin.tx_maispace_consent
+     * @param array<string, mixed> $ts       Raw TypoScript sub-array for plugin.tx_mai_consent
      *
      * @return array<string, mixed>
      */

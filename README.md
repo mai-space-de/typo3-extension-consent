@@ -18,14 +18,14 @@ A TYPO3 extension that adds a cookie banner and consent modal to the frontend, l
 | Consent category assignment on every content element | Backend content element tab |
 | Cookie banner with accept / reject / customize actions | Auto-injected via middleware |
 | Consent modal for per-category preference management | Triggered from banner |
-| Consent preferences stored in a first-party cookie | `maispace_consent` cookie |
+| Consent preferences stored in a first-party cookie | `mai_consent` cookie |
 | Content elements hidden until consent is granted | DataProcessor + JavaScript runtime |
 | JavaScript runtime for full client-side consent UX | `Resources/Public/JavaScript/consent.js` (registered via `maispace/assets` ViewHelpers) |
 | CSS styling for banner, modal and placeholder | `Resources/Public/Css/consent.css` (registered via `maispace/assets` ViewHelpers) |
 | Backend module for managing categories | `Web > Consent` module |
 | Consent statistics per category (tables + progress bar) | Backend module dashboard |
 | CSV export of consent statistics | One-click download from statistics view |
-| Fully customizable banner and modal text via TypoScript | `plugin.tx_maispace_consent` |
+| Fully customizable banner and modal text via TypoScript | `plugin.tx_mai_consent` |
 | All frontend texts translatable via XLIFF | `locallang_fe.xlf` |
 | GDPR-compliant — no data leaves the server | Built-in |
 
@@ -40,7 +40,7 @@ composer require maispace/consent
 Include the TypoScript setup in your site package:
 
 ```typoscript
-@import 'EXT:maispace_consent/Configuration/TypoScript/setup.typoscript'
+@import 'EXT:mai_consent/Configuration/TypoScript/setup.typoscript'
 ```
 
 The cookie banner and middleware are registered automatically. CSS and JavaScript are
@@ -100,7 +100,7 @@ EXT:my_sitepackage/Resources/Private/Partials/Consent/Banner.html
 Configure the partial path via TypoScript:
 
 ```typoscript
-plugin.tx_maispace_consent.view {
+plugin.tx_mai_consent.view {
     partialRootPaths.10 = EXT:my_sitepackage/Resources/Private/Partials/
 }
 ```
@@ -137,7 +137,7 @@ The modal partial receives the following variables:
 
 ## Consent Storage
 
-User preferences are stored in a single first-party cookie named `maispace_consent`. The cookie contains a JSON object keyed by category UID:
+User preferences are stored in a single first-party cookie named `mai_consent`. The cookie contains a JSON object keyed by category UID:
 
 ```json
 { "1": true, "2": false, "3": true }
@@ -145,7 +145,7 @@ User preferences are stored in a single first-party cookie named `maispace_conse
 
 | Property | Value |
 |---|---|
-| Name | `maispace_consent` |
+| Name | `mai_consent` |
 | Lifetime | 365 days (configurable) |
 | Scope | Current domain, path `/` |
 | `SameSite` | `Lax` |
@@ -163,7 +163,7 @@ Content elements assigned to a consent category are hidden on initial render and
 A placeholder can be shown instead of the blank space:
 
 ```typoscript
-plugin.tx_maispace_consent.gating {
+plugin.tx_mai_consent.gating {
     placeholder = 1
     placeholderPartial = Consent/Placeholder
 }
@@ -192,9 +192,9 @@ The **Consent** backend module (`Web > Consent`) gives administrators full contr
 ## TypoScript Configuration
 
 ```typoscript
-plugin.tx_maispace_consent {
+plugin.tx_mai_consent {
     cookie {
-        name = maispace_consent      # cookie name
+        name = mai_consent      # cookie name
         lifetime = 365               # days until the cookie expires
         sameSite = Lax               # Strict | Lax | None
     }
@@ -215,9 +215,9 @@ plugin.tx_maispace_consent {
         retentionDays = 90           # delete events older than N days (0 = keep forever)
     }
     view {
-        templateRootPaths.0 = EXT:maispace_consent/Resources/Private/Templates/
-        partialRootPaths.0  = EXT:maispace_consent/Resources/Private/Partials/
-        layoutRootPaths.0   = EXT:maispace_consent/Resources/Private/Layouts/
+        templateRootPaths.0 = EXT:mai_consent/Resources/Private/Templates/
+        partialRootPaths.0  = EXT:mai_consent/Resources/Private/Partials/
+        layoutRootPaths.0   = EXT:mai_consent/Resources/Private/Layouts/
     }
 }
 ```
@@ -243,7 +243,7 @@ services:
     tags:
       - name: event.listener
         identifier: 'my-sitepackage/modify-banner'
-        event: Maispace\MaispaceConsent\Event\BeforeBannerRenderedEvent
+        event: Maispace\MaiConsent\Event\BeforeBannerRenderedEvent
 ```
 
 ---

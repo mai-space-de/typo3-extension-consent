@@ -11,13 +11,13 @@
     <div class="maispace-consent-modal__dialog">
         <div class="maispace-consent-modal__header">
             <h2 id="maispace-consent-modal-title" class="maispace-consent-modal__title">
-                <f:translate key="LLL:EXT:maispace_consent/Resources/Private/Language/locallang_fe.xlf:modal.title" default="Manage Cookie Preferences" />
+                <f:translate key="LLL:EXT:mai_consent/Resources/Private/Language/locallang_fe.xlf:modal.title" default="Manage Cookie Preferences" />
             </h2>
             <button
                 type="button"
                 class="maispace-consent-modal__close"
                 data-maispace-consent-action="close-modal"
-                aria-label="{f:translate(key: 'LLL:EXT:maispace_consent/Resources/Private/Language/locallang_fe.xlf:modal.close', default: 'Close')}"
+                aria-label="{f:translate(key: 'LLL:EXT:mai_consent/Resources/Private/Language/locallang_fe.xlf:modal.close', default: 'Close')}"
             >
                 <span aria-hidden="true">&times;</span>
             </button>
@@ -25,7 +25,7 @@
 
         <div class="maispace-consent-modal__body">
             <p class="maispace-consent-modal__intro">
-                <f:translate key="LLL:EXT:maispace_consent/Resources/Private/Language/locallang_fe.xlf:modal.intro" default="Select which categories of cookies you consent to. Essential cookies cannot be disabled as they are required for the website to function." />
+                <f:translate key="LLL:EXT:mai_consent/Resources/Private/Language/locallang_fe.xlf:modal.intro" default="Select which categories of cookies you consent to. Essential cookies cannot be disabled as they are required for the website to function." />
             </p>
 
             <div class="maispace-consent-modal__categories">
@@ -50,7 +50,7 @@
                                     {category.name}
                                     <f:if condition="{category.isEssential}">
                                         <span class="maispace-consent-modal__category-badge">
-                                            <f:translate key="LLL:EXT:maispace_consent/Resources/Private/Language/locallang_fe.xlf:modal.essential" default="Essential" />
+                                            <f:translate key="LLL:EXT:mai_consent/Resources/Private/Language/locallang_fe.xlf:modal.essential" default="Essential" />
                                         </span>
                                     </f:if>
                                 </span>
@@ -74,21 +74,21 @@
                 class="maispace-consent-modal__btn maispace-consent-modal__btn--primary"
                 data-maispace-consent-action="save-preferences"
             >
-                <f:translate key="LLL:EXT:maispace_consent/Resources/Private/Language/locallang_fe.xlf:modal.savePreferences" default="Save preferences" />
+                <f:translate key="LLL:EXT:mai_consent/Resources/Private/Language/locallang_fe.xlf:modal.savePreferences" default="Save preferences" />
             </button>
             <button
                 type="button"
                 class="maispace-consent-modal__btn maispace-consent-modal__btn--secondary"
                 data-maispace-consent-action="accept-all"
             >
-                <f:translate key="LLL:EXT:maispace_consent/Resources/Private/Language/locallang_fe.xlf:modal.acceptAll" default="Accept all" />
+                <f:translate key="LLL:EXT:mai_consent/Resources/Private/Language/locallang_fe.xlf:modal.acceptAll" default="Accept all" />
             </button>
             <button
                 type="button"
                 class="maispace-consent-modal__btn maispace-consent-modal__btn--outline"
                 data-maispace-consent-action="reject-all"
             >
-                <f:translate key="LLL:EXT:maispace_consent/Resources/Private/Language/locallang_fe.xlf:modal.rejectAll" default="Reject all" />
+                <f:translate key="LLL:EXT:mai_consent/Resources/Private/Language/locallang_fe.xlf:modal.rejectAll" default="Reject all" />
             </button>
         </div>
     </div>

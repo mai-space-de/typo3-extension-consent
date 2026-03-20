@@ -6,7 +6,7 @@
  *
  * Configuration is read from the JSON element injected by ConsentBannerMiddleware:
  *   <script type="application/json" id="maispace-consent-config">
- *     {"cookieName":"maispace_consent","cookieLifetime":365,"recordEndpoint":"/maispace/consent/record"}
+ *     {"cookieName":"mai_consent","cookieLifetime":365,"recordEndpoint":"/maispace/consent/record"}
  *   </script>
  *
  * CSS and JavaScript are registered with TYPO3's AssetCollector via
@@ -36,7 +36,7 @@
 
     const cookieName = (typeof runtimeConfig.cookieName === 'string' && runtimeConfig.cookieName)
         ? runtimeConfig.cookieName
-        : 'maispace_consent';
+        : 'mai_consent';
     const cookieLifetime = (typeof runtimeConfig.cookieLifetime === 'number' && runtimeConfig.cookieLifetime > 0)
         ? runtimeConfig.cookieLifetime
         : 365;

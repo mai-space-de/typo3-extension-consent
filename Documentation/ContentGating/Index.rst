@@ -14,7 +14,7 @@ How it works
 
 1. A TYPO3 **DataProcessor** (``ConsentGatingProcessor``) runs on every
    content element during page rendering.
-2. It reads the ``tx_maispace_consent_categories`` field that the extension
+2. It reads the ``tx_mai_consent_categories`` field that the extension
    adds to ``tt_content``.
 3. If categories are assigned, the layout template wraps the element in a
    ``<div>`` with the ``data-maispace-consent-required`` attribute set to the
@@ -59,7 +59,7 @@ Enable the placeholder to show a visible hint instead of a blank space:
 
 .. code-block:: typoscript
 
-   plugin.tx_maispace_consent.gating {
+   plugin.tx_mai_consent.gating {
        placeholder = 1
        placeholderPartial = Consent/Placeholder
    }
@@ -82,7 +82,7 @@ Before a content element is wrapped, the
 
 .. code-block:: php
 
-   use Maispace\MaispaceConsent\Event\BeforeContentElementGatedEvent;
+   use Maispace\MaiConsent\Event\BeforeContentElementGatedEvent;
 
    final class MyGatingListener
    {
@@ -104,4 +104,4 @@ Register in ``Configuration/Services.yaml``:
        tags:
          - name: event.listener
            identifier: 'my-sitepackage/gating'
-           event: Maispace\MaispaceConsent\Event\BeforeContentElementGatedEvent
+           event: Maispace\MaiConsent\Event\BeforeContentElementGatedEvent

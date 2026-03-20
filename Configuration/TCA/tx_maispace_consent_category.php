@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 return [
     'ctrl' => [
-        'title'          => 'LLL:EXT:maispace_consent/Resources/Private/Language/locallang_tca.xlf:tx_maiconsent_category',
+        'title'          => 'LLL:EXT:mai_consent/Resources/Private/Language/locallang_tca.xlf:tx_maiconsent_category',
         'label'          => 'name',
         'sortby'         => 'sorting',
         'tstamp'         => 'tstamp',
@@ -14,7 +14,7 @@ return [
             'disabled' => 'hidden',
         ],
         'searchFields'   => 'name,description',
-        'iconfile'       => 'EXT:maispace_consent/ext_icon.svg',
+        'iconfile'       => 'EXT:mai_consent/Resources/Public/Icons/Extension.svg',
     ],
     'types' => [
         '0' => [
@@ -39,7 +39,7 @@ return [
         ],
         'name' => [
             'exclude' => false,
-            'label'   => 'LLL:EXT:maispace_consent/Resources/Private/Language/locallang_tca.xlf:tx_maiconsent_category.name',
+            'label'   => 'LLL:EXT:mai_consent/Resources/Private/Language/locallang_tca.xlf:tx_maiconsent_category.name',
             'config'  => [
                 'type'     => 'input',
                 'size'     => 50,
@@ -50,7 +50,7 @@ return [
         ],
         'description' => [
             'exclude' => false,
-            'label'   => 'LLL:EXT:maispace_consent/Resources/Private/Language/locallang_tca.xlf:tx_maiconsent_category.description',
+            'label'   => 'LLL:EXT:mai_consent/Resources/Private/Language/locallang_tca.xlf:tx_maiconsent_category.description',
             'config'  => [
                 'type'            => 'text',
                 'cols'            => 40,
@@ -61,7 +61,7 @@ return [
         ],
         'is_essential' => [
             'exclude' => false,
-            'label'   => 'LLL:EXT:maispace_consent/Resources/Private/Language/locallang_tca.xlf:tx_maiconsent_category.is_essential',
+            'label'   => 'LLL:EXT:mai_consent/Resources/Private/Language/locallang_tca.xlf:tx_maiconsent_category.is_essential',
             'config'  => [
                 'type'       => 'check',
                 'renderType' => 'checkboxToggle',

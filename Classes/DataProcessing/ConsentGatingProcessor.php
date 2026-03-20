@@ -14,7 +14,7 @@ use TYPO3\CMS\Frontend\ContentObject\DataProcessorInterface;
  *
  * When a content element has one or more consent categories assigned via the
  * `tx_maiconsent_categories` field the processor sets
- * `maispace_consent.isGated = true` and `maispace_consent.categoryUids` so that
+ * `mai_consent.isGated = true` and `mai_consent.categoryUids` so that
  * a layout override can wrap the element in a hidden container.
  *
  * Register in TypoScript:

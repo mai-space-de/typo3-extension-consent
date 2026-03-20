@@ -1,6 +1,6 @@
 <html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers" xmlns:be="http://typo3.org/ns/TYPO3/CMS/Backend/ViewHelpers" data-namespace-typo3-fluid="true">
 
-<f:flashMessages />
+<f:flashMessages queueIdentifier="mai_consent.flashmessages" />
 
 <div class="module-body">
 
@@ -64,7 +64,7 @@
                                                 </button>
 
                                                 <!-- Delete form -->
-                                                <form method="post" action="{f:be.uri(route: 'maispace_consent.deleteCategory')}" class="d-inline">
+                                                <form method="post" action="{f:be.uri(route: 'mai_consent.deleteCategory')}" class="d-inline">
                                                     <input type="hidden" name="uid" value="{category.uid}" />
                                                     <button
                                                         type="submit"
@@ -78,7 +78,7 @@
                                         </tr>
                                         <tr id="edit-category-{category.uid}" class="collapse">
                                             <td colspan="4">
-                                                <form method="post" action="{f:be.uri(route: 'maispace_consent.updateCategory')}" class="p-3 bg-light">
+                                                <form method="post" action="{f:be.uri(route: 'mai_consent.updateCategory')}" class="p-3 bg-light">
                                                     <input type="hidden" name="uid" value="{category.uid}" />
                                                     <div class="row g-3">
                                                         <div class="col-md-4">
@@ -146,7 +146,7 @@
                     <h2 class="card-title">Add New Category</h2>
                 </div>
                 <div class="card-body">
-                    <form method="post" action="{f:be.uri(route: 'maispace_consent.createCategory')}">
+                    <form method="post" action="{f:be.uri(route: 'mai_consent.createCategory')}">
                         <div class="row g-3">
                             <div class="col-md-4">
                                 <label class="form-label" for="new-category-name">Name *</label>
