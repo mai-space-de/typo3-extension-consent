@@ -1,4 +1,4 @@
-# maispace/consent — Consent Management for TYPO3
+# maispace/mai-consent — Consent Management for TYPO3
 
 [![CI](https://github.com/mai-space-de/typo3-extension-consent/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/mai-space-de/typo3-extension-consent/actions/workflows/ci.yml)
 [![PHP](https://img.shields.io/badge/PHP-8.2%2B-blue)](https://www.php.net/)
@@ -34,7 +34,7 @@ A TYPO3 extension that adds a cookie banner and consent modal to the frontend, l
 ## Installation
 
 ```bash
-composer require maispace/consent
+composer require maispace/mai-consent
 ```
 
 Include the TypoScript setup in your site package:

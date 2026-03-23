@@ -9,6 +9,12 @@
       "role": "Developer"
     }
   ],
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "https://github.com/mai-space-de/typo3-extension-assets"
+    }
+  ],
   "require": {
     "maispace/mai-assets": "^13.0",
     "php": "^8.2",

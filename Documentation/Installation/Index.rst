@@ -16,7 +16,7 @@ Composer installation
 
 .. code-block:: bash
 
-   composer require maispace/consent
+   composer require maispace/mai-consent
 
 TYPO3 will automatically discover the extension. No manual activation is
 required.
