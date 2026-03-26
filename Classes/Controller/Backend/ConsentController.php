@@ -13,13 +13,9 @@ use TYPO3\CMS\Backend\Template\ModuleTemplateFactory;
 use TYPO3\CMS\Core\Http\RedirectResponse;
 use TYPO3\CMS\Core\Http\Response;
 use TYPO3\CMS\Core\Http\Stream;
-use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
-use TYPO3\CMS\Fluid\View\StandaloneView;
 
 class ConsentController
 {
-    private const EXT_KEY = 'mai_consent';
-
     public function __construct(
         private readonly CategoryService $categoryService,
         private readonly StatisticRepository $statisticRepository,
@@ -34,8 +30,7 @@ class ConsentController
 
         $categories = $this->categoryService->getAllCategories();
 
-        $view = $this->createView('Backend/Index');
-        $view->assignMultiple([
+        $moduleTemplate->assignMultiple([
             'categories'    => $categories,
             'statisticsUri' => (string)$this->uriBuilder->buildUriFromRoute('mai_consent.statistics'),
         ]);
@@ -68,8 +63,7 @@ class ConsentController
 
         $dailyActivity = $this->statisticRepository->getDailyActivity(30);
 
-        $view = $this->createView('Backend/Statistics');
-        $view->assignMultiple([
+        $moduleTemplate->assignMultiple([
             'statisticsData' => $statisticsData,
             'dailyActivity'  => $dailyActivity,
             'indexUri'       => (string)$this->uriBuilder->buildUriFromRoute('mai_consent'),
@@ -192,16 +186,5 @@ class ConsentController
         return $value;
     }
 
-    private function createView(string $template): StandaloneView
-    {
-        $extPath = ExtensionManagementUtility::extPath(self::EXT_KEY);
 
-        $view = new StandaloneView();
-        $view->setTemplateRootPaths([$extPath . 'Resources/Private/Templates/']);
-        $view->setPartialRootPaths([$extPath . 'Resources/Private/Partials/']);
-        $view->setLayoutRootPaths([$extPath . 'Resources/Private/Layouts/']);
-        $view->setTemplate($template);
-
-        return $view;
-    }
 }

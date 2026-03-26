@@ -4,9 +4,14 @@ declare(strict_types = 1);
 
 namespace Maispace\MaiConsent\Service;
 
+use Psr\Http\Message\ServerRequestInterface;
+use TYPO3\CMS\Core\Core\SystemEnvironmentBuilder;
+use TYPO3\CMS\Core\TypoScript\FrontendTypoScript;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Fluid\View\StandaloneView;
+use TYPO3\CMS\Core\View\ViewFactoryData;
+use TYPO3\CMS\Core\View\ViewFactoryInterface;
+use TYPO3\CMS\Core\View\ViewInterface;
 
 class BannerRenderer
 {
@@ -14,10 +19,15 @@ class BannerRenderer
     private const DEFAULT_PARTIALS_SUBPATH = 'Resources/Private/Partials/';
     private const DEFAULT_LAYOUTS_SUBPATH = 'Resources/Private/Layouts/';
 
+    public function __construct(
+        private readonly ViewFactoryInterface $viewFactory,
+    ) {
+    }
+
     /**
      * @param array<string, mixed> $variables
      */
-    public function renderBannerHtml(array $variables): string
+    public function renderBannerHtml(array $variables, ?ServerRequestInterface $request = null): string
     {
         $extPath = ExtensionManagementUtility::extPath(self::EXT_KEY);
         $viewSettings = $this->extractViewSettings($variables);
@@ -36,13 +46,16 @@ class BannerRenderer
         $templateFile = $this->resolveOverridableTemplate($partialRootPaths, 'Consent/Banner.html')
             ?? $extPath . self::DEFAULT_PARTIALS_SUBPATH . 'Consent/Banner.html';
 
-        $view = new StandaloneView();
-        $view->setTemplatePathAndFilename($templateFile);
-        $view->setPartialRootPaths($partialRootPaths);
-        $view->setLayoutRootPaths($layoutRootPaths);
+        $safeRequest = $this->buildSafeRequest($request);
+        $view = $this->viewFactory->create(new ViewFactoryData(
+            partialRootPaths: $partialRootPaths,
+            layoutRootPaths: $layoutRootPaths,
+            request: $safeRequest,
+            templatePathAndFilename: $templateFile,
+        ));
         $view->assignMultiple($variables);
 
-        $html = $view->render();
+        $html = $this->renderWithSafeGlobals($view, $safeRequest);
 
         return is_string($html) ? $html : '';
     }
@@ -50,7 +63,7 @@ class BannerRenderer
     /**
      * @param array<string, mixed> $variables
      */
-    public function renderModalHtml(array $variables): string
+    public function renderModalHtml(array $variables, ?ServerRequestInterface $request = null): string
     {
         $extPath = ExtensionManagementUtility::extPath(self::EXT_KEY);
         $viewSettings = $this->extractViewSettings($variables);
@@ -69,13 +82,16 @@ class BannerRenderer
         $templateFile = $this->resolveOverridableTemplate($partialRootPaths, 'Consent/Modal.html')
             ?? $extPath . self::DEFAULT_PARTIALS_SUBPATH . 'Consent/Modal.html';
 
-        $view = new StandaloneView();
-        $view->setTemplatePathAndFilename($templateFile);
-        $view->setPartialRootPaths($partialRootPaths);
-        $view->setLayoutRootPaths($layoutRootPaths);
+        $safeRequest = $this->buildSafeRequest($request);
+        $view = $this->viewFactory->create(new ViewFactoryData(
+            partialRootPaths: $partialRootPaths,
+            layoutRootPaths: $layoutRootPaths,
+            request: $safeRequest,
+            templatePathAndFilename: $templateFile,
+        ));
         $view->assignMultiple($variables);
 
-        $html = $view->render();
+        $html = $this->renderWithSafeGlobals($view, $safeRequest);
 
         return is_string($html) ? $html : '';
     }
@@ -83,6 +99,58 @@ class BannerRenderer
     // -------------------------------------------------------------------------
     // Helpers
     // -------------------------------------------------------------------------
+
+    /**
+     * Renders a view while temporarily replacing $GLOBALS['TYPO3_REQUEST']
+     * with the safe request so that static helpers such as
+     * LocalizationUtility::loadTypoScriptLabels() — which read the global
+     * request directly — also see the non-frontend applicationType and skip
+     * the TypoScript setup lookup.
+     */
+    private function renderWithSafeGlobals(ViewInterface $view, ?ServerRequestInterface $safeRequest): mixed
+    {
+        $backup = $GLOBALS['TYPO3_REQUEST'] ?? null;
+        if ($safeRequest !== null) {
+            $GLOBALS['TYPO3_REQUEST'] = $safeRequest;
+        }
+        try {
+            return $view->render();
+        } finally {
+            $GLOBALS['TYPO3_REQUEST'] = $backup;
+        }
+    }
+
+    /**
+     * Returns a request safe for use with Fluid's view factory.
+     *
+     * In cached Frontend scope TYPO3 does not initialise the full TypoScript
+     * setup array.  When Fluid renders a <f:translate> tag it calls
+     * LocalizationUtility::loadTypoScriptLabels(), which tries to read the
+     * setup array via FrontendConfigurationManager and throws a
+     * RuntimeException.  Replacing `applicationType` with REQUESTTYPE_BE makes
+     * loadTypoScriptLabels() detect a non-frontend context and return early
+     * with an empty array, so XLF translations still work without TypoScript
+     * label overrides.  Using REQUESTTYPE_BE (rather than removing the
+     * attribute entirely) prevents ApplicationType::fromRequest() from throwing
+     * when other ViewHelpers such as <f:translate> call it to resolve the
+     * locale.  The modified request is also installed as $GLOBALS['TYPO3_REQUEST']
+     * during rendering (see renderWithSafeGlobals()) so that static helpers
+     * which bypass the rendering context and read the global request directly
+     * also see the non-frontend application type.
+     */
+    private function buildSafeRequest(?ServerRequestInterface $request): ?ServerRequestInterface
+    {
+        if ($request === null) {
+            return null;
+        }
+
+        $frontendTypoScript = $request->getAttribute('frontend.typoscript');
+        if ($frontendTypoScript instanceof FrontendTypoScript && $frontendTypoScript->hasSetup()) {
+            return $request;
+        }
+
+        return $request->withAttribute('applicationType', SystemEnvironmentBuilder::REQUESTTYPE_BE);
+    }
 
     /**
      * @param array<string, mixed> $variables

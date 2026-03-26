@@ -77,9 +77,15 @@ class ConsentSettingsService
                 'retentionDays' => 90,
             ],
             'view' => [
-                'templateRootPaths' => ['0' => 'EXT:mai_consent/Resources/Private/Templates/'],
-                'partialRootPaths'  => ['0' => 'EXT:mai_consent/Resources/Private/Partials/'],
-                'layoutRootPaths'   => ['0' => 'EXT:mai_consent/Resources/Private/Layouts/'],
+                'templateRootPaths' => [
+                    '0' => 'EXT:mai_consent/Resources/Private/Templates/',
+                ],
+                'partialRootPaths' => [
+                    '0' => 'EXT:mai_consent/Resources/Private/Partials/',
+                ],
+                'layoutRootPaths' => [
+                    '0' => 'EXT:mai_consent/Resources/Private/Layouts/',
+                ],
             ],
         ];
     }
@@ -91,14 +97,21 @@ class ConsentSettingsService
     /**
      * @return array<string, mixed>
      */
-    private function readTypoScriptPlugin(ServerRequestInterface $request): array
-    {
+    private function readTypoScriptPlugin(
+        ServerRequestInterface $request,
+    ): array {
         $frontendTypoScript = $request->getAttribute('frontend.typoscript');
         if (!$frontendTypoScript instanceof FrontendTypoScript) {
             return [];
         }
 
-        $setup = $frontendTypoScript->getSetupArray();
+        $setup = [];
+        try {
+            $setup = $frontendTypoScript->getSetupArray();
+        } catch (\Exception $e) {
+            return [];
+        }
+
         $pluginSetup = $setup['plugin.'] ?? null;
         if (!is_array($pluginSetup)) {
             return [];
@@ -130,7 +143,9 @@ class ConsentSettingsService
         // cookie.*
         $cookieTs = $ts['cookie.'] ?? null;
         if (is_array($cookieTs)) {
-            $cookieResult = is_array($result['cookie'] ?? null) ? $result['cookie'] : [];
+            $cookieResult = is_array($result['cookie'] ?? null)
+                ? $result['cookie']
+                : [];
             $name = $cookieTs['name'] ?? null;
             if (is_string($name) && $name !== '') {
                 $cookieResult['name'] = $name;
@@ -149,7 +164,9 @@ class ConsentSettingsService
         // banner.*
         $bannerTs = $ts['banner.'] ?? null;
         if (is_array($bannerTs)) {
-            $bannerResult = is_array($result['banner'] ?? null) ? $result['banner'] : [];
+            $bannerResult = is_array($result['banner'] ?? null)
+                ? $result['banner']
+                : [];
             $enable = $bannerTs['enable'] ?? null;
             if ($enable !== null && is_numeric($enable)) {
                 $bannerResult['enable'] = (int)$enable;
@@ -168,10 +185,18 @@ class ConsentSettingsService
         // modal.*
         $modalTs = $ts['modal.'] ?? null;
         if (is_array($modalTs)) {
-            $modalResult = is_array($result['modal'] ?? null) ? $result['modal'] : [];
-            $showCategoryDescriptions = $modalTs['showCategoryDescriptions'] ?? null;
-            if ($showCategoryDescriptions !== null && is_numeric($showCategoryDescriptions)) {
-                $modalResult['showCategoryDescriptions'] = (int)$showCategoryDescriptions;
+            $modalResult = is_array($result['modal'] ?? null)
+                ? $result['modal']
+                : [];
+            $showCategoryDescriptions =
+                $modalTs['showCategoryDescriptions'] ?? null;
+            if (
+                $showCategoryDescriptions !== null
+                && is_numeric($showCategoryDescriptions)
+            ) {
+                $modalResult[
+                    'showCategoryDescriptions'
+                ] = (int)$showCategoryDescriptions;
             }
             $result['modal'] = $modalResult;
         }
@@ -179,7 +204,9 @@ class ConsentSettingsService
         // record.*
         $recordTs = $ts['record.'] ?? null;
         if (is_array($recordTs)) {
-            $recordResult = is_array($result['record'] ?? null) ? $result['record'] : [];
+            $recordResult = is_array($result['record'] ?? null)
+                ? $result['record']
+                : [];
             $endpoint = $recordTs['endpoint'] ?? null;
             if (is_string($endpoint) && $endpoint !== '') {
                 $recordResult['endpoint'] = $endpoint;
@@ -190,13 +217,19 @@ class ConsentSettingsService
         // statistics.*
         $statisticsTs = $ts['statistics.'] ?? null;
         if (is_array($statisticsTs)) {
-            $statsResult = is_array($result['statistics'] ?? null) ? $result['statistics'] : [];
+            $statsResult = is_array($result['statistics'] ?? null)
+                ? $result['statistics']
+                : [];
             $enable = $statisticsTs['enable'] ?? null;
             if ($enable !== null && is_numeric($enable)) {
                 $statsResult['enable'] = (int)$enable;
             }
             $retentionDays = $statisticsTs['retentionDays'] ?? null;
-            if ($retentionDays !== null && is_numeric($retentionDays) && (int)$retentionDays >= 0) {
+            if (
+                $retentionDays !== null
+                && is_numeric($retentionDays)
+                && (int)$retentionDays >= 0
+            ) {
                 $statsResult['retentionDays'] = (int)$retentionDays;
             }
             $result['statistics'] = $statsResult;
@@ -205,7 +238,9 @@ class ConsentSettingsService
         // view.* — handle path arrays (templateRootPaths, partialRootPaths, layoutRootPaths)
         $viewTs = $ts['view.'] ?? null;
         if (is_array($viewTs)) {
-            $viewResult = is_array($result['view'] ?? null) ? $result['view'] : [];
+            $viewResult = is_array($result['view'] ?? null)
+                ? $result['view']
+                : [];
             foreach (self::VIEW_PATH_KEYS as $tsKey => $settingsKey) {
                 $pathsArray = $viewTs[$tsKey] ?? null;
                 if (!is_array($pathsArray)) {

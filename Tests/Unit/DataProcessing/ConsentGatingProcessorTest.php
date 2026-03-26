@@ -30,7 +30,7 @@ final class ConsentGatingProcessorTest extends TestCase
         return [
             'data' => [
                 'uid'                            => $uid,
-                'tx_maiconsent_categories' => $categories,
+                'tx_maiconsent_categories'       => $categories,
             ],
         ];
     }

@@ -74,8 +74,8 @@ class ConsentBannerMiddleware implements MiddlewareInterface
 
         $variables = $beforeEvent->getVariables();
 
-        $bannerHtml = $this->bannerRenderer->renderBannerHtml($variables);
-        $modalHtml = $this->bannerRenderer->renderModalHtml($variables);
+        $bannerHtml = $this->bannerRenderer->renderBannerHtml($variables, $request);
+        $modalHtml = $this->bannerRenderer->renderModalHtml($variables, $request);
 
         // Extract runtime-configurable values from settings (may be overridden by event listeners).
         $settings = is_array($variables['settings'] ?? null) ? $variables['settings'] : [];
