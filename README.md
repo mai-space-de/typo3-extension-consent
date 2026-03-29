@@ -5,7 +5,7 @@
 
 Cookie consent management with a configurable banner, modal, category-based content gating, and a backend statistics module.
 
-**Requires:** TYPO3 13.4 LTS / 14.0 · PHP 8.2+
+**Requires:** TYPO3 13.4 LTS / 14.1 · PHP 8.2+
 
 ---
 
