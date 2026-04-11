@@ -2,12 +2,8 @@ services:
   _defaults:
     autowire: true
     autoconfigure: true
-    public: true
+    public: false
 
   Maispace\MaiConsent\:
     resource: '../Classes/*'
-    exclude:
-      - '../Classes/Domain/Model/*'
-      - '../Classes/Event/*'
-
-
+    exclude: '../Classes/Domain/Model/*'

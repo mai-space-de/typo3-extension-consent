@@ -1,21 +1,17 @@
 <?php
-
 $EM_CONF[$_EXTKEY] = [
-    'title'            => 'Maispace Consent',
-    'description'      => 'Cookie consent management for TYPO3. Cookie banner, consent modal, category-based content gating and backend statistics.',
-    'category'         => 'fe',
-    'version'          => '1.0.0',
-    'state'            => 'stable',
-    'author'           => 'Maispace',
-    'author_email'     => '',
-    'author_company'   => 'Maispace',
-    'clearCacheOnLoad' => true,
-    'constraints'      => [
-        'depends'   => [
-            'php'   => '8.2.0-0.0.0',
-            'typo3' => '13.4.0-13.9.99',
+    'title' => 'Mai Consent',
+    'description' => 'Cookie consent management with a configurable banner, modal, category-based content gating, and a backend statistics module.',
+    'category' => 'module',
+    'author' => 'Maispace',
+    'author_email' => '',
+    'state' => 'stable',
+    'version' => '1.0.0',
+    'constraints' => [
+        'depends' => [
+            'typo3' => '13.4.0-14.99.99',
         ],
         'conflicts' => [],
-        'suggests'  => [],
+        'suggests' => [],
     ],
 ];

@@ -1,20 +1,16 @@
-filePatterns:
-  - '*.tsconfig'
-  - '*.typoscript'
+paths:
+  - Configuration/
 
-sniffs:
-  - class: Indentation
-    parameters:
-      indentConditions: true
-      useSpaces: true
-      indentPerLevel: 4
-  - class: OperatorWhitespace
-  - class: RepeatingRValue
-    disabled: true
-  - class: DeadCode
-    disabled: false
-  - class: DuplicateAssignment
-  - class: EmptySection
-  - class: NestingConsistency
-    parameters:
-      commonPathPrefixThreshold: 1
+linters:
+  Indentation:
+    enabled: true
+    useSpaces: true
+    indentPerLevel: 4
+  DeadCode:
+    enabled: true
+  EmptyBlock:
+    enabled: true
+  NestingConsistency:
+    enabled: true
+  RepeatingRValue:
+    enabled: true
