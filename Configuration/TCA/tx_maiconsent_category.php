@@ -14,13 +14,12 @@ $lang = Helper::localLangHelperFactory('mai_consent', 'Default/locallang_tca.xlf
 return (new Table($lang('table.tx_maiconsent_category')))
     ->setDefaultConfig()
     ->setLabel('title')
-    ->setSearchFields('title, identifier, description')
     ->setIconFile('EXT:mai_consent/Resources/Public/Icons/tx_maiconsent_category.svg')
     ->setSortingField()
     ->addColumn(
         'title',
         $lang('tx_maiconsent_category.title'),
-        (new InputConfig())->setSize(50)->setMax(255)->setEval('trim,required')
+        (new InputConfig())->setSize(50)->setMax(255)->setEval('trim')->setRequired()
     )
     ->addColumn(
         'identifier',
