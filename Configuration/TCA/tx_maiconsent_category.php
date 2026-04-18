@@ -2,6 +2,10 @@
 
 declare(strict_types=1);
 
+use Maispace\MaiBase\TableConfigurationArray\FieldConfig\CheckboxConfig;
+use Maispace\MaiBase\TableConfigurationArray\FieldConfig\InputConfig;
+use Maispace\MaiBase\TableConfigurationArray\FieldConfig\SlugConfig;
+use Maispace\MaiBase\TableConfigurationArray\FieldConfig\TextConfig;
 use Maispace\MaiBase\TableConfigurationArray\Helper;
 use Maispace\MaiBase\TableConfigurationArray\Table;
 
@@ -16,35 +20,28 @@ return (new Table($lang('table.tx_maiconsent_category')))
     ->addColumn(
         'title',
         $lang('tx_maiconsent_category.title'),
-        ['type' => 'input', 'size' => 50, 'max' => 255, 'eval' => 'trim,required']
+        (new InputConfig())->setSize(50)->setMax(255)->setEval('trim,required')
     )
     ->addColumn(
         'identifier',
         $lang('tx_maiconsent_category.identifier'),
-        [
-            'type' => 'slug',
-            'size' => 50,
-            'generatorOptions' => [
+        (new SlugConfig())
+            ->setGeneratorOptions([
                 'fields' => ['title'],
                 'replacements' => [' ' => '_'],
-            ],
-            'fallbackCharacter' => '_',
-            'eval' => 'uniqueInSite',
-        ]
+            ])
+            ->setFallbackCharacter('_')
+            ->setEval('uniqueInSite')
     )
     ->addColumn(
         'description',
         $lang('tx_maiconsent_category.description'),
-        ['type' => 'text', 'rows' => 5, 'cols' => 50, 'eval' => 'trim']
+        (new TextConfig())->setRows(5)->setCols(50)->setEval('trim')
     )
     ->addColumn(
         'is_required',
         $lang('tx_maiconsent_category.is_required'),
-        [
-            'type' => 'check',
-            'renderType' => 'checkboxToggle',
-            'default' => 0,
-        ]
+        (new CheckboxConfig())->setRenderType('checkboxToggle')->setDefault(0)
     )
     ->addTypeShowItem(
         '0',
