@@ -7,3 +7,6 @@ services:
   Maispace\MaiConsent\:
     resource: '../Classes/*'
     exclude: '../Classes/Domain/Model/*'
+
+  Maispace\MaiConsent\Controller\Backend\ConsentStatisticsBackendController:
+    public: true

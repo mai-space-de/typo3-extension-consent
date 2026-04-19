@@ -1,0 +1,136 @@
+.mai-consent-banner {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 9999;
+    background: #fff;
+    border-top: 2px solid #e0e0e0;
+    box-shadow: 0 -2px 12px rgba(0, 0, 0, 0.08);
+    padding: 1rem 1.5rem;
+}
+
+.mai-consent-banner__inner {
+    max-width: 72rem;
+    margin: 0 auto;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1rem;
+}
+
+.mai-consent-banner__text {
+    flex: 1 1 20rem;
+    margin: 0;
+    font-size: 0.9rem;
+    color: #333;
+}
+
+.mai-consent-banner__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.mai-consent-banner__accept,
+.mai-consent-banner__customize,
+.mai-consent-banner__reject {
+    padding: 0.5rem 1.25rem;
+    border: none;
+    border-radius: 4px;
+    font-size: 0.875rem;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+.mai-consent-banner__accept {
+    background: #1a56db;
+    color: #fff;
+}
+
+.mai-consent-banner__customize {
+    background: #f3f4f6;
+    color: #111;
+    border: 1px solid #d1d5db;
+}
+
+.mai-consent-banner__reject {
+    background: transparent;
+    color: #6b7280;
+    text-decoration: underline;
+}
+
+.mai-consent-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mai-consent-modal__overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+}
+
+.mai-consent-modal__dialog {
+    position: relative;
+    background: #fff;
+    border-radius: 8px;
+    padding: 2rem;
+    max-width: 36rem;
+    width: 100%;
+    max-height: 80vh;
+    overflow-y: auto;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.18);
+}
+
+.mai-consent-modal__title {
+    margin-top: 0;
+    font-size: 1.25rem;
+}
+
+.mai-consent-modal__category {
+    margin-bottom: 1.25rem;
+}
+
+.mai-consent-modal__label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.mai-consent-modal__category-description {
+    margin: 0.25rem 0 0 1.5rem;
+    font-size: 0.875rem;
+    color: #6b7280;
+}
+
+.mai-consent-modal__actions {
+    margin-top: 1.5rem;
+}
+
+.mai-consent-modal__save {
+    padding: 0.6rem 1.5rem;
+    background: #1a56db;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.mai-consent-gate__placeholder {
+    padding: 2rem;
+    background: #f9fafb;
+    border: 1px dashed #d1d5db;
+    border-radius: 6px;
+    text-align: center;
+    color: #6b7280;
+    font-size: 0.875rem;
+}

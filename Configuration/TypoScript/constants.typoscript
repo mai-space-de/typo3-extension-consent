@@ -1,0 +1,8 @@
+plugin.tx_maiconsent {
+    settings {
+        cookieName = mai_consent
+        cookieLifetime = 365
+        consentPageId = 0
+        storagePageId = 0
+    }
+}

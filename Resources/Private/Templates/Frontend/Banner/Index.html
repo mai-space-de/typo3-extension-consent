@@ -1,0 +1,67 @@
+<html
+    xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+    xmlns:consent="http://typo3.org/ns/Maispace/MaiConsent/ViewHelpers"
+    xmlns:asset="http://typo3.org/ns/Maispace/MaiAssets/ViewHelpers/Asset"
+    data-namespace-typo3-fluid="true"
+>
+
+<asset:css identifier="mai-consent" src="EXT:mai_consent/Resources/Public/Css/consent.css" />
+<asset:js identifier="mai-consent" src="EXT:mai_consent/Resources/Public/JavaScript/consent.js" defer="true" />
+
+<div class="mai-consent-banner" id="mai-consent-banner" role="dialog" aria-modal="true" aria-labelledby="mai-consent-title" hidden>
+    <div class="mai-consent-banner__inner">
+        <p id="mai-consent-title" class="mai-consent-banner__text">
+            <f:translate key="LLL:EXT:mai_consent/Resources/Private/Language/locallang.xlf:banner.text" />
+        </p>
+        <div class="mai-consent-banner__actions">
+            <button type="button" class="mai-consent-banner__accept" data-consent-action="acceptAll">
+                <f:translate key="LLL:EXT:mai_consent/Resources/Private/Language/locallang.xlf:banner.acceptAll" />
+            </button>
+            <button type="button" class="mai-consent-banner__customize" data-consent-action="openModal">
+                <f:translate key="LLL:EXT:mai_consent/Resources/Private/Language/locallang.xlf:banner.customize" />
+            </button>
+            <button type="button" class="mai-consent-banner__reject" data-consent-action="rejectAll">
+                <f:translate key="LLL:EXT:mai_consent/Resources/Private/Language/locallang.xlf:banner.rejectAll" />
+            </button>
+        </div>
+    </div>
+</div>
+
+<div class="mai-consent-modal" id="mai-consent-modal" role="dialog" aria-modal="true" hidden>
+    <div class="mai-consent-modal__overlay" data-consent-action="closeModal"></div>
+    <div class="mai-consent-modal__dialog">
+        <h2 class="mai-consent-modal__title">
+            <f:translate key="LLL:EXT:mai_consent/Resources/Private/Language/locallang.xlf:modal.title" />
+        </h2>
+
+        <form id="mai-consent-form" data-consent-api="/api/consent">
+            <f:for each="{categories}" as="category">
+                <div class="mai-consent-modal__category">
+                    <label class="mai-consent-modal__label">
+                        <f:if condition="{category.isRequired}">
+                            <f:then>
+                                <input type="checkbox" name="consent[{category.identifier}]" value="1" checked disabled />
+                            </f:then>
+                            <f:else>
+                                <input type="checkbox" name="consent[{category.identifier}]" value="1"
+                                    data-consent-identifier="{category.identifier}" />
+                            </f:else>
+                        </f:if>
+                        <span class="mai-consent-modal__category-title">{category.title}</span>
+                    </label>
+                    <f:if condition="{category.description}">
+                        <p class="mai-consent-modal__category-description">{category.description}</p>
+                    </f:if>
+                </div>
+            </f:for>
+
+            <div class="mai-consent-modal__actions">
+                <button type="submit" class="mai-consent-modal__save">
+                    <f:translate key="LLL:EXT:mai_consent/Resources/Private/Language/locallang.xlf:modal.save" />
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+</html>

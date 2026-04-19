@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+    <file source-language="en" datatype="plaintext" original="messages" date="2024-01-01T00:00:00Z" product-name="mai_consent">
+        <header/>
+        <body>
+            <trans-unit id="tx_maiconsent_category">
+                <source>Consent Category</source>
+            </trans-unit>
+            <trans-unit id="tx_maiconsent_category.title">
+                <source>Title</source>
+            </trans-unit>
+            <trans-unit id="tx_maiconsent_category.identifier">
+                <source>Identifier</source>
+            </trans-unit>
+            <trans-unit id="tx_maiconsent_category.description">
+                <source>Description</source>
+            </trans-unit>
+            <trans-unit id="tx_maiconsent_category.is_required">
+                <source>Required</source>
+            </trans-unit>
+            <trans-unit id="tx_maiconsent_log">
+                <source>Consent Log</source>
+            </trans-unit>
+            <trans-unit id="tx_maiconsent_log.category">
+                <source>Category</source>
+            </trans-unit>
+            <trans-unit id="tx_maiconsent_log.accepted">
+                <source>Accepted</source>
+            </trans-unit>
+            <trans-unit id="tx_maiconsent_log.session">
+                <source>Session</source>
+            </trans-unit>
+            <trans-unit id="tx_maiconsent_log.ip_address">
+                <source>IP Address</source>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>

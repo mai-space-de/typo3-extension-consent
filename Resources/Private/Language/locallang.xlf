@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+    <file source-language="en" datatype="plaintext" original="messages" date="2024-01-01T00:00:00Z" product-name="mai_consent">
+        <header/>
+        <body>
+            <trans-unit id="module.title">
+                <source>Consent Statistics</source>
+            </trans-unit>
+            <trans-unit id="stats.category">
+                <source>Category</source>
+            </trans-unit>
+            <trans-unit id="stats.total">
+                <source>Total</source>
+            </trans-unit>
+            <trans-unit id="stats.accepted">
+                <source>Accepted</source>
+            </trans-unit>
+            <trans-unit id="stats.rate">
+                <source>Acceptance Rate</source>
+            </trans-unit>
+            <trans-unit id="stats.empty">
+                <source>No consent logs recorded yet.</source>
+            </trans-unit>
+            <trans-unit id="banner.text">
+                <source>We use cookies and similar technologies to improve your experience. Please choose which categories you consent to.</source>
+            </trans-unit>
+            <trans-unit id="banner.acceptAll">
+                <source>Accept all</source>
+            </trans-unit>
+            <trans-unit id="banner.customize">
+                <source>Customize</source>
+            </trans-unit>
+            <trans-unit id="banner.rejectAll">
+                <source>Reject all</source>
+            </trans-unit>
+            <trans-unit id="modal.title">
+                <source>Cookie Preferences</source>
+            </trans-unit>
+            <trans-unit id="modal.save">
+                <source>Save preferences</source>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>

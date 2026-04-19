@@ -1,0 +1,17 @@
+plugin.tx_maiconsent {
+    view {
+        templateRootPaths {
+            0 = EXT:mai_consent/Resources/Private/Templates/Frontend/
+        }
+        partialRootPaths {
+            0 = EXT:mai_consent/Resources/Private/Partials/
+        }
+        layoutRootPaths {
+            0 = EXT:mai_consent/Resources/Private/Layouts/
+        }
+    }
+    persistence {
+        storagePid = {$plugin.tx_maiconsent.settings.storagePageId}
+    }
+    settings < plugin.tx_maiconsent.settings
+}
