@@ -19,7 +19,7 @@ class ConsentCategoryRepository extends Repository
         return $query->execute()->toArray();
     }
 
-    public function findByIdentifier(string $identifier): ?ConsentCategory
+    public function findOneByIdentifier(string $identifier): ?ConsentCategory
     {
         $query = $this->createQuery();
         $query->matching($query->equals('identifier', $identifier));

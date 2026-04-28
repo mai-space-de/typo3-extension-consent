@@ -19,11 +19,11 @@ class ConsentLogRepository extends Repository
     {
         $connection = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(
             \TYPO3\CMS\Core\Database\ConnectionPool::class
-        )->getConnectionForTable('tx_maiconsent_log');
+        )->getConnectionForTable('tx_maiconsent_domain_model_consentlog');
 
         $rows = $connection->executeQuery(
             'SELECT category, accepted, COUNT(*) AS cnt
-             FROM tx_maiconsent_log
+             FROM tx_maiconsent_domain_model_consentlog
              WHERE deleted = 0
              GROUP BY category, accepted'
         )->fetchAllAssociative();
@@ -47,9 +47,9 @@ class ConsentLogRepository extends Repository
     {
         $connection = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(
             \TYPO3\CMS\Core\Database\ConnectionPool::class
-        )->getConnectionForTable('tx_maiconsent_log');
+        )->getConnectionForTable('tx_maiconsent_domain_model_consentlog');
 
-        $connection->insert('tx_maiconsent_log', [
+        $connection->insert('tx_maiconsent_domain_model_consentlog', [
             'pid'        => $storagePid,
             'crdate'     => time(),
             'tstamp'     => time(),

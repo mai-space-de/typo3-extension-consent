@@ -21,7 +21,7 @@ class ConsentApiMiddleware extends AbstractApiMiddleware
         private readonly Context $context,
     ) {}
 
-    protected function shouldHandle(ServerRequestInterface $request): bool
+    public function shouldHandle(ServerRequestInterface $request): bool
     {
         return str_starts_with($request->getUri()->getPath(), self::API_PATH);
     }
@@ -54,7 +54,7 @@ class ConsentApiMiddleware extends AbstractApiMiddleware
             $identifier = (string)($entry['identifier'] ?? '');
             $accepted   = (bool)($entry['accepted'] ?? false);
 
-            $category = $this->categoryRepository->findByIdentifier($identifier);
+            $category = $this->categoryRepository->findOneByIdentifier($identifier);
             if ($category === null) {
                 continue;
             }

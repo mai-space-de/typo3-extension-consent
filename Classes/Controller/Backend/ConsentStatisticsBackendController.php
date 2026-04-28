@@ -27,7 +27,7 @@ class ConsentStatisticsBackendController extends AbstractBackendController
     public function indexAction(): ResponseInterface
     {
         $moduleTemplate = $this->createModuleTemplate();
-        $this->addShortcutButton($moduleTemplate);
+        $this->addShortcutButton($moduleTemplate, 'maispace_mai_consent', 'Consent Statistics');
 
         $categories = $this->categoryRepository->findAllOrdered();
         $statsPerCategory = $this->logRepository->countPerCategory();
@@ -48,6 +48,6 @@ class ConsentStatisticsBackendController extends AbstractBackendController
             'stats' => $stats,
         ]);
 
-        return $this->renderModuleResponse($moduleTemplate);
+        return $this->renderModuleResponse($moduleTemplate, 'Index');
     }
 }
