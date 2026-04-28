@@ -21,8 +21,8 @@ return (new Table($lang('table.tx_maiconsent_log')))
         'category',
         $lang('tx_maiconsent_log.category'),
         (new SelectSingleConfig())
-            ->setForeignTable('tx_maiconsent_category')
-            ->setForeignTableWhere('ORDER BY tx_maiconsent_category.title')
+            ->setForeignTable('tx_maiconsent_domain_model_consentcategory')
+            ->setForeignTableWhere('ORDER BY tx_maiconsent_domain_model_consentcategory.title')
             ->setMinItems(1)
             ->setMaxItems(1)
     )

@@ -1,4 +1,4 @@
-CREATE TABLE tx_maiconsent_category (
+CREATE TABLE tx_maiconsent_domain_model_consentcategory (
     uid         INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
     pid         INT(11) UNSIGNED NOT NULL DEFAULT 0,
     tstamp      INT(11) UNSIGNED NOT NULL DEFAULT 0,
@@ -20,7 +20,7 @@ CREATE TABLE tx_maiconsent_category (
     KEY parent (pid)
 );
 
-CREATE TABLE tx_maiconsent_log (
+CREATE TABLE tx_maiconsent_domain_model_consentlog (
     uid         INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
     pid         INT(11) UNSIGNED NOT NULL DEFAULT 0,
     tstamp      INT(11) UNSIGNED NOT NULL DEFAULT 0,
