@@ -14,7 +14,7 @@ $lang = Helper::localLangHelperFactory('mai_consent', 'Default/locallang_tca.xlf
 return (new Table($lang('table.tx_maiconsent_category')))
     ->setDefaultConfig()
     ->setLabel('title')
-    ->setIconFile('EXT:mai_consent/Resources/Public/Icons/tx_maiconsent_category.svg')
+    ->setIconFile('EXT:mai_base/Resources/Public/Icons/generic_table.svg')
     ->setSortingField()
     ->addColumn(
         'title',
