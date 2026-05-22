@@ -29,7 +29,7 @@ class ContentGateViewHelper extends AbstractViewHelper
             . '</div>',
             htmlspecialchars($category, ENT_QUOTES),
             $content,
-            htmlspecialchars($placeholder, ENT_QUOTES)
+            htmlspecialchars($placeholder, ENT_QUOTES),
         );
     }
 }

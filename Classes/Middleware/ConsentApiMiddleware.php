@@ -9,7 +9,6 @@ use Maispace\MaiConsent\Domain\Repository\ConsentCategoryRepository;
 use Maispace\MaiConsent\Domain\Repository\ConsentLogRepository;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use TYPO3\CMS\Core\Context\Context;
 
 class ConsentApiMiddleware extends AbstractApiMiddleware
 {
@@ -18,7 +17,6 @@ class ConsentApiMiddleware extends AbstractApiMiddleware
     public function __construct(
         private readonly ConsentCategoryRepository $categoryRepository,
         private readonly ConsentLogRepository $logRepository,
-        private readonly Context $context,
     ) {}
 
     public function shouldHandle(ServerRequestInterface $request): bool
@@ -37,22 +35,18 @@ class ConsentApiMiddleware extends AbstractApiMiddleware
         }
 
         $body = $this->decodeJsonBody($request);
-        if ($body === null) {
-            return $this->errorResponse('Invalid JSON body', 400);
-        }
-
         $consents = $body['consents'] ?? [];
         if (!is_array($consents)) {
             return $this->errorResponse('Missing or invalid "consents" array', 422);
         }
 
-        $storagePid = (int)($body['storagePid'] ?? 0);
-        $session = $request->getAttribute('frontend.user')?->id ?? session_id() ?: '';
+        $storagePid = (int) ($body['storagePid'] ?? 0);
+        $session = $request->getAttribute('frontend.user')->id ?? session_id() ?: '';
         $ipAddress = $this->anonymizeIp($request->getServerParams()['REMOTE_ADDR'] ?? '');
 
         foreach ($consents as $entry) {
-            $identifier = (string)($entry['identifier'] ?? '');
-            $accepted   = (bool)($entry['accepted'] ?? false);
+            $identifier = (string) ($entry['identifier'] ?? '');
+            $accepted   = (bool) ($entry['accepted'] ?? false);
 
             $category = $this->categoryRepository->findOneByIdentifier($identifier);
             if ($category === null) {
@@ -60,11 +54,11 @@ class ConsentApiMiddleware extends AbstractApiMiddleware
             }
 
             $this->logRepository->addEntry(
-                (int)$category->getUid(),
+                (int) $category->getUid(),
                 $accepted,
                 $session,
                 $ipAddress,
-                $storagePid
+                $storagePid,
             );
         }
 

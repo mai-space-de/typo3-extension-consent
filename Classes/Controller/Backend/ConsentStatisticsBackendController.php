@@ -8,7 +8,7 @@ use Maispace\MaiBase\Controller\Backend\AbstractBackendController;
 use Maispace\MaiConsent\Domain\Repository\ConsentCategoryRepository;
 use Maispace\MaiConsent\Domain\Repository\ConsentLogRepository;
 use Psr\Http\Message\ResponseInterface;
-use Symfony\Component\DependencyInjection\Attribute\AsController;
+use TYPO3\CMS\Backend\Attribute\AsController;
 use TYPO3\CMS\Backend\Template\ModuleTemplateFactory;
 use TYPO3\CMS\Core\Imaging\IconFactory;
 
