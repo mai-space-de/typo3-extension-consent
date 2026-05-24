@@ -73,5 +73,7 @@
             "typo3/class-alias-loader": true
         },
         "sort-packages": true
-    }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
 }
