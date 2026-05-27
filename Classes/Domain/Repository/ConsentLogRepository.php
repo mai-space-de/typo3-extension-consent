@@ -59,4 +59,29 @@ class ConsentLogRepository extends Repository
             'ip_address' => $ipAddress,
         ]);
     }
+
+    /**
+     * Physically removes consent log entries created before the given cutoff
+     * timestamp. The stored IP address is personal data, so expired entries
+     * are hard-deleted (erased) rather than soft-deleted to satisfy GDPR
+     * data-minimisation / retention requirements.
+     *
+     * @return int Number of removed rows.
+     */
+    public function deleteOlderThan(int $cutoffTimestamp): int
+    {
+        $queryBuilder = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(
+            \TYPO3\CMS\Core\Database\ConnectionPool::class,
+        )->getQueryBuilderForTable('tx_maiconsent_domain_model_consentlog');
+
+        return (int) $queryBuilder
+            ->delete('tx_maiconsent_domain_model_consentlog')
+            ->where(
+                $queryBuilder->expr()->lt(
+                    'crdate',
+                    $queryBuilder->createNamedParameter($cutoffTimestamp, \Doctrine\DBAL\ParameterType::INTEGER),
+                ),
+            )
+            ->executeStatement();
+    }
 }

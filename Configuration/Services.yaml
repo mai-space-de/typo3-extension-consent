@@ -10,3 +10,10 @@ services:
 
   Maispace\MaiConsent\Controller\Backend\ConsentStatisticsBackendController:
     public: true
+
+  Maispace\MaiConsent\Command\PurgeExpiredConsentLogsCommand:
+    tags:
+      - name: console.command
+        command: 'consent:purge-expired-logs'
+        description: 'Erase consent log entries older than the configured retention period (GDPR cleanup)'
+        schedulable: true

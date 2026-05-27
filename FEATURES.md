@@ -42,9 +42,32 @@ The server never logs a `false` entry for a required category.
 ## 2 · Consent Log
 
 Every call to `POST /api/consent` writes a row to `tx_maiconsent_domain_model_consentlog`
-for each category entry in the request. The table is **append-only** — rows are never
-updated or deleted by the system. Editors can view log entries in read-only mode from
-the TYPO3 List module.
+for each category entry in the request. The table is **write-once** — rows are never
+updated in place. Editors can view log entries in read-only mode from the TYPO3 List
+module. The only routine that removes rows is the retention purge (see below), which
+erases entries once they pass the configured age.
+
+### Retention purge — `consent:purge-expired-logs`
+
+To satisfy GDPR data-minimisation, entries older than a retention window are physically
+erased (the stored — albeit anonymised — IP address is personal data, so expired rows
+are hard-deleted rather than soft-deleted). `ConsentLogRetentionService::purgeExpired()`
+computes the cutoff (`now − retentionDays`, clamped to ≥ 1 day) and delegates to
+`ConsentLogRepository::deleteOlderThan()`.
+
+The schedulable CLI command drives it:
+
+```bash
+# default retention (365 days)
+vendor/bin/typo3 consent:purge-expired-logs
+
+# custom retention window
+vendor/bin/typo3 consent:purge-expired-logs --days=180
+```
+
+Register it as a recurring **Execute console command** task in the TYPO3 scheduler
+(`schedulable: true`). The default window is `ConsentLogRetentionService::DEFAULT_RETENTION_DAYS`
+(365); a non-positive `--days` value is rejected with exit code `Command::INVALID`.
 
 ### `ConsentLogRepository::addEntry()` method
 
@@ -500,7 +523,8 @@ Transactional email
 | `ip_address` | `varchar(45)` | Anonymized IPv4 (last octet `0`) or IPv6 (last group `0`) |
 
 Records are never updated in place (the `tstamp` column is set only at creation).
-Soft-deletion via `deleted = 1` is supported but not performed automatically.
+Expired records are hard-deleted by the `consent:purge-expired-logs` retention task
+(see § 2); the `deleted` soft-delete flag still applies to manual edits in the backend.
 
 ---
 
