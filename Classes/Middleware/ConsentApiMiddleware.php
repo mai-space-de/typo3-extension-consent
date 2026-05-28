@@ -9,6 +9,8 @@ use Maispace\MaiConsent\Domain\Repository\ConsentCategoryRepository;
 use Maispace\MaiConsent\Domain\Repository\ConsentLogRepository;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
 
 class ConsentApiMiddleware extends AbstractApiMiddleware
 {
@@ -42,7 +44,7 @@ class ConsentApiMiddleware extends AbstractApiMiddleware
 
         $storagePid = (int) ($body['storagePid'] ?? 0);
         $session = $request->getAttribute('frontend.user')->id ?? session_id() ?: '';
-        $ipAddress = $this->anonymizeIp($request->getServerParams()['REMOTE_ADDR'] ?? '');
+        $ipAddress = $this->resolveIpAddress($request);
 
         foreach ($consents as $entry) {
             $identifier = (string) ($entry['identifier'] ?? '');
@@ -63,6 +65,32 @@ class ConsentApiMiddleware extends AbstractApiMiddleware
         }
 
         return $this->jsonResponse(['success' => true]);
+    }
+
+    private function resolveIpAddress(ServerRequestInterface $request): string
+    {
+        $ip = $request->getServerParams()['REMOTE_ADDR'] ?? '';
+
+        if ($this->isIpAnonymisationEnabled()) {
+            return $this->anonymizeIp($ip);
+        }
+
+        return $ip;
+    }
+
+    protected function isIpAnonymisationEnabled(): bool
+    {
+        try {
+            $configurationManager = GeneralUtility::makeInstance(ConfigurationManagerInterface::class);
+            $settings = $configurationManager->getConfiguration(
+                ConfigurationManagerInterface::CONFIGURATION_TYPE_SETTINGS,
+                'MaiConsent',
+            );
+
+            return (bool) ($settings['ipAnonymisation'] ?? true);
+        } catch (\Throwable) {
+            return true;
+        }
     }
 
     private function anonymizeIp(string $ip): string

@@ -53,13 +53,6 @@ The `BannerController` is registered as a content element plugin in `ext_localco
 
 ## 4. Recommended Enhancements
 
-### 4.1 Dispatch a custom DOM event after consent is saved
-In `consent.js`, after `applyConsent()` is called, dispatch a `CustomEvent` so third-party scripts (e.g. Leaflet initialiser) can react without polling:
-
-```js
-window.dispatchEvent(new CustomEvent('maiConsent:updated', { detail: categories }));
-```
-
 ### 4.2 Re-consent on category change
 If a new consent category is added to the database, existing visitors will not see the banner again because their cookie is still valid. Add a `version` field to the cookie payload and bump a constant in `consent.js` to force re-consent when categories change.
 

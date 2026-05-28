@@ -293,6 +293,24 @@ Buttons inside the banner template control the UI via `data-consent-action`:
 Submitting `#mai-consent-form` saves the current checkbox state (via
 `[data-consent-identifier]` elements) and behaves identically to `acceptAll`.
 
+### CustomEvent: `maiConsent:updated`
+
+After any consent action (accept all, reject all, form save), `consent.js` dispatches a
+`CustomEvent` on `window` so third-party scripts can react without polling:
+
+```js
+window.addEventListener('maiConsent:updated', function (e) {
+  // e.detail = { essential: true, analytics: false, marketing: false, ... }
+  if (e.detail.mapping) {
+    initLeafletMap();
+  }
+});
+```
+
+| Property | Type | Description |
+|---|---|---|
+| `e.detail` | `object` | Category identifier → boolean map of current consent state |
+
 ---
 
 ## 7 · Backend Statistics Module

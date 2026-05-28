@@ -13,5 +13,7 @@ plugin.tx_maiconsent {
     persistence {
         storagePid = {$plugin.tx_maiconsent.settings.storagePageId}
     }
-    settings < plugin.tx_maiconsent.settings
+    settings {
+        ipAnonymisation = {$plugin.tx_maiconsent.settings.ipAnonymisation}
+    }
 }

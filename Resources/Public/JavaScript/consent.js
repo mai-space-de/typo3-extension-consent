@@ -39,11 +39,17 @@
     ));
   }
 
+  function getCategoryVersion() {
+    var el = document.getElementById('mai-consent-banner');
+    return el ? (el.dataset.consentVersion || '') : '';
+  }
+
   function applyConsent(categories) {
-    writeCookie({ categories, ts: Date.now() });
+    writeCookie({ categories, ts: Date.now(), version: getCategoryVersion() });
     persistToServer(categories);
     updateGates(categories);
     hideBanner();
+    window.dispatchEvent(new CustomEvent('maiConsent:updated', { detail: categories }));
   }
 
   function updateGates(categories) {
@@ -84,8 +90,13 @@
   }
 
   function init() {
-    const existing = readCookie();
+    var existing = readCookie();
     if (existing && existing.categories) {
+      var currentVersion = getCategoryVersion();
+      if (currentVersion && existing.version !== currentVersion) {
+        showBanner();
+        return;
+      }
       updateGates(existing.categories);
       return;
     }
