@@ -1,9 +1,12 @@
-<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
-      xmlns:be="http://typo3.org/ns/TYPO3/CMS/Backend/ViewHelpers"
-      data-namespace-typo3-fluid="true">
-<be:pageRenderer />
-<be:moduleLayout>
-    <f:section name="Content">
+<html
+    xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+    xmlns:be="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+    data-namespace-typo3-fluid="true"
+>
+
+<f:layout name="Module" />
+
+<f:section name="Content">
         <h1><f:translate key="LLL:EXT:mai_consent/Resources/Private/Language/locallang.xlf:module.title" /></h1>
 
         <f:if condition="{stats}">
@@ -36,4 +39,5 @@
             </f:else>
         </f:if>
     </f:section>
-</be:moduleLayout>
+
+</html>
