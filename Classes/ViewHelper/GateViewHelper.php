@@ -15,6 +15,4 @@ namespace Maispace\MaiConsent\ViewHelper;
  *     ...
  *   </consent:gate>
  */
-class GateViewHelper extends ContentGateViewHelper
-{
-}
+class GateViewHelper extends ContentGateViewHelper {}
