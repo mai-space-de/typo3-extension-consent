@@ -20,4 +20,10 @@ defined('TYPO3') or die();
     \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addTypoScriptSetup(
         '@import "EXT:mai_consent/Configuration/TypoScript/setup.typoscript"'
     );
+
+    // Register the global Fluid namespace <consent:…> so templates can resolve
+    // <consent:gate category="…">…</consent:gate> without an inline xmlns:consent.
+    // The PHP namespace is singular ("ViewHelper") on purpose — mirror it here.
+    $GLOBALS['TYPO3_CONF_VARS']['SYS']['fluid']['namespaces']['consent'][]
+        = 'Maispace\\MaiConsent\\ViewHelper';
 })();
