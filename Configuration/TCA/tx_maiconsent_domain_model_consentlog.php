@@ -17,6 +17,7 @@ return (new Table($lang('table.tx_maiconsent_log')))
     ->setIconFile('EXT:mai_base/Resources/Public/Icons/generic_table.svg')
     ->setDefaultSorting('ORDER BY crdate DESC')
     ->recordsCanOnlyBeRead()
+    ->disableRecordModule()
     ->addColumn(
         'category',
         $lang('tx_maiconsent_log.category'),

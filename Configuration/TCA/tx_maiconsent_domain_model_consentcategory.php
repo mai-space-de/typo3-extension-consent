@@ -16,6 +16,7 @@ return (new Table($lang('table.tx_maiconsent_category')))
     ->setLabel('title')
     ->setIconFile('EXT:mai_base/Resources/Public/Icons/generic_table.svg')
     ->setSortingField()
+    ->disableRecordModule()
     ->addColumn(
         'title',
         $lang('tx_maiconsent_category.title'),
