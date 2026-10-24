@@ -12,7 +12,7 @@ return [
         'workspaceSupport' => false,
         'labels' => 'LLL:EXT:mai_consent/Resources/Private/Language/locallang.xlf',
         'extensionName' => 'MaiConsent',
-        'iconIdentifier' => 'mai-backend-module',
+        'iconIdentifier' => 'mai-consent-module',
         'controllerActions' => [
             ConsentStatisticsBackendController::class => ['index'],
         ],
