@@ -119,7 +119,8 @@
       } else if (action === 'rejectAll') {
         const categories = {};
         document.querySelectorAll('[data-consent-identifier]').forEach(function (el) {
-          categories[el.dataset.consentIdentifier] = false;
+          // Required (disabled) categories stay accepted.
+          categories[el.dataset.consentIdentifier] = !!el.disabled;
         });
         applyConsent(categories);
       } else if (action === 'openModal') {

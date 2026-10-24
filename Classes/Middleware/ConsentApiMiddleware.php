@@ -7,19 +7,26 @@ namespace Maispace\MaiConsent\Middleware;
 use Maispace\MaiBase\Middleware\Api\AbstractApiMiddleware;
 use Maispace\MaiConsent\Domain\Repository\ConsentCategoryRepository;
 use Maispace\MaiConsent\Domain\Repository\ConsentLogRepository;
+use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
+use TYPO3\CMS\Frontend\Authentication\FrontendUserAuthentication;
 
 class ConsentApiMiddleware extends AbstractApiMiddleware
 {
     private const API_PATH = '/api/consent';
 
     public function __construct(
+        ResponseFactoryInterface $responseFactory,
+        StreamFactoryInterface $streamFactory,
         private readonly ConsentCategoryRepository $categoryRepository,
         private readonly ConsentLogRepository $logRepository,
-    ) {}
+    ) {
+        parent::__construct($responseFactory, $streamFactory);
+    }
 
     public function shouldHandle(ServerRequestInterface $request): bool
     {
@@ -43,7 +50,7 @@ class ConsentApiMiddleware extends AbstractApiMiddleware
         }
 
         $storagePid = (int) ($body['storagePid'] ?? 0);
-        $session = $request->getAttribute('frontend.user')->id ?? session_id() ?: '';
+        $session = $this->resolveSessionId($request);
         $ipAddress = $this->resolveIpAddress($request);
 
         foreach ($consents as $entry) {
@@ -65,6 +72,23 @@ class ConsentApiMiddleware extends AbstractApiMiddleware
         }
 
         return $this->jsonResponse(['success' => true]);
+    }
+
+    private function resolveSessionId(ServerRequestInterface $request): string
+    {
+        $frontendUser = $request->getAttribute('frontend.user');
+        if ($frontendUser instanceof FrontendUserAuthentication) {
+            try {
+                $sessionId = $frontendUser->getSession()->getIdentifier();
+                if ($sessionId !== '') {
+                    return $sessionId;
+                }
+            } catch (\Throwable) {
+                // No session yet — fall through to PHP session id.
+            }
+        }
+
+        return session_id() ?: '';
     }
 
     private function resolveIpAddress(ServerRequestInterface $request): string

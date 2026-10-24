@@ -48,6 +48,11 @@ class ConsentCategory extends AbstractEntity
         return $this->isRequired;
     }
 
+    public function getIsRequired(): bool
+    {
+        return $this->isRequired;
+    }
+
     public function setIsRequired(bool $isRequired): void
     {
         $this->isRequired = $isRequired;

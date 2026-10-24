@@ -23,4 +23,30 @@ class ConsentCategoryRepositoryTest extends TestCase
         $defaultOrderings = $reflection->getDefaultProperties()['defaultOrderings'] ?? [];
         self::assertSame([], $defaultOrderings, 'findAllOrdered() sets ordering at query time; no static defaultOrderings expected');
     }
+
+    public function testFindOneByIdentifierDisablesStoragePageRespect(): void
+    {
+        $source = file_get_contents(
+            dirname(__DIR__, 4) . '/Classes/Domain/Repository/ConsentCategoryRepository.php',
+        );
+        self::assertNotFalse($source);
+        self::assertMatchesRegularExpression(
+            '/function findOneByIdentifier[\s\S]*setRespectStoragePage\(false\)/',
+            $source,
+            'findOneByIdentifier must ignore storagePid so the consent API can resolve categories without Extbase TypoScript context.',
+        );
+    }
+
+    public function testFindAllOrderedDisablesStoragePageRespect(): void
+    {
+        $source = file_get_contents(
+            dirname(__DIR__, 4) . '/Classes/Domain/Repository/ConsentCategoryRepository.php',
+        );
+        self::assertNotFalse($source);
+        self::assertMatchesRegularExpression(
+            '/function findAllOrdered[\s\S]*setRespectStoragePage\(false\)/',
+            $source,
+            'findAllOrdered must ignore storagePid so the backend statistics module lists categories when the page tree selection is not the storage folder.',
+        );
+    }
 }

@@ -9,22 +9,79 @@ use Maispace\MaiConsent\Domain\Repository\ConsentLogRepository;
 use Maispace\MaiConsent\Middleware\ConsentApiMiddleware;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
+use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Message\StreamFactoryInterface;
+use Psr\Http\Message\UriInterface;
+use TYPO3\CMS\Frontend\Authentication\FrontendUserAuthentication;
 
 class ConsentApiMiddlewareTest extends TestCase
 {
     private ConsentApiMiddleware $subject;
     private \ReflectionMethod $anonymizeIp;
     private \ReflectionMethod $resolveIpAddress;
+    private \ReflectionMethod $resolveSessionId;
 
     protected function setUp(): void
     {
         $categoryRepository = $this->createMock(ConsentCategoryRepository::class);
         $logRepository      = $this->createMock(ConsentLogRepository::class);
 
-        $this->subject        = new ConsentApiMiddleware($categoryRepository, $logRepository);
-        $this->anonymizeIp    = new \ReflectionMethod(ConsentApiMiddleware::class, 'anonymizeIp');
+        $this->subject = new ConsentApiMiddleware(
+            $this->createMock(ResponseFactoryInterface::class),
+            $this->createMock(StreamFactoryInterface::class),
+            $categoryRepository,
+            $logRepository,
+        );
+        $this->anonymizeIp      = new \ReflectionMethod(ConsentApiMiddleware::class, 'anonymizeIp');
         $this->resolveIpAddress = new \ReflectionMethod(ConsentApiMiddleware::class, 'resolveIpAddress');
+        $this->resolveSessionId = new \ReflectionMethod(ConsentApiMiddleware::class, 'resolveSessionId');
+    }
+
+    // -------------------------------------------------------------------------
+    // shouldHandle
+    // -------------------------------------------------------------------------
+
+    #[Test]
+    public function shouldHandleAcceptsConsentApiPath(): void
+    {
+        self::assertTrue($this->subject->shouldHandle($this->requestWithPath('/api/consent')));
+    }
+
+    #[Test]
+    public function shouldHandleRejectsUnrelatedPath(): void
+    {
+        self::assertFalse($this->subject->shouldHandle($this->requestWithPath('/api/other')));
+    }
+
+    // -------------------------------------------------------------------------
+    // resolveSessionId
+    // -------------------------------------------------------------------------
+
+    #[Test]
+    public function resolveSessionIdUsesFrontendUserSessionWhenPresent(): void
+    {
+        $session = $this->createMock(\TYPO3\CMS\Core\Session\UserSession::class);
+        $session->method('getIdentifier')->willReturn('fe-session-abc');
+
+        $frontendUser = $this->createMock(FrontendUserAuthentication::class);
+        $frontendUser->method('getSession')->willReturn($session);
+
+        $request = $this->createMock(ServerRequestInterface::class);
+        $request->method('getAttribute')->with('frontend.user')->willReturn($frontendUser);
+
+        self::assertSame('fe-session-abc', $this->resolveSessionId->invoke($this->subject, $request));
+    }
+
+    #[Test]
+    public function resolveSessionIdFallsBackWhenFrontendUserMissing(): void
+    {
+        $request = $this->createMock(ServerRequestInterface::class);
+        $request->method('getAttribute')->with('frontend.user')->willReturn(null);
+
+        $result = $this->resolveSessionId->invoke($this->subject, $request);
+
+        self::assertIsString($result);
     }
 
     // -------------------------------------------------------------------------
@@ -163,5 +220,16 @@ class ConsentApiMiddlewareTest extends TestCase
         $result = $this->resolveIpAddress->invoke($this->subject, $request);
 
         self::assertSame('', $result);
+    }
+
+    private function requestWithPath(string $path): ServerRequestInterface
+    {
+        $uri = $this->createMock(UriInterface::class);
+        $uri->method('getPath')->willReturn($path);
+
+        $request = $this->createMock(ServerRequestInterface::class);
+        $request->method('getUri')->willReturn($uri);
+
+        return $request;
     }
 }

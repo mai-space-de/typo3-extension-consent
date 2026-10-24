@@ -8,7 +8,7 @@
 <mai:asset.css identifier="mai-consent" src="EXT:mai_consent/Resources/Public/Css/consent.css" />
 <mai:asset.js identifier="mai-consent" src="EXT:mai_consent/Resources/Public/JavaScript/consent.js" defer="true" />
 
-<div class="mai-consent-banner" id="mai-consent-banner" role="dialog" aria-modal="true" aria-labelledby="mai-consent-title" data-consent-version="{categoryVersion}" hidden>
+<div class="mai-consent-banner" id="mai-consent-banner" role="dialog" aria-modal="true" aria-labelledby="mai-consent-title" data-consent-version="{categoryVersion}" data-storage-pid="{settings.storagePageId}" hidden>
     <div class="mai-consent-banner__inner">
         <p id="mai-consent-title" class="mai-consent-banner__text">
             <f:translate key="LLL:EXT:mai_consent/Resources/Private/Language/locallang.xlf:banner.text" />
@@ -40,7 +40,9 @@
                     <label class="mai-consent-modal__label">
                         <f:if condition="{category.isRequired}">
                             <f:then>
-                                <input type="checkbox" name="consent[{category.identifier}]" value="1" checked disabled />
+                                <input type="checkbox" name="consent[{category.identifier}]" value="1"
+                                    data-consent-identifier="{category.identifier}"
+                                    checked disabled />
                             </f:then>
                             <f:else>
                                 <input type="checkbox" name="consent[{category.identifier}]" value="1"
