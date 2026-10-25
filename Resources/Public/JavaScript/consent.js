@@ -52,6 +52,22 @@
     window.dispatchEvent(new CustomEvent('maiConsent:updated', { detail: categories }));
   }
 
+  function setEmbeddedSource(frame, granted) {
+    if (granted) {
+      const pending = frame.getAttribute('data-consent-src');
+      if (pending && frame.getAttribute('src') !== pending) {
+        frame.setAttribute('src', pending);
+      }
+      return;
+    }
+    if (frame.getAttribute('src')) {
+      if (!frame.getAttribute('data-consent-src')) {
+        frame.setAttribute('data-consent-src', frame.getAttribute('src'));
+      }
+      frame.removeAttribute('src');
+    }
+  }
+
   function updateGates(categories) {
     document.querySelectorAll('.mai-consent-gate').forEach(function (gate) {
       const id = gate.dataset.consentCategory;
@@ -61,6 +77,9 @@
       const placeholder = gate.querySelector('.mai-consent-gate__placeholder');
       if (content) content.hidden = !granted;
       if (placeholder) placeholder.hidden = granted;
+      gate.querySelectorAll('iframe, embed, object').forEach(function (frame) {
+        setEmbeddedSource(frame, granted);
+      });
     });
   }
 
@@ -76,9 +95,25 @@
     if (modal) modal.hidden = true;
   }
 
+  function syncFormFromCookie() {
+    const data = readCookie();
+    const categories = data && data.categories ? data.categories : {};
+    document.querySelectorAll('[data-consent-identifier]').forEach(function (el) {
+      if (el.disabled) {
+        el.checked = true;
+        return;
+      }
+      el.checked = categories[el.dataset.consentIdentifier] === true;
+    });
+  }
+
   function openModal() {
+    syncFormFromCookie();
     const modal = document.getElementById('mai-consent-modal');
-    if (modal) modal.hidden = false;
+    if (!modal) return;
+    modal.hidden = false;
+    const title = document.getElementById('mai-consent-modal-title');
+    if (title) title.focus();
   }
 
   function collectFormState() {
@@ -123,7 +158,19 @@
           categories[el.dataset.consentIdentifier] = !!el.disabled;
         });
         applyConsent(categories);
-      } else if (action === 'openModal') {
+      } else if (action === 'acceptCategory') {
+        const gate = e.target.closest('.mai-consent-gate');
+        const id = gate ? gate.dataset.consentCategory : '';
+        const existing = readCookie();
+        const categories = existing && existing.categories ? Object.assign({}, existing.categories) : {};
+        document.querySelectorAll('[data-consent-identifier]').forEach(function (el) {
+          if (!Object.prototype.hasOwnProperty.call(categories, el.dataset.consentIdentifier)) {
+            categories[el.dataset.consentIdentifier] = !!el.disabled;
+          }
+        });
+        if (id) categories[id] = true;
+        applyConsent(categories);
+      } else if (action === 'openModal' || action === 'openSettings') {
         openModal();
       } else if (action === 'closeModal') {
         const modal = document.getElementById('mai-consent-modal');
@@ -138,6 +185,12 @@
         applyConsent(collectFormState());
       });
     }
+
+    document.addEventListener('keydown', function (e) {
+      if (e.key !== 'Escape') return;
+      const modal = document.getElementById('mai-consent-modal');
+      if (modal && !modal.hidden) modal.hidden = true;
+    });
   });
 
   window.MaiConsent = {

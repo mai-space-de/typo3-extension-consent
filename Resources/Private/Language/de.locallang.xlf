@@ -60,9 +60,45 @@
                 <source>Cookie Preferences</source>
                 <target>Cookie-Einstellungen</target>
             </trans-unit>
+            <trans-unit id="modal.intro">
+                <source>Switch each category on or off. Necessary cookies stay on.</source>
+                <target>Schalte jede Kategorie einzeln an oder aus. Notwendige Cookies bleiben an.</target>
+            </trans-unit>
+            <trans-unit id="modal.switchOn">
+                <source>On</source>
+                <target>An</target>
+            </trans-unit>
+            <trans-unit id="modal.switchOff">
+                <source>Off</source>
+                <target>Aus</target>
+            </trans-unit>
+            <trans-unit id="modal.switchLocked">
+                <source>Always on</source>
+                <target>Immer an</target>
+            </trans-unit>
             <trans-unit id="modal.save">
                 <source>Save preferences</source>
                 <target>Einstellungen speichern</target>
+            </trans-unit>
+            <trans-unit id="gate.video.placeholder">
+                <source>This video is hosted on YouTube and stays blocked until you allow videos.</source>
+                <target>Dieses Video liegt bei YouTube und wird erst geladen, wenn Sie Videos erlauben.</target>
+            </trans-unit>
+            <trans-unit id="gate.vimeo.placeholder">
+                <source>This video is hosted on Vimeo and stays blocked until you allow videos.</source>
+                <target>Dieses Video liegt bei Vimeo und wird erst geladen, wenn Sie Videos erlauben.</target>
+            </trans-unit>
+            <trans-unit id="gate.video.load">
+                <source>Load video</source>
+                <target>Video laden</target>
+            </trans-unit>
+            <trans-unit id="gate.map.placeholder">
+                <source>This map is hosted on OpenStreetMap and stays blocked until you allow maps.</source>
+                <target>Diese Karte liegt bei OpenStreetMap und wird erst geladen, wenn Sie Karten erlauben.</target>
+            </trans-unit>
+            <trans-unit id="gate.map.load">
+                <source>Load map</source>
+                <target>Karte laden</target>
             </trans-unit>
         </body>
     </file>

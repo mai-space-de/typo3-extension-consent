@@ -27,34 +27,19 @@
     </div>
 </div>
 
-<div class="mai-consent-modal" id="mai-consent-modal" role="dialog" aria-modal="true" hidden>
+<div class="mai-consent-modal" id="mai-consent-modal" role="dialog" aria-modal="true" aria-labelledby="mai-consent-modal-title" hidden>
     <div class="mai-consent-modal__overlay" data-consent-action="closeModal"></div>
     <div class="mai-consent-modal__dialog">
-        <h2 class="mai-consent-modal__title">
+        <h2 class="mai-consent-modal__title" id="mai-consent-modal-title" tabindex="-1">
             <f:translate key="LLL:EXT:mai_consent/Resources/Private/Language/locallang.xlf:modal.title" />
         </h2>
+        <p class="mai-consent-modal__intro">
+            <f:translate key="LLL:EXT:mai_consent/Resources/Private/Language/locallang.xlf:modal.intro" />
+        </p>
 
         <form id="mai-consent-form" data-consent-api="/api/consent">
             <f:for each="{categories}" as="category">
-                <div class="mai-consent-modal__category">
-                    <label class="mai-consent-modal__label">
-                        <f:if condition="{category.isRequired}">
-                            <f:then>
-                                <input type="checkbox" name="consent[{category.identifier}]" value="1"
-                                    data-consent-identifier="{category.identifier}"
-                                    checked disabled />
-                            </f:then>
-                            <f:else>
-                                <input type="checkbox" name="consent[{category.identifier}]" value="1"
-                                    data-consent-identifier="{category.identifier}" />
-                            </f:else>
-                        </f:if>
-                        <span class="mai-consent-modal__category-title">{category.title}</span>
-                    </label>
-                    <f:if condition="{category.description}">
-                        <p class="mai-consent-modal__category-description">{category.description}</p>
-                    </f:if>
-                </div>
+                <f:render partial="CategorySwitch" arguments="{category: category}" />
             </f:for>
 
             <div class="mai-consent-modal__actions">

@@ -45,8 +45,35 @@
             <trans-unit id="modal.title">
                 <source>Cookie Preferences</source>
             </trans-unit>
+            <trans-unit id="modal.intro">
+                <source>Switch each category on or off. Necessary cookies stay on.</source>
+            </trans-unit>
+            <trans-unit id="modal.switchOn">
+                <source>On</source>
+            </trans-unit>
+            <trans-unit id="modal.switchOff">
+                <source>Off</source>
+            </trans-unit>
+            <trans-unit id="modal.switchLocked">
+                <source>Always on</source>
+            </trans-unit>
             <trans-unit id="modal.save">
                 <source>Save preferences</source>
+            </trans-unit>
+            <trans-unit id="gate.video.placeholder">
+                <source>This video is hosted on YouTube and stays blocked until you allow videos.</source>
+            </trans-unit>
+            <trans-unit id="gate.vimeo.placeholder">
+                <source>This video is hosted on Vimeo and stays blocked until you allow videos.</source>
+            </trans-unit>
+            <trans-unit id="gate.video.load">
+                <source>Load video</source>
+            </trans-unit>
+            <trans-unit id="gate.map.placeholder">
+                <source>This map is hosted on OpenStreetMap and stays blocked until you allow maps.</source>
+            </trans-unit>
+            <trans-unit id="gate.map.load">
+                <source>Load map</source>
             </trans-unit>
         </body>
     </file>

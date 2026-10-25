@@ -1,0 +1,30 @@
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers" data-namespace-typo3-fluid="true">
+<label class="mai-consent-switch{f:if(condition: category.isRequired, then: ' mai-consent-switch--locked')}">
+    <span class="mai-consent-switch__copy">
+        <span class="mai-consent-switch__title">{category.title}</span>
+        <f:if condition="{category.description}">
+            <span class="mai-consent-switch__description">{category.description}</span>
+        </f:if>
+    </span>
+    <span class="mai-consent-switch__toggle">
+        <f:if condition="{category.isRequired}">
+            <f:then>
+                <input type="checkbox" class="mai-consent-switch__input" name="consent[{category.identifier}]" value="1"
+                    data-consent-identifier="{category.identifier}" checked disabled />
+                <span class="mai-consent-switch__control" aria-hidden="true"></span>
+                <span class="mai-consent-switch__state"
+                    data-on="{f:translate(key: 'LLL:EXT:mai_consent/Resources/Private/Language/locallang.xlf:modal.switchLocked')}"
+                    data-off="{f:translate(key: 'LLL:EXT:mai_consent/Resources/Private/Language/locallang.xlf:modal.switchLocked')}"></span>
+            </f:then>
+            <f:else>
+                <input type="checkbox" class="mai-consent-switch__input" name="consent[{category.identifier}]" value="1"
+                    data-consent-identifier="{category.identifier}" />
+                <span class="mai-consent-switch__control" aria-hidden="true"></span>
+                <span class="mai-consent-switch__state"
+                    data-on="{f:translate(key: 'LLL:EXT:mai_consent/Resources/Private/Language/locallang.xlf:modal.switchOn')}"
+                    data-off="{f:translate(key: 'LLL:EXT:mai_consent/Resources/Private/Language/locallang.xlf:modal.switchOff')}"></span>
+            </f:else>
+        </f:if>
+    </span>
+</label>
+</html>
