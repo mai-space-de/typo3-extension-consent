@@ -17,3 +17,21 @@ services:
         command: 'consent:purge-expired-logs'
         description: 'Erase consent log entries older than the configured retention period (GDPR cleanup)'
         schedulable: true
+
+  dashboard.widget.maiConsentManual:
+    class: 'ProudNerds\PnBackendManual\Widgets\ManualWidget'
+    arguments:
+      $options:
+        file: 'EXT:mai_consent/Resources/Private/Manual/Manual.md'
+        numbered: true
+        contentsDepth: 2
+        printButton: true
+    tags:
+      - name: dashboard.widget
+        identifier: 'maiConsentManual'
+        groupNames: 'documentation'
+        title: 'Handbuch: Einwilligung'
+        description: 'Kurze Anleitung für Cookie-Kategorien und die Statistik.'
+        iconIdentifier: 'content-book'
+        height: 'medium'
+        width: 'medium'
