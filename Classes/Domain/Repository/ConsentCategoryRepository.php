@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Maispace\MaiConsent\Domain\Repository;
 
 use Maispace\MaiConsent\Domain\Model\ConsentCategory;
+use TYPO3\CMS\Core\Context\LanguageAspect;
+use TYPO3\CMS\Extbase\Persistence\QueryInterface;
 use TYPO3\CMS\Extbase\Persistence\Repository;
 
 /**
@@ -15,21 +17,35 @@ class ConsentCategoryRepository extends Repository
     public function findAllOrdered(): array
     {
         $query = $this->createQuery();
-        // Backend modules fall back to the selected page as storagePid when
-        // plugin TypoScript is missing; categories live on a fixed storage
-        // folder and identifiers are globally unique — never hide them.
-        $query->getQuerySettings()->setRespectStoragePage(false);
-        $query->setOrderings(['sorting' => \TYPO3\CMS\Extbase\Persistence\QueryInterface::ORDER_ASCENDING]);
+        $this->keepDefaultLanguageCategories($query);
+        $query->setOrderings(['sorting' => QueryInterface::ORDER_ASCENDING]);
         return $query->execute()->toArray();
     }
 
     public function findOneByIdentifier(string $identifier): ?ConsentCategory
     {
         $query = $this->createQuery();
-        // API middleware has no Extbase persistence.storagePid; identifiers are
-        // globally unique so storage-page filtering must not hide categories.
-        $query->getQuerySettings()->setRespectStoragePage(false);
+        $this->keepDefaultLanguageCategories($query);
         $query->matching($query->equals('identifier', $identifier));
         return $query->execute()->getFirst();
+    }
+
+    /**
+     * Kategorien sind seitenweit und meist nur in der Standardsprache angelegt.
+     * Sprachen mit fallbackType strict würden sie sonst ausblenden, der Banner
+     * bliebe ohne Schalter. Eine vorhandene Übersetzung liegt weiterhin darüber.
+     */
+    private function keepDefaultLanguageCategories(QueryInterface $query): void
+    {
+        $settings = $query->getQuerySettings();
+        // Backend und die API haben oft kein storagePid; Identifier sind eindeutig.
+        $settings->setRespectStoragePage(false);
+        $aspect = $settings->getLanguageAspect();
+        $settings->setLanguageAspect(new LanguageAspect(
+            $aspect->getId(),
+            $aspect->getContentId(),
+            LanguageAspect::OVERLAYS_MIXED,
+            $aspect->getFallbackChain(),
+        ));
     }
 }

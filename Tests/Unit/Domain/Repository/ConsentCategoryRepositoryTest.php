@@ -31,9 +31,9 @@ class ConsentCategoryRepositoryTest extends TestCase
         );
         self::assertNotFalse($source);
         self::assertMatchesRegularExpression(
-            '/function findOneByIdentifier[\s\S]*setRespectStoragePage\(false\)/',
+            '/function findOneByIdentifier\([\s\S]*?keepDefaultLanguageCategories\(\$query\);[\s\S]*?\n    \}/',
             $source,
-            'findOneByIdentifier must ignore storagePid so the consent API can resolve categories without Extbase TypoScript context.',
+            'findOneByIdentifier must keep default-language categories so the consent API resolves them in every language.',
         );
     }
 
@@ -44,9 +44,10 @@ class ConsentCategoryRepositoryTest extends TestCase
         );
         self::assertNotFalse($source);
         self::assertMatchesRegularExpression(
-            '/function findAllOrdered[\s\S]*setRespectStoragePage\(false\)/',
+            '/function findAllOrdered\([\s\S]*?keepDefaultLanguageCategories\(\$query\);[\s\S]*?\n    \}/',
             $source,
-            'findAllOrdered must ignore storagePid so the backend statistics module lists categories when the page tree selection is not the storage folder.',
+            'findAllOrdered must keep default-language categories so the banner lists them in every language.',
         );
+        self::assertStringContainsString('LanguageAspect::OVERLAYS_MIXED', $source);
     }
 }
