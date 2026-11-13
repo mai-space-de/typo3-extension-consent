@@ -21,6 +21,12 @@ defined('TYPO3') or die();
         '@import "EXT:mai_consent/Configuration/TypoScript/setup.typoscript"'
     );
 
+    // The banner is cacheable page content: flush it when categories change.
+    $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_tcemain.php']['processDatamapClass']['mai_consent']
+        = \Maispace\MaiConsent\Hook\ConsentCategoryCacheInvalidationHook::class;
+    $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_tcemain.php']['processCmdmapClass']['mai_consent']
+        = \Maispace\MaiConsent\Hook\ConsentCategoryCacheInvalidationHook::class;
+
     // Register the global Fluid namespace <consent:…> so templates can resolve
     // <consent:gate category="…">…</consent:gate> without an inline xmlns:consent.
     // The PHP namespace is singular ("ViewHelper") on purpose — mirror it here.

@@ -8,6 +8,10 @@ services:
     resource: '../Classes/*'
     exclude: '../Classes/Domain/Model/*'
 
+  # DataHandler instantiates hooks via GeneralUtility::makeInstance() - must be public for DI
+  Maispace\MaiConsent\Hook\ConsentCategoryCacheInvalidationHook:
+    public: true
+
   Maispace\MaiConsent\Controller\Backend\ConsentStatisticsBackendController:
     public: true
 
